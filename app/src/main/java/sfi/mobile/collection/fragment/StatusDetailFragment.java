@@ -1,0 +1,434 @@
+package sfi.mobile.collection.fragment;
+
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import sfi.mobile.collection.R;
+import sfi.mobile.collection.app.AppController;
+import sfi.mobile.collection.helper.ConnectionHelper;
+import sfi.mobile.collection.helper.DBHelper;
+
+public class StatusDetailFragment extends Fragment {
+
+    public StatusDetailFragment() {
+    }
+    /*** memanggil session yang terdaftar ***/
+    SharedPreferences sharedpreferences;
+    public final static String TAG_USER_ID = "USERID";
+    public final static String TAG_USERNAME = "USERNAME";
+    public final static String TAG_FULL_NAME = "FULLNAME";
+    public final static String TAG_BRANCH_ID = "BRANCH_ID";
+    public final static String TAG_EMP_ID = "EMP_ID";
+    public final static String TAG_EMP_JOB_ID= "EMP_JOB_ID";
+    public final static String TAG_BRANCH_NAME = "BRANCH_NAME";
+
+    public static final String my_shared_preferences = "my_shared_preferences";
+    /*** end memanggil session yang terdaftar ***/
+
+    ProgressDialog progressDialog;
+
+    TextView txtContractID, txtCustomerName, txtResult, txtMeetup, txtContactName, txtHubungan, txtAddress, txtNewAddress, txtUnit, txtAmount, txtSisa, txtLokasiPembayaran, txtLokasiPertemuan, txtJanjiBayar, txtHasilKunjungan;
+    ImageView imgPembayaran, imgPertemuan;
+    Button btnUpload;
+    ImageButton btnEdit,btnPrint;
+
+    String strMeetup, strContactName, strHubungan, strAddress, strQAddress, strNewAddress, strUnit, strQbayar, strAmount, strSisa, strLatPembayaran, strLngPembayaran, strLatPertemuan, strLngPertemuan, strJanjiBayar, strHasilKunjungan, strCreateDate;
+
+    LinearLayout ln_ketemudengankosumen,ln_contactpersonname,ln_hubungancostumer,ln_alamatkunjungan,ln_alamatbaru,ln_apakah_unitada,ln_pembayaranditerima,ln_sisa_tagihan,ln_lokasiPembayaran,ln_lokasipertemuan,ln_tgljanjibayar,ln_hasilKunjungan,ln_bertemukonsumen;
+
+    protected Cursor cursor;
+    DBHelper dbhelper;
+    private static final String TAG = StatusDetailFragment.class.getSimpleName();
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_status_detail, container, false);
+
+        txtContractID = (TextView) view.findViewById(R.id.contract_id_detail_status);
+        txtCustomerName = (TextView) view.findViewById(R.id.customer_name_detail_status);
+        txtResult = (TextView) view.findViewById(R.id.hasil_kunjungan);
+        txtMeetup = (TextView) view.findViewById(R.id.answer_meetup);
+        txtContactName = (TextView) view.findViewById(R.id.answer_contact_name);
+        txtHubungan = (TextView) view.findViewById(R.id.answer_hubungan);
+        txtAddress = (TextView) view.findViewById(R.id.answer_address);
+        txtNewAddress = (TextView) view.findViewById(R.id.answer_new_address);
+        txtUnit = (TextView) view.findViewById(R.id.answer_unit);
+        txtAmount = (TextView) view.findViewById(R.id.answer_pembayaran);
+        txtSisa = (TextView) view.findViewById(R.id.answer_sisa);
+        txtLokasiPembayaran = (TextView) view.findViewById(R.id.answer_lokasi_pembayaran);
+        txtLokasiPertemuan = (TextView) view.findViewById(R.id.answer_lokasi_pertemuan);
+        txtJanjiBayar = (TextView) view.findViewById(R.id.answer_tgl_janji_bayar);
+        txtHasilKunjungan = (TextView) view.findViewById(R.id.answer_hasil_kunjungan);
+
+        imgPembayaran = (ImageView) view.findViewById(R.id.answer_img_pembayaran);
+        imgPertemuan = (ImageView) view.findViewById(R.id.answer_img_pertemuan);
+
+        btnUpload = (Button) view.findViewById(R.id.btnUpload);
+        btnEdit = (ImageButton) view.findViewById(R.id.btnEdit);
+        btnPrint = (ImageButton) view.findViewById(R.id.btnPrint);
+
+
+        //-------------------------------------------------//
+        ln_ketemudengankosumen = (LinearLayout) view.findViewById(R.id.ln_ketemudengankosumen);
+        ln_contactpersonname = (LinearLayout) view.findViewById(R.id.ln_contactpersonname);
+        ln_alamatkunjungan = (LinearLayout) view.findViewById(R.id.ln_alamatkunjungan);
+        ln_hubungancostumer = (LinearLayout) view.findViewById(R.id.ln_hubungancostumer);
+        ln_alamatbaru = (LinearLayout) view.findViewById(R.id.ln_alamatbaru);
+        ln_apakah_unitada = (LinearLayout) view.findViewById(R.id.ln_apakah_unitada);
+        ln_pembayaranditerima = (LinearLayout) view.findViewById(R.id.ln_pembayaranditerima);
+        ln_sisa_tagihan = (LinearLayout) view.findViewById(R.id.ln_sisa_tagihan);
+        ln_lokasiPembayaran = (LinearLayout) view.findViewById(R.id.ln_lokasiPembayaran);
+        ln_lokasipertemuan = (LinearLayout) view.findViewById(R.id.ln_lokasipertemuan);
+        ln_tgljanjibayar = (LinearLayout) view.findViewById(R.id.ln_tgljanjibayar);
+        ln_hasilKunjungan = (LinearLayout) view.findViewById(R.id.ln_hasilKunjungan);
+        ln_bertemukonsumen = (LinearLayout) view.findViewById(R.id.ln_bertemukonsumen);
+
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        super.onCreate(savedInstanceState);
+
+        /*** Get parameter dari halaman sebelumnya ***/
+        Bundle arguments = getArguments();
+        final String paramId = arguments.getString("paramId");
+        /*** end Get parameter dari halaman sebelumnya ***/
+
+        dbhelper = new DBHelper(getActivity());
+
+        SQLiteDatabase db = dbhelper.getReadableDatabase();
+        cursor = db.rawQuery("SELECT A.CONTRACT_ID, B.NAMA_KOSTUMER, A.QUESTION, A.ANSWER, A.CREATE_DATE FROM RESULT A LEFT JOIN DKH B ON A.CONTRACT_ID=B.NOMOR_KONTRAK WHERE A.CONTRACT_ID ='" + paramId +"'",null);
+        cursor.moveToFirst();
+        if(cursor.getCount()>0) {
+            cursor.moveToPosition(0);
+            txtContractID.setText(cursor.getString(0));
+            txtCustomerName.setText(cursor.getString(1));
+            strCreateDate = cursor.getString(4);
+
+            do {
+                String questionID = cursor.getString(2);
+
+                //Apakah bertemu dengan customer ?
+                if(questionID.equals("MS_Q20190226172031880")){
+                    strMeetup = cursor.getString(3);
+                }
+                //Nama kontak person
+                if(questionID.equals("MS_Q20190226172302530")){
+                    strContactName = cursor.getString(3);
+                }
+                //Hubungan Kontak Person dengan Kostumer
+                if(questionID.equals("MS_Q20190226172325360")){
+                    strHubungan = cursor.getString(3);
+                }
+                //Alamat yang dikunjungi
+                if(questionID.equals("MS_Q20190226172343540")){
+                    strAddress = cursor.getString(3);
+                }
+                //Apakah alamat berubah
+                if(questionID.equals("MS_Q20190226172405297")){
+                    strQAddress = cursor.getString(3);
+                }
+                //Alamat Baru
+                if(questionID.equals("MS_Q20190226172432320")){
+                    strNewAddress = cursor.getString(3);
+                }
+                //Apakah unit ada
+                if(questionID.equals("MS_Q20190226172447930")){
+                    strUnit = cursor.getString(3);
+                }
+                //Apakah customer akan membayar
+                if(questionID.equals("MS_Q20190226172517357")){
+                    strQbayar = cursor.getString(3);
+                }
+                //Latitude Lokasi Pembayaran
+                if(questionID.equals("MS_Q20190226172558067")){
+                    strLatPembayaran = cursor.getString(3);
+                }
+                //Longitude Lokasi Pembayaran
+                if(questionID.equals("MS_Q20190226172603397")){
+                    strLngPembayaran = cursor.getString(3);
+                }
+                //Latitude Lokasi Pertemuan
+                if(questionID.equals("MS_Q20190226172624710")){
+                    strLatPertemuan = cursor.getString(3);
+                }
+                //Longitude Lokasi Pertemuan
+                if(questionID.equals("MS_Q20190226172628683")){
+                    strLngPertemuan = cursor.getString(3);
+                }
+                //Pembayaran yang diterima
+                if(questionID.equals("MS_Q20190226172644783")){
+                    strAmount = cursor.getString(3);
+                }
+                //Foto Lokasi Pembayaran
+                if(questionID.equals("MS_Q20190226172753329")){
+                    //imgPembayaran = cursor.getString(3);
+                }
+                //Foto Lokasi Pertemuan
+                if(questionID.equals("MS_Q20190226172753330")){
+                    //imgPertemuan = cursor.getString(3);
+                }
+                //Janji Bayar
+                if(questionID.equals("MS_Q20190226172810420")){
+                    strJanjiBayar = cursor.getString(3);
+                }
+                //Hasil Kunjungan
+                if(questionID.equals("MS_Q20190226172818070")){
+                    strHasilKunjungan = cursor.getString(3);
+                }
+            } while (cursor.moveToNext());
+
+            txtMeetup.setText(strMeetup);
+            txtContactName.setText(strContactName);
+            txtHubungan.setText(strHubungan);
+            txtAddress.setText(strAddress);
+            txtNewAddress.setText(strNewAddress);
+            txtUnit.setText(strUnit);
+            txtAmount.setText(strAmount);
+            txtLokasiPembayaran.setText(strLatPembayaran+"\n"+strLngPembayaran);
+            txtLokasiPertemuan.setText(strLatPertemuan+"\n"+strLngPertemuan);
+            txtJanjiBayar.setText(strJanjiBayar);
+            txtHasilKunjungan.setText(strHasilKunjungan);
+
+            if(txtAmount.getText().equals("") || txtAmount.getText().equals(null)){
+                if(txtJanjiBayar.getText().equals("") || txtJanjiBayar.getText().equals(null)){
+                    txtResult.setText("Tidak bertemu");
+                }else{
+                    txtResult.setText("Janji Bayar");
+                }
+            }else{
+                txtResult.setText("Customer Membayar");
+            }
+            //Log.e(TAG,"result : "+txtResult);
+        }
+
+        if(txtResult.getText().equals("Janji Bayar")){
+            ln_pembayaranditerima.setVisibility(View.GONE);
+            ln_sisa_tagihan.setVisibility(View.GONE);
+            ln_lokasiPembayaran.setVisibility(View.GONE);
+            btnPrint.setVisibility(View.GONE);
+        }else if (txtResult.getText().equals("Customer Membayar")){
+            ln_sisa_tagihan.setVisibility(View.GONE);
+            ln_lokasipertemuan.setVisibility(View.GONE);
+            ln_tgljanjibayar.setVisibility(View.GONE);
+        }else if (txtResult.getText().equals("Tidak bertemu")){
+            ln_bertemukonsumen.setVisibility(View.GONE);
+            ln_hasilKunjungan.setVisibility(View.VISIBLE);
+            btnPrint.setVisibility(View.GONE);
+        }
+
+        if(txtMeetup.getText().equals("Ya")){
+            ln_contactpersonname.setVisibility(View.GONE);
+            ln_hubungancostumer.setVisibility(View.GONE);
+        }else{
+            ln_contactpersonname.setVisibility(View.VISIBLE);
+            ln_hubungancostumer.setVisibility(View.VISIBLE);
+        }
+
+        //--------------------------------------------------------//
+        btnPrint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String contract_id = ((TextView) getActivity().findViewById(R.id.contract_id_detail_status)).getText().toString();
+                PrintFragment fragment = new PrintFragment();
+                Bundle arguments = new Bundle();
+                arguments.putString( "paramId" , contract_id);
+                Log.d(TAG,"Contract ID -> " + contract_id);
+                fragment.setArguments(arguments);
+                FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.main_container_wrapper,fragment).commit();
+            }
+        });
+
+        btnUpload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                progressDialog = new ProgressDialog(getActivity());
+                progressDialog.setCancelable(false);
+                progressDialog.setMessage("Sedang upload Data...");
+                showDialog();
+
+                String questionID ="";
+                String answer = "";
+
+                for(int i = 1; i <= 17; i++) {
+                    if (i == 1) {
+                        //Apakah Bertemu dengan Kostumer
+                        questionID = "MS_Q20190226172031880";
+                        answer = strMeetup;
+                    } else if (i == 2) {
+                        //Nama Kontak Person
+                        questionID = "MS_Q20190226172302530";
+                        answer = strContactName;
+                    } else if (i == 3) {
+                        //Hubungan Kontak Person dengan Kostumer
+                        questionID = "MS_Q20190226172325360";
+                        answer = strHubungan;
+                    } else if (i == 4) {
+                        //Alamat yang dikunjungi
+                        questionID = "MS_Q20190226172343540";
+                        answer = strAddress;
+                    } else if (i == 5) {
+                        //Apakah alamat berubah
+                        questionID = "MS_Q20190226172405297";
+                        answer = strQAddress;
+                    } else if (i == 6) {
+                        //Alamat Baru
+                        questionID = "MS_Q20190226172432320";
+                        answer = strNewAddress;
+                    } else if (i == 7) {
+                        //Apakah unit ada
+                        questionID = "MS_Q20190226172447930";
+                        answer = strUnit;
+                    } else if (i == 8) {
+                        //Apakah Kostumer Akan Membayar
+                        questionID = "MS_Q20190226172517357";
+                        answer = strQbayar;
+                    } else if (i == 9) {
+                        //Latitude Lokasi Pembayaran
+                        questionID = "MS_Q20190226172558067";
+                        answer = strLatPembayaran;
+                    } else if (i == 10) {
+                        //Longitude Lokasi Pembayaran
+                        questionID = "MS_Q20190226172603397";
+                        answer = strLngPembayaran;
+                    } else if (i == 11) {
+                        //Latitude Lokasi Pertemuan
+                        questionID = "MS_Q20190226172624710";
+                        answer = strLatPertemuan;
+                    } else if (i == 12) {
+                        //Longitude Lokasi Pertemuan
+                        questionID = "MS_Q20190226172628683";
+                        answer = strLngPertemuan;
+                    } else if (i == 13) {
+                        //Pembayaran yang diterima
+                        questionID = "MS_Q20190226172644783";
+                        answer = strAmount;
+                    } else if (i == 14) {
+                        //Foto Lokasi Pembayaran
+                        questionID = "MS_Q20190226172753329";
+                        answer = "";
+                    } else if (i == 15) {
+                        //Foto Lokasi Pertemuan
+                        questionID = "MS_Q20190226172753329";
+                        answer = "";
+                    } else if (i == 16) {
+                        //Janji Bayar
+                        questionID = "MS_Q20190226172810420";
+                        answer = strJanjiBayar;
+                    } else if (i == 17) {
+                        //Hasil Kunjungan
+                        questionID = "MS_Q20190226172818070";
+                        answer = strHasilKunjungan;
+                    }
+                    uploadData(questionID, answer);
+
+                }
+                hideDialog();
+                Toast.makeText(getActivity(),"Upload data ke server berhasil",Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void uploadData(final String strQuestion, final String strAnswer){
+            String urlUploadData = ConnectionHelper.URL+"saveResult.php";
+            String tag_json = "tag_json";
+
+                /*progressDialog.setCancelable(false);
+                progressDialog.setMessage("Harap Menunggu...");
+                showDialog();*/
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUploadData, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.d("response", response.toString());
+                    //hideDialog();
+
+                    try {
+                        JSONObject jObject = new JSONObject(response);
+                        String pesan = jObject.getString("pesan");
+                        String hasil = jObject.getString("result");
+                        if (hasil.equalsIgnoreCase("true")) {
+                            Toast.makeText(getActivity(), pesan, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(), pesan, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getActivity(), "Error JSON", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.d("ERROR", error.getMessage());
+                    Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                    //hideDialog();
+                }
+            }) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> param = new HashMap<String, String>();
+
+                    /*** set session to variable ***/
+                    sharedpreferences = getActivity().getSharedPreferences(my_shared_preferences, Context.MODE_PRIVATE);
+                    String strPic = sharedpreferences.getString(TAG_EMP_ID, null);
+                    String strBranchID = sharedpreferences.getString(TAG_BRANCH_ID, null);
+                    /*** end set session to variable ***/
+
+                    param.put("contractID", txtContractID.getText().toString());
+                    param.put("questionID", strQuestion);
+                    param.put("answer", strAnswer);
+                    param.put("savedDate", strCreateDate);
+                    param.put("pic", strPic);
+                    param.put("branchID", strBranchID);
+                    return param;
+                }
+            };
+
+            AppController.getInstance().addToRequestQueue(stringRequest, tag_json);
+    }
+
+    private void showDialog() {
+        if (!progressDialog.isShowing())
+            progressDialog.show();
+    }
+
+    private void hideDialog() {
+        if (progressDialog.isShowing())
+            progressDialog.dismiss();
+    }
+}
