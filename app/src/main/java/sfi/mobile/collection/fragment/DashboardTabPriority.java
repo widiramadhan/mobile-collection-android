@@ -173,7 +173,50 @@ public class DashboardTabPriority extends Fragment implements
                         } else {
                             Log.e(TAG, "Anda memilih selain Jarak Terdekat");
                             dialog.dismiss();
+                        }
 
+                        if (strSort == "Jarak Terjauh") {
+                            Log.e(TAG, "Anda memilih Jarak Terjauh");
+                            dialog.dismiss();
+                        } else {
+                            Log.e(TAG, "Anda memilih selain Jarak Terjauh");
+                            dialog.dismiss();
+                        }
+
+                        if (strSort == "Tagihan Terbesar") {
+                            Log.e(TAG, "Anda memilih Tagihan Terbesar");
+                            dialog.dismiss();
+                            getDKHTagihanTerbesar();
+                        } else {
+                            Log.e(TAG, "Anda memilih selain Tagihan Terbesar");
+                            dialog.dismiss();
+                        }
+
+                        if (strSort == "Tagihan Terendah") {
+                            Log.e(TAG, "Anda memilih Tagihan Terendah");
+                            dialog.dismiss();
+                            getDKHTagihanTerendah();
+                        } else {
+                            Log.e(TAG, "Anda memilih selain Tagihan Terendah");
+                            dialog.dismiss();
+                        }
+
+                        if (strSort == "Overdue Tertinggi") {
+                            Log.e(TAG, "Anda memilih Overdue Tertinggi");
+                            dialog.dismiss();
+                            getDKHODtertinggi();
+                        } else {
+                            Log.e(TAG, "Anda memilih selain Overdue Tertinggi");
+                            dialog.dismiss();
+                        }
+
+                        if (strSort == "Overdue Terendah") {
+                            Log.e(TAG, "Anda memilih Overdue Terendah");
+                            dialog.dismiss();
+                            getDKHODterendah();
+                        } else {
+                            Log.e(TAG, "Anda memilih selain Overdue Terendah");
+                            dialog.dismiss();
                         }
                     }
                 });
@@ -265,7 +308,7 @@ public class DashboardTabPriority extends Fragment implements
 
     private void getAllDKHC(){
         dbhelper = new DBHelper(getActivity());
-        ArrayList<HashMap<String, String>> row = dbhelper.getData30Days();
+        ArrayList<HashMap<String, String>> row = dbhelper.getPriority();
         swipe.setRefreshing(true);
 
         itemList.clear();
@@ -277,6 +320,7 @@ public class DashboardTabPriority extends Fragment implements
             String strlat = row.get(i).get("LAT");
             String strlng = row.get(i).get("LNG");
             String stroverduedays = row.get(i).get("OVERDUE_DAYS");
+            String strjanjibayar = row.get(i).get("TANGGAL_JANJI_BAYAR");
 
             double currentLat = Double.parseDouble(txtLatitude.getText().toString());
             double currentLng = Double.parseDouble(txtLongitude.getText().toString());
@@ -297,6 +341,182 @@ public class DashboardTabPriority extends Fragment implements
             data.setTanggalJatuhTempo(strtgljatuhtempo);
             data.setJarak(distance);
             data.setOverDueDays(Integer.valueOf(stroverduedays));
+            //data.setTanggalJanjiBayar(strjanjibayar);
+
+            itemList.add(data);
+        }
+
+        swipe.setRefreshing(false);
+        dkhcAdapter.notifyDataSetChanged();
+    }
+
+    private void getDKHTagihanTerbesar(){
+        dbhelper = new DBHelper(getActivity());
+        ArrayList<HashMap<String, String>> row = dbhelper.getDKHTagihanTerbesar();
+        swipe.setRefreshing(true);
+
+        itemList.clear();
+        for (int i = 0; i < row.size(); i++) {
+            String strcontractid = row.get(i).get("NOMOR_KONTRAK");
+            String strtcustomername = row.get(i).get("NAMA_KOSTUMER");
+            String strtotaltagihan = row.get(i).get("TOTAL_TAGIHAN");
+            String strtgljatuhtempo = row.get(i).get("TANGGAL_JATUH_TEMPO");
+            String strlat = row.get(i).get("LAT");
+            String strlng = row.get(i).get("LNG");
+            String stroverduedays = row.get(i).get("OVERDUE_DAYS");
+            String strjanjibayar = row.get(i).get("TANGGAL_JANJI_BAYAR");
+
+            double currentLat = Double.parseDouble(txtLatitude.getText().toString());
+            double currentLng = Double.parseDouble(txtLongitude.getText().toString());
+            double latFromDB = Double.parseDouble(strlat);
+            double lngFromDB = Double.parseDouble(strlng);
+
+            double earthRadius = 6371;
+
+            double distance = (earthRadius * Math.acos(Math.sin(Math.toRadians(latFromDB)) * Math.sin(Math.toRadians(currentLat)) + Math.cos(Math.toRadians(lngFromDB - currentLng)) * Math.cos(Math.toRadians(latFromDB)) * Math.cos(Math.toRadians(currentLat))));
+            DecimalFormat df = new DecimalFormat("#.##");
+            //Log.e(TAG,"distance -> "+df.format(distance));
+
+            DKHC data = new DKHC();
+
+            data.setNomorKontrak(strcontractid);
+            data.setNamaKostumer(strtcustomername);
+            data.setTotalTagihan(Integer.valueOf(strtotaltagihan));
+            data.setTanggalJatuhTempo(strtgljatuhtempo);
+            data.setJarak(distance);
+            data.setOverDueDays(Integer.valueOf(stroverduedays));
+            //data.setTanggalJanjiBayar(strjanjibayar);
+
+            itemList.add(data);
+        }
+
+        swipe.setRefreshing(false);
+        dkhcAdapter.notifyDataSetChanged();
+    }
+
+    private void getDKHTagihanTerendah(){
+        dbhelper = new DBHelper(getActivity());
+        ArrayList<HashMap<String, String>> row = dbhelper.getDKHTagihanTerendah();
+        swipe.setRefreshing(true);
+
+        itemList.clear();
+        for (int i = 0; i < row.size(); i++) {
+            String strcontractid = row.get(i).get("NOMOR_KONTRAK");
+            String strtcustomername = row.get(i).get("NAMA_KOSTUMER");
+            String strtotaltagihan = row.get(i).get("TOTAL_TAGIHAN");
+            String strtgljatuhtempo = row.get(i).get("TANGGAL_JATUH_TEMPO");
+            String strlat = row.get(i).get("LAT");
+            String strlng = row.get(i).get("LNG");
+            String stroverduedays = row.get(i).get("OVERDUE_DAYS");
+            String strjanjibayar = row.get(i).get("TANGGAL_JANJI_BAYAR");
+
+            double currentLat = Double.parseDouble(txtLatitude.getText().toString());
+            double currentLng = Double.parseDouble(txtLongitude.getText().toString());
+            double latFromDB = Double.parseDouble(strlat);
+            double lngFromDB = Double.parseDouble(strlng);
+
+            double earthRadius = 6371;
+
+            double distance = (earthRadius * Math.acos(Math.sin(Math.toRadians(latFromDB)) * Math.sin(Math.toRadians(currentLat)) + Math.cos(Math.toRadians(lngFromDB - currentLng)) * Math.cos(Math.toRadians(latFromDB)) * Math.cos(Math.toRadians(currentLat))));
+            DecimalFormat df = new DecimalFormat("#.##");
+            //Log.e(TAG,"distance -> "+df.format(distance));
+
+            DKHC data = new DKHC();
+
+            data.setNomorKontrak(strcontractid);
+            data.setNamaKostumer(strtcustomername);
+            data.setTotalTagihan(Integer.valueOf(strtotaltagihan));
+            data.setTanggalJatuhTempo(strtgljatuhtempo);
+            data.setJarak(distance);
+            data.setOverDueDays(Integer.valueOf(stroverduedays));
+            //data.setTanggalJanjiBayar(strjanjibayar);
+
+            itemList.add(data);
+        }
+
+        swipe.setRefreshing(false);
+        dkhcAdapter.notifyDataSetChanged();
+    }
+    private void getDKHODtertinggi(){
+        dbhelper = new DBHelper(getActivity());
+        ArrayList<HashMap<String, String>> row = dbhelper.getDKHODTertinggi();
+        swipe.setRefreshing(true);
+
+        itemList.clear();
+        for (int i = 0; i < row.size(); i++) {
+            String strcontractid = row.get(i).get("NOMOR_KONTRAK");
+            String strtcustomername = row.get(i).get("NAMA_KOSTUMER");
+            String strtotaltagihan = row.get(i).get("TOTAL_TAGIHAN");
+            String strtgljatuhtempo = row.get(i).get("TANGGAL_JATUH_TEMPO");
+            String strlat = row.get(i).get("LAT");
+            String strlng = row.get(i).get("LNG");
+            String stroverduedays = row.get(i).get("OVERDUE_DAYS");
+            String strjanjibayar = row.get(i).get("TANGGAL_JANJI_BAYAR");
+
+            double currentLat = Double.parseDouble(txtLatitude.getText().toString());
+            double currentLng = Double.parseDouble(txtLongitude.getText().toString());
+            double latFromDB = Double.parseDouble(strlat);
+            double lngFromDB = Double.parseDouble(strlng);
+
+            double earthRadius = 6371;
+
+            double distance = (earthRadius * Math.acos(Math.sin(Math.toRadians(latFromDB)) * Math.sin(Math.toRadians(currentLat)) + Math.cos(Math.toRadians(lngFromDB - currentLng)) * Math.cos(Math.toRadians(latFromDB)) * Math.cos(Math.toRadians(currentLat))));
+            DecimalFormat df = new DecimalFormat("#.##");
+            //Log.e(TAG,"distance -> "+df.format(distance));
+
+            DKHC data = new DKHC();
+
+            data.setNomorKontrak(strcontractid);
+            data.setNamaKostumer(strtcustomername);
+            data.setTotalTagihan(Integer.valueOf(strtotaltagihan));
+            data.setTanggalJatuhTempo(strtgljatuhtempo);
+            data.setJarak(distance);
+            data.setOverDueDays(Integer.valueOf(stroverduedays));
+            //data.setTanggalJanjiBayar(strjanjibayar);
+
+            itemList.add(data);
+        }
+
+        swipe.setRefreshing(false);
+        dkhcAdapter.notifyDataSetChanged();
+    }
+
+    private void getDKHODterendah(){
+        dbhelper = new DBHelper(getActivity());
+        ArrayList<HashMap<String, String>> row = dbhelper.getDKHODTerendah();
+        swipe.setRefreshing(true);
+
+        itemList.clear();
+        for (int i = 0; i < row.size(); i++) {
+            String strcontractid = row.get(i).get("NOMOR_KONTRAK");
+            String strtcustomername = row.get(i).get("NAMA_KOSTUMER");
+            String strtotaltagihan = row.get(i).get("TOTAL_TAGIHAN");
+            String strtgljatuhtempo = row.get(i).get("TANGGAL_JATUH_TEMPO");
+            String strlat = row.get(i).get("LAT");
+            String strlng = row.get(i).get("LNG");
+            String stroverduedays = row.get(i).get("OVERDUE_DAYS");
+            String strjanjibayar = row.get(i).get("TANGGAL_JANJI_BAYAR");
+
+            double currentLat = Double.parseDouble(txtLatitude.getText().toString());
+            double currentLng = Double.parseDouble(txtLongitude.getText().toString());
+            double latFromDB = Double.parseDouble(strlat);
+            double lngFromDB = Double.parseDouble(strlng);
+
+            double earthRadius = 6371;
+
+            double distance = (earthRadius * Math.acos(Math.sin(Math.toRadians(latFromDB)) * Math.sin(Math.toRadians(currentLat)) + Math.cos(Math.toRadians(lngFromDB - currentLng)) * Math.cos(Math.toRadians(latFromDB)) * Math.cos(Math.toRadians(currentLat))));
+            DecimalFormat df = new DecimalFormat("#.##");
+            //Log.e(TAG,"distance -> "+df.format(distance));
+
+            DKHC data = new DKHC();
+
+            data.setNomorKontrak(strcontractid);
+            data.setNamaKostumer(strtcustomername);
+            data.setTotalTagihan(Integer.valueOf(strtotaltagihan));
+            data.setTanggalJatuhTempo(strtgljatuhtempo);
+            data.setJarak(distance);
+            data.setOverDueDays(Integer.valueOf(stroverduedays));
+            //data.setTanggalJanjiBayar(strjanjibayar);
 
             itemList.add(data);
         }

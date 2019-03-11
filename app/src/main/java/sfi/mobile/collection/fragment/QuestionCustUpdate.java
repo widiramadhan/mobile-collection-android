@@ -86,7 +86,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
 
     String flagFoto = "";
 
-    LinearLayout ln_pembayaran_ya, ln_pembayaran_tidak, ln_alamatbaru, ln_contactperson, ln_AlmtKunjungi, ln_unit, ln_customerbayar, ln_alamatberubah;
+    LinearLayout ln_pembayaran_ya, ln_pembayaran_tidak, ln_alamatbaru, ln_contactperson, ln_AlmtKunjungi, ln_unit, ln_customerbayar, ln_alamatberubah,ln_tanggaljanjibayar;
     Spinner spinner_name, spinner_alamatbaru, spinner_unit, spinner_custbayar, spinner_hubungan, spiner_alamat;
     CardView cardcontact, cardalamatbaru, cardunit, cardpembayaran_ya, cardpembayaran_tidak;
     TextView txtcontract_id, txtcostumername, txttotaltagihan, txttgljanjibayar, txtlat_pembayaran, txtlng_pembayaran, txtlat_pertemuan, txtlng_pertemuan;
@@ -144,6 +144,8 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         ln_unit = (LinearLayout) getActivity().findViewById(R.id.ln_unit);
         ln_customerbayar = (LinearLayout) getActivity().findViewById(R.id.ln_customerbayar);
         ln_alamatberubah = (LinearLayout) getActivity().findViewById(R.id.ln_alamatberubah);
+        ln_tanggaljanjibayar = (LinearLayout) getActivity().findViewById(R.id.ln_tanggaljanjibayar);
+
 
         spinner_name = (Spinner) getActivity().findViewById(R.id.sp_name);
         spinner_alamatbaru = (Spinner) getActivity().findViewById(R.id.sp_pilihanalamat);
@@ -301,12 +303,26 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
                     ln_AlmtKunjungi.setVisibility(View.VISIBLE);
                     ln_alamatberubah.setVisibility(View.VISIBLE);
                     cardcontact.setVisibility(View.VISIBLE);
+                    cardpembayaran_tidak.setVisibility(View.GONE);
                 } else if (position == 2) {
                     ln_contactperson.setVisibility(View.VISIBLE);
                     ln_AlmtKunjungi.setVisibility(View.VISIBLE);
                     ln_alamatberubah.setVisibility(View.VISIBLE);
                     cardcontact.setVisibility(View.VISIBLE);
+                    cardpembayaran_tidak.setVisibility(View.GONE);
+                } else if (position == 3) {
+                    ln_contactperson.setVisibility(View.GONE);
+                    ln_AlmtKunjungi.setVisibility(View.GONE);
+                    ln_alamatberubah.setVisibility(View.GONE);
+                    cardcontact.setVisibility(View.GONE);
+                    cardalamatbaru.setVisibility(View.GONE);
+                    cardunit.setVisibility(View.GONE);
+                    cardpembayaran_ya.setVisibility(View.GONE);
+                    cardpembayaran_tidak.setVisibility(View.VISIBLE);
+                    ln_pembayaran_tidak.setVisibility(View.VISIBLE);
+                    ln_tanggaljanjibayar.setVisibility(View.GONE);
                 }
+
                 Log.v("item", (String) parent.getItemAtPosition(position));
             }
 
@@ -342,6 +358,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
                     ln_customerbayar.setVisibility(View.VISIBLE);
                     cardunit.setVisibility(View.VISIBLE);
                     cardalamatbaru.setVisibility(View.GONE);
+
                 }
                 Log.v("item", (String) parent.getItemAtPosition(position));
             }
@@ -373,6 +390,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
                     ln_pembayaran_ya.setVisibility(View.GONE);
                     cardpembayaran_ya.setVisibility(View.GONE);
                     cardpembayaran_tidak.setVisibility(View.VISIBLE);
+                    ln_tanggaljanjibayar.setVisibility(View.VISIBLE);
                 }
                 Log.v("item", (String) parent.getItemAtPosition(position));
             }
@@ -414,8 +432,12 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
                             "('"+ strContractID +"','MS_Q20190226172818070','"+ hasilkunjungan.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')";
 
                     dbInsert.execSQL(saved);
-
+                    String contract_id =  ((TextView) getActivity().findViewById(R.id.nomor_kontrak2)).getText().toString();
                     ResultFragment fragment = new ResultFragment();
+                    Bundle arguments = new Bundle();
+                    arguments.putString( "paramId" , contract_id);
+                    Log.d(TAG,"Contract ID -> " + contract_id);
+                    fragment.setArguments(arguments);
                     FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();

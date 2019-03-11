@@ -157,12 +157,6 @@
                         android:orientation="vertical"
                         android:paddingTop="10dp">
 
-                        <LinearLayout
-                            android:id="@+id/ln_bertemukonsumen"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
                             <LinearLayout
                                 android:id="@+id/ln_ketemudengankosumen"
                                 android:layout_width="match_parent"
@@ -195,6 +189,12 @@
                                     android:background="@android:color/darker_gray" />
 
                             </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ln_bertemukonsumen"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
 
                             <LinearLayout
                                 android:id="@+id/ln_contactpersonname"

@@ -1,7 +1,9 @@
 package sfi.mobile.collection.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
@@ -50,6 +53,7 @@ public class DKHCAdapter extends BaseAdapter {
         return position;
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (inflater == null)
@@ -64,6 +68,7 @@ public class DKHCAdapter extends BaseAdapter {
         TextView txttanggal_jatuh_tempo = (TextView) convertView.findViewById(R.id.tanggal_jatuh_tempo);
         TextView txtjarak = (TextView) convertView.findViewById(R.id.jarak);
         TextView txtod = (TextView) convertView.findViewById(R.id.od);
+        ImageView Img = (ImageView) convertView.findViewById(R.id.imageView2);
 
         DKHC j = itemList.get(position);
 
@@ -85,6 +90,21 @@ public class DKHCAdapter extends BaseAdapter {
             daysOD = "Over due days : "+j.getOverDueDays()+" Days";
         }else{
             daysOD = "Over due days : "+j.getOverDueDays()+" Days";
+        }
+
+        String tanggaljanjibayar="";
+        if(j.getTanggalJanjiBayar() != null){
+            Resources res = activity.getResources(); /** from an Activity */
+            Img.setImageDrawable(res.getDrawable(R.drawable.circle_primary));
+        }else{
+            if(j.getOverDueDays() > 0 ){
+                Resources res = activity.getResources(); /** from an Activity */
+                Img.setImageDrawable(res.getDrawable(R.drawable.circle_danger));
+            }
+            else {
+                Resources res = activity.getResources(); /** from an Activity */
+                Img.setImageDrawable(res.getDrawable(R.drawable.circle_success));
+            }
         }
 
         txtcontract_id.setText(j.getNomorKontrak());

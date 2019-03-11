@@ -38,6 +38,13 @@
         android:text="Tasklist anda berhasil di simpan, silahkan ke menu status untuk mengupload data Tasklist anda."
         android:fontFamily="sans-serif"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtcontractid"
+        android:text="contract id"
+        android:visibility="gone"/>
+
     <Button
         android:id="@+id/btnBack"
         android:layout_width="match_parent"
@@ -47,6 +54,6 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginTop="30dp"
-        android:text="Back To Dashboard" />
+        android:text="Check Status" />
 
 </LinearLayout>

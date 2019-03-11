@@ -222,7 +222,7 @@ public class StatusDetailFragment extends Fragment {
             txtHasilKunjungan.setText(strHasilKunjungan);
 
             if(txtAmount.getText().equals("") || txtAmount.getText().equals(null)){
-                if(txtJanjiBayar.getText().equals("") || txtJanjiBayar.getText().equals(null)){
+                if(txtJanjiBayar.getText().equals("") || txtJanjiBayar.getText().equals(null) || txtMeetup.getText().equals("Tidak bertemu siapapun")){
                     txtResult.setText("Tidak bertemu");
                 }else{
                     txtResult.setText("Janji Bayar");
@@ -245,13 +245,14 @@ public class StatusDetailFragment extends Fragment {
         }else if (txtResult.getText().equals("Tidak bertemu")){
             ln_bertemukonsumen.setVisibility(View.GONE);
             ln_hasilKunjungan.setVisibility(View.VISIBLE);
+            ln_ketemudengankosumen.setVisibility(View.VISIBLE);
             btnPrint.setVisibility(View.GONE);
         }
 
-        if(txtMeetup.getText().equals("Ya")){
+        if(txtMeetup.getText().equals("Ya, bertemu dengan customer")){
             ln_contactpersonname.setVisibility(View.GONE);
             ln_hubungancostumer.setVisibility(View.GONE);
-        }else{
+        }else if(txtMeetup.getText().equals("Tidak, bertemu dengan orang lain") || txtMeetup.getText().equals("Tidak bertemu siapapun")){
             ln_contactpersonname.setVisibility(View.VISIBLE);
             ln_hubungancostumer.setVisibility(View.VISIBLE);
         }
