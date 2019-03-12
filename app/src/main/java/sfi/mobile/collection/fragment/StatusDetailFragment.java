@@ -1,7 +1,9 @@
 package sfi.mobile.collection.fragment;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -73,6 +75,8 @@ public class StatusDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_status_detail, container, false);
 
+        progressDialog = new ProgressDialog(getActivity());
+
         txtContractID = (TextView) view.findViewById(R.id.contract_id_detail_status);
         txtCustomerName = (TextView) view.findViewById(R.id.customer_name_detail_status);
         txtResult = (TextView) view.findViewById(R.id.hasil_kunjungan);
@@ -126,7 +130,6 @@ public class StatusDetailFragment extends Fragment {
         /*** end Get parameter dari halaman sebelumnya ***/
 
         dbhelper = new DBHelper(getActivity());
-
         SQLiteDatabase db = dbhelper.getReadableDatabase();
         cursor = db.rawQuery("SELECT A.CONTRACT_ID, B.NAMA_KOSTUMER, A.QUESTION, A.ANSWER, A.CREATE_DATE FROM RESULT A LEFT JOIN DKH B ON A.CONTRACT_ID=B.NOMOR_KONTRAK WHERE A.CONTRACT_ID ='" + paramId +"'",null);
         cursor.moveToFirst();
@@ -230,6 +233,12 @@ public class StatusDetailFragment extends Fragment {
             }else{
                 txtResult.setText("Customer Membayar");
             }
+
+            if(strQAddress.equals("Ya")){
+                ln_alamatbaru.setVisibility(View.VISIBLE);
+            }else{
+                ln_alamatbaru.setVisibility(View.GONE);
+            }
             //Log.e(TAG,"result : "+txtResult);
         }
 
@@ -277,89 +286,101 @@ public class StatusDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                progressDialog = new ProgressDialog(getActivity());
-                progressDialog.setCancelable(false);
-                progressDialog.setMessage("Sedang upload Data...");
-                showDialog();
+                AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
+                //adb.setView(alertDialogView);
+                adb.setTitle("Apakah anda yakin akan mengupload data ini ?");
+                adb.setIcon(android.R.drawable.ic_dialog_alert);
+                adb.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String questionID ="";
+                        String answer = "";
 
-                String questionID ="";
-                String answer = "";
+                        for(int i = 1; i <= 17; i++) {
+                            if (i == 1) {
+                                //Apakah Bertemu dengan Kostumer
+                                questionID = "MS_Q20190226172031880";
+                                answer = strMeetup;
+                            } else if (i == 2) {
+                                //Nama Kontak Person
+                                questionID = "MS_Q20190226172302530";
+                                answer = strContactName;
+                            } else if (i == 3) {
+                                //Hubungan Kontak Person dengan Kostumer
+                                questionID = "MS_Q20190226172325360";
+                                answer = strHubungan;
+                            } else if (i == 4) {
+                                //Alamat yang dikunjungi
+                                questionID = "MS_Q20190226172343540";
+                                answer = strAddress;
+                            } else if (i == 5) {
+                                //Apakah alamat berubah
+                                questionID = "MS_Q20190226172405297";
+                                answer = strQAddress;
+                            } else if (i == 6) {
+                                //Alamat Baru
+                                questionID = "MS_Q20190226172432320";
+                                answer = strNewAddress;
+                            } else if (i == 7) {
+                                //Apakah unit ada
+                                questionID = "MS_Q20190226172447930";
+                                answer = strUnit;
+                            } else if (i == 8) {
+                                //Apakah Kostumer Akan Membayar
+                                questionID = "MS_Q20190226172517357";
+                                answer = strQbayar;
+                            } else if (i == 9) {
+                                //Latitude Lokasi Pembayaran
+                                questionID = "MS_Q20190226172558067";
+                                answer = strLatPembayaran;
+                            } else if (i == 10) {
+                                //Longitude Lokasi Pembayaran
+                                questionID = "MS_Q20190226172603397";
+                                answer = strLngPembayaran;
+                            } else if (i == 11) {
+                                //Latitude Lokasi Pertemuan
+                                questionID = "MS_Q20190226172624710";
+                                answer = strLatPertemuan;
+                            } else if (i == 12) {
+                                //Longitude Lokasi Pertemuan
+                                questionID = "MS_Q20190226172628683";
+                                answer = strLngPertemuan;
+                            } else if (i == 13) {
+                                //Pembayaran yang diterima
+                                questionID = "MS_Q20190226172644783";
+                                answer = strAmount;
+                            } else if (i == 14) {
+                                //Foto Lokasi Pembayaran
+                                questionID = "MS_Q20190226172753329";
+                                answer = "";
+                            } else if (i == 15) {
+                                //Foto Lokasi Pertemuan
+                                questionID = "MS_Q20190226172753329";
+                                answer = "";
+                            } else if (i == 16) {
+                                //Janji Bayar
+                                questionID = "MS_Q20190226172810420";
+                                answer = strJanjiBayar;
+                            } else if (i == 17) {
+                                //Hasil Kunjungan
+                                questionID = "MS_Q20190226172818070";
+                                answer = strHasilKunjungan;
+                            }
+                            uploadData(questionID, answer);
+                        }
 
-                for(int i = 1; i <= 17; i++) {
-                    if (i == 1) {
-                        //Apakah Bertemu dengan Kostumer
-                        questionID = "MS_Q20190226172031880";
-                        answer = strMeetup;
-                    } else if (i == 2) {
-                        //Nama Kontak Person
-                        questionID = "MS_Q20190226172302530";
-                        answer = strContactName;
-                    } else if (i == 3) {
-                        //Hubungan Kontak Person dengan Kostumer
-                        questionID = "MS_Q20190226172325360";
-                        answer = strHubungan;
-                    } else if (i == 4) {
-                        //Alamat yang dikunjungi
-                        questionID = "MS_Q20190226172343540";
-                        answer = strAddress;
-                    } else if (i == 5) {
-                        //Apakah alamat berubah
-                        questionID = "MS_Q20190226172405297";
-                        answer = strQAddress;
-                    } else if (i == 6) {
-                        //Alamat Baru
-                        questionID = "MS_Q20190226172432320";
-                        answer = strNewAddress;
-                    } else if (i == 7) {
-                        //Apakah unit ada
-                        questionID = "MS_Q20190226172447930";
-                        answer = strUnit;
-                    } else if (i == 8) {
-                        //Apakah Kostumer Akan Membayar
-                        questionID = "MS_Q20190226172517357";
-                        answer = strQbayar;
-                    } else if (i == 9) {
-                        //Latitude Lokasi Pembayaran
-                        questionID = "MS_Q20190226172558067";
-                        answer = strLatPembayaran;
-                    } else if (i == 10) {
-                        //Longitude Lokasi Pembayaran
-                        questionID = "MS_Q20190226172603397";
-                        answer = strLngPembayaran;
-                    } else if (i == 11) {
-                        //Latitude Lokasi Pertemuan
-                        questionID = "MS_Q20190226172624710";
-                        answer = strLatPertemuan;
-                    } else if (i == 12) {
-                        //Longitude Lokasi Pertemuan
-                        questionID = "MS_Q20190226172628683";
-                        answer = strLngPertemuan;
-                    } else if (i == 13) {
-                        //Pembayaran yang diterima
-                        questionID = "MS_Q20190226172644783";
-                        answer = strAmount;
-                    } else if (i == 14) {
-                        //Foto Lokasi Pembayaran
-                        questionID = "MS_Q20190226172753329";
-                        answer = "";
-                    } else if (i == 15) {
-                        //Foto Lokasi Pertemuan
-                        questionID = "MS_Q20190226172753329";
-                        answer = "";
-                    } else if (i == 16) {
-                        //Janji Bayar
-                        questionID = "MS_Q20190226172810420";
-                        answer = strJanjiBayar;
-                    } else if (i == 17) {
-                        //Hasil Kunjungan
-                        questionID = "MS_Q20190226172818070";
-                        answer = strHasilKunjungan;
+                        dbhelper = new DBHelper(getActivity());
+                        SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
+                        String Sql = "update DKH set IS_COLLECT=1 where NOMOR_KONTRAK="+paramId;
+                        dbInsert.execSQL(Sql);
+                        Toast.makeText(getActivity(), "Upload data berhasil", Toast.LENGTH_LONG).show();
                     }
-                    uploadData(questionID, answer);
-
-                }
-                hideDialog();
-                Toast.makeText(getActivity(),"Upload data ke server berhasil",Toast.LENGTH_LONG).show();
+                });
+                adb.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                adb.show();
             }
         });
     }
@@ -368,15 +389,15 @@ public class StatusDetailFragment extends Fragment {
             String urlUploadData = ConnectionHelper.URL+"saveResult.php";
             String tag_json = "tag_json";
 
-                /*progressDialog.setCancelable(false);
-                progressDialog.setMessage("Harap Menunggu...");
-                showDialog();*/
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Sedang upload Data...");
+            showDialog();
 
             StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUploadData, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     Log.d("response", response.toString());
-                    //hideDialog();
+                    hideDialog();
 
                     try {
                         JSONObject jObject = new JSONObject(response);
@@ -397,7 +418,7 @@ public class StatusDetailFragment extends Fragment {
                 public void onErrorResponse(VolleyError error) {
                     VolleyLog.d("ERROR", error.getMessage());
                     Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                    //hideDialog();
+                    hideDialog();
                 }
             }) {
                 @Override
