@@ -100,7 +100,6 @@ public class StatusDetailFragment extends Fragment {
         btnEdit = (ImageButton) view.findViewById(R.id.btnEdit);
         btnPrint = (ImageButton) view.findViewById(R.id.btnPrint);
 
-
         //-------------------------------------------------//
         ln_ketemudengankosumen = (LinearLayout) view.findViewById(R.id.ln_ketemudengankosumen);
         ln_contactpersonname = (LinearLayout) view.findViewById(R.id.ln_contactpersonname);

@@ -25,6 +25,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.CardView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,6 +78,8 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
     Bitmap bitmap, decoded;
     ImageView imageView, imageViewPembayaran;
     EditText contactperson, alamatbaru, pembayaran_diterima, hasilkunjungan;
+    double intPembayaran,intTotaltagihan;
+    String strHasilpembayaran,strHasiltotaltagihan;
     public final int REQUEST_CAMERA = 0;
 
     int bitmap_size = 100; // image quality 1 - 100;
@@ -108,7 +111,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
 
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         super.onCreate(savedInstanceState);
 
@@ -184,6 +187,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         cardunit.setVisibility(View.GONE);
         cardpembayaran_ya.setVisibility(View.GONE);
         cardpembayaran_tidak.setVisibility(View.GONE);
+
 
 
         final DatePickerDialog.OnDateSetListener datePickerJanjiBayar = new DatePickerDialog.OnDateSetListener() {
@@ -289,7 +293,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         spinner_name.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
+                if (position == 0) {//Pilih
                     ln_contactperson.setVisibility(View.GONE);
                     ln_AlmtKunjungi.setVisibility(View.GONE);
                     ln_alamatberubah.setVisibility(View.GONE);
@@ -298,19 +302,33 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
                     cardunit.setVisibility(View.GONE);
                     cardpembayaran_ya.setVisibility(View.GONE);
                     cardpembayaran_tidak.setVisibility(View.GONE);
-                } else if (position == 1) {
+                    txtlat_pertemuan.setText("Lat  : " );
+                    txtlng_pertemuan.setText("Long : " );
+                    spiner_alamat.setSelection(0);
+                    spinner_alamatbaru.setSelection(0);
+                    spinner_hubungan.setSelection(0);
+                    contactperson.setText("");
+                } else if (position == 1) { //ya
                     ln_contactperson.setVisibility(View.GONE);
                     ln_AlmtKunjungi.setVisibility(View.VISIBLE);
                     ln_alamatberubah.setVisibility(View.VISIBLE);
                     cardcontact.setVisibility(View.VISIBLE);
                     cardpembayaran_tidak.setVisibility(View.GONE);
-                } else if (position == 2) {
+                    txtlat_pertemuan.setText("Lat  : " );
+                    txtlng_pertemuan.setText("Long : " );
+                    contactperson.setText("");
+                    spinner_hubungan.setSelection(0);
+                    btnsave.setEnabled(true);
+                } else if (position == 2) { //bertemu orang lain
                     ln_contactperson.setVisibility(View.VISIBLE);
                     ln_AlmtKunjungi.setVisibility(View.VISIBLE);
                     ln_alamatberubah.setVisibility(View.VISIBLE);
                     cardcontact.setVisibility(View.VISIBLE);
                     cardpembayaran_tidak.setVisibility(View.GONE);
-                } else if (position == 3) {
+                    txtlat_pertemuan.setText("Lat  : " );
+                    txtlng_pertemuan.setText("Long : " );
+                    btnsave.setEnabled(true);
+                } else if (position == 3) { //tidak bertemu
                     ln_contactperson.setVisibility(View.GONE);
                     ln_AlmtKunjungi.setVisibility(View.GONE);
                     ln_alamatberubah.setVisibility(View.GONE);
@@ -321,6 +339,13 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
                     cardpembayaran_tidak.setVisibility(View.VISIBLE);
                     ln_pembayaran_tidak.setVisibility(View.VISIBLE);
                     ln_tanggaljanjibayar.setVisibility(View.GONE);
+                    spiner_alamat.setSelection(0);
+                    spinner_alamatbaru.setSelection(0);
+                    spinner_hubungan.setSelection(0);
+                    contactperson.setText("");
+                    spinner_unit.setSelection(0);
+                    spinner_custbayar.setSelection(0);
+                    btnsave.setEnabled(true);
                 }
 
                 Log.v("item", (String) parent.getItemAtPosition(position));
@@ -335,8 +360,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         //Spinner Alamat Baru atau Tidak //
         spinner_alamatbaru.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view,int position, long id) {
                 if (position == 0) { //Pilih
                     ln_alamatbaru.setVisibility(View.GONE);
                     ln_unit.setVisibility(View.GONE);
@@ -346,19 +370,24 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
                     cardunit.setVisibility(View.GONE);
                     cardpembayaran_ya.setVisibility(View.GONE);
                     cardpembayaran_tidak.setVisibility(View.GONE);
+                    alamatbaru.setText("");
                 } else if (position == 1) { //Ya
                     ln_alamatbaru.setVisibility(View.VISIBLE);
                     ln_unit.setVisibility(View.VISIBLE);
                     ln_customerbayar.setVisibility(View.VISIBLE);
                     cardunit.setVisibility(View.VISIBLE);
                     cardalamatbaru.setVisibility(View.VISIBLE);
+                    spinner_unit.setSelection(0);
+                    spinner_custbayar.setSelection(0);
                 } else if (position == 2) { //Tidak
                     ln_alamatbaru.setVisibility(View.GONE);
                     ln_unit.setVisibility(View.VISIBLE);
                     ln_customerbayar.setVisibility(View.VISIBLE);
                     cardunit.setVisibility(View.VISIBLE);
                     cardalamatbaru.setVisibility(View.GONE);
-
+                    alamatbaru.setText("");
+                    spinner_unit.setSelection(0);
+                    spinner_custbayar.setSelection(0);
                 }
                 Log.v("item", (String) parent.getItemAtPosition(position));
             }
@@ -380,17 +409,29 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
                     cardpembayaran_tidak.setVisibility(View.GONE);
                     cardpembayaran_ya.setVisibility(View.GONE);
                     cardpembayaran_tidak.setVisibility(View.GONE);
+                    txtlat_pembayaran.setText("Lat  : ");
+                    txtlng_pembayaran.setText("Long : ");
+                    txtlat_pertemuan.setText("Lat  : ");
+                    txtlng_pertemuan.setText("Long : ");
+                    pembayaran_diterima.setText("");
+                    txttgljanjibayar.setText("");
                 } else if (position == 1) { //ya
                     ln_pembayaran_ya.setVisibility(View.VISIBLE);
                     ln_pembayaran_tidak.setVisibility(View.GONE);
                     cardpembayaran_ya.setVisibility(View.VISIBLE);
                     cardpembayaran_tidak.setVisibility(View.GONE);
+                    txtlat_pertemuan.setText("Lat  : ");
+                    txtlng_pertemuan.setText("Long : ");
+                    txttgljanjibayar.setText("");
                 } else if (position == 2) { //tidak
                     ln_pembayaran_tidak.setVisibility(View.VISIBLE);
                     ln_pembayaran_ya.setVisibility(View.GONE);
                     cardpembayaran_ya.setVisibility(View.GONE);
                     cardpembayaran_tidak.setVisibility(View.VISIBLE);
                     ln_tanggaljanjibayar.setVisibility(View.VISIBLE);
+                    txtlat_pembayaran.setText("Lat  : ");
+                    txtlng_pembayaran.setText("Long : ");
+                    pembayaran_diterima.setText("");
                 }
                 Log.v("item", (String) parent.getItemAtPosition(position));
             }
@@ -404,44 +445,77 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         btnsave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String strContractID = txtcontract_id.getText().toString();
-                String getDate = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
-                Log.e(TAG, "Testing 123 -> "+pembayaran_diterima.getText());
+               /* if (pembayaran_diterima.getText().equals("")){
+                    intPembayaran = 0;
+                }else{
+                    intPembayaran = Double.parseDouble(pembayaran_diterima.getText().toString());
+                }*/
+                if(spinner_name.getSelectedItemPosition() != 0){
+                    //Toast.makeText(getActivity(), "Sudah Memilih",Toast.LENGTH_LONG).show();
+                    if(TextUtils.isEmpty(hasilkunjungan.getText().toString())){
+                        //Toast.makeText(getActivity(), "Hasil Kunjungan Kosong",Toast.LENGTH_LONG).show();
+                        Log.d(TAG,"Hasil kunjungan belum terisi");
+                        /*if(intPembayaran > intTotaltagihan){
+                            Toast.makeText(getActivity(), "Pembayaran Melebihi Total Tagihan",Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            Toast.makeText(getActivity(), "Pembayaran sudah benar",Toast.LENGTH_LONG).show();
+                            SaveDataResult();
+                        }*/
+                    }else{
+                        //Toast.makeText(getActivity(), "Hasil Kunjungan ada",Toast.LENGTH_LONG).show();
+                        Log.d(TAG,"Hasil kunjungan sudah terisi");
+                        SaveDataResult();
+                    }
+                }else {
+                    Toast.makeText(getActivity(), "Silahkan pilih bertemu customer",Toast.LENGTH_LONG).show();
+                    Log.d(TAG,"bertemu customer belum di pilih");
+                }
+            }
+        });
 
-                dbhelper = new DBHelper(getActivity());
+        getDataCustomerByContract((String) contractID.getText());
+    }
 
-                //try{
-                    SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
-                    String saved = "insert into RESULT (CONTRACT_ID, QUESTION, ANSWER, CREATE_DATE, USER, BRANCH_ID) values" +
-                            "('"+ strContractID +"','MS_Q20190226172031880','"+ spinner_name.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                            "('"+ strContractID +"','MS_Q20190226172302530','"+ contactperson.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                            "('"+ strContractID +"','MS_Q20190226172325360','"+ spinner_hubungan.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                            "('"+ strContractID +"','MS_Q20190226172343540','"+ spiner_alamat.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                            "('"+ strContractID +"','MS_Q20190226172405297','"+ spinner_alamatbaru.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                            "('"+ strContractID +"','MS_Q20190226172432320','"+ alamatbaru.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                            "('"+ strContractID +"','MS_Q20190226172447930','"+ spinner_unit.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                            "('"+ strContractID +"','MS_Q20190226172517357','"+ spinner_custbayar.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                            "('"+ strContractID +"','MS_Q20190226172558067','"+ txtlat_pembayaran.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                            "('"+ strContractID +"','MS_Q20190226172603397','"+ txtlng_pembayaran.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                            "('"+ strContractID +"','MS_Q20190226172624710','"+ txtlat_pertemuan.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                            "('"+ strContractID +"','MS_Q20190226172628683','"+ txtlng_pertemuan.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                            "('"+ strContractID +"','MS_Q20190226172644783','"+ pembayaran_diterima.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                            "('"+ strContractID +"','MS_Q20190226172753329','gambar/foto','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                            "('"+ strContractID +"','MS_Q20190226172753330','gambar/foto','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                            "('"+ strContractID +"','MS_Q20190226172810420','"+ txttgljanjibayar.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                            "('"+ strContractID +"','MS_Q20190226172818070','"+ hasilkunjungan.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')";
+    private void SaveDataResult(){
+        String strContractID = txtcontract_id.getText().toString();
+        String getDate = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
+        Log.e(TAG, "Testing 123 -> "+pembayaran_diterima.getText());
 
-                    dbInsert.execSQL(saved);
-                    String contract_id =  ((TextView) getActivity().findViewById(R.id.nomor_kontrak2)).getText().toString();
-                    ResultFragment fragment = new ResultFragment();
-                    Bundle arguments = new Bundle();
-                    arguments.putString( "paramId" , contract_id);
-                    Log.d(TAG,"Contract ID -> " + contract_id);
-                    fragment.setArguments(arguments);
-                    FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();
-                /*}catch(Exception e){
+        dbhelper = new DBHelper(getActivity());
+
+        //try{
+        SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
+        String saved = "insert into RESULT (CONTRACT_ID, QUESTION, ANSWER, CREATE_DATE, USER, BRANCH_ID) values" +
+                "('"+ strContractID +"','MS_Q20190226172031880','"+ spinner_name.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
+                "('"+ strContractID +"','MS_Q20190226172302530','"+ contactperson.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
+                "('"+ strContractID +"','MS_Q20190226172325360','"+ spinner_hubungan.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
+                "('"+ strContractID +"','MS_Q20190226172343540','"+ spiner_alamat.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
+                "('"+ strContractID +"','MS_Q20190226172405297','"+ spinner_alamatbaru.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
+                "('"+ strContractID +"','MS_Q20190226172432320','"+ alamatbaru.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
+                "('"+ strContractID +"','MS_Q20190226172447930','"+ spinner_unit.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
+                "('"+ strContractID +"','MS_Q20190226172517357','"+ spinner_custbayar.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
+                "('"+ strContractID +"','MS_Q20190226172558067','"+ txtlat_pembayaran.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
+                "('"+ strContractID +"','MS_Q20190226172603397','"+ txtlng_pembayaran.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
+                "('"+ strContractID +"','MS_Q20190226172624710','"+ txtlat_pertemuan.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
+                "('"+ strContractID +"','MS_Q20190226172628683','"+ txtlng_pertemuan.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
+                "('"+ strContractID +"','MS_Q20190226172644783','"+ pembayaran_diterima.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
+                "('"+ strContractID +"','MS_Q20190226172753329','gambar/foto','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
+                "('"+ strContractID +"','MS_Q20190226172753330','gambar/foto','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
+                "('"+ strContractID +"','MS_Q20190226172810420','"+ txttgljanjibayar.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
+                "('"+ strContractID +"','MS_Q20190226172818070','"+ hasilkunjungan.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')";
+
+        dbInsert.execSQL(saved);
+        String contract_id =  ((TextView) getActivity().findViewById(R.id.nomor_kontrak2)).getText().toString();
+        ResultFragment fragment = new ResultFragment();
+        Bundle arguments = new Bundle();
+        arguments.putString( "paramId" , contract_id);
+        Log.d(TAG,"Contract ID -> " + contract_id);
+        fragment.setArguments(arguments);
+        FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();
+        /*}catch(Exception e){
                     e.printStackTrace();
                 }*/
 
@@ -462,12 +536,6 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
                 db.execSQL(sql15);
                 db.execSQL(sql16);
                 db.execSQL(sql17);*/
-
-            }
-        });
-
-        getDataCustomerByContract((String) contractID.getText());
-
     }
 
     private void getDataCustomerByContract(String ContractID) {
@@ -483,8 +551,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
             cursor.moveToPosition(0);
             txtcontract_id.setText(cursor.getString(4));
             txtcostumername.setText(cursor.getString(5));
-            txttotaltagihan.setText("Rp. " + String.valueOf(formatRupiah.format(Double.parseDouble(cursor.getString(15)))).replaceAll("Rp", ""));
-
+            txttotaltagihan.setText(String.valueOf(formatRupiah.format(Double.parseDouble(cursor.getString(15)))).replaceAll("Rp", ""));
         }
     }
 
