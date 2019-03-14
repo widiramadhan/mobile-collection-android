@@ -132,6 +132,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                     fragment = new DashboardFragment();
                 } else if (id == R.id.menu1) {
                     fragment = new StatusFragment();
+                } else if (id == R.id.nav_logout){
+
+                    SharedPreferences preferences = getSharedPreferences(my_shared_preferences, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.clear();
+                    editor.commit();
+
+                    Intent iIntent = new Intent(MainActivity.this, Login.class);
+                    startActivity(iIntent);
+                    Toast.makeText(getApplicationContext(), "Anda berhasil Logout", Toast.LENGTH_LONG).show();
+                    finish();
+                   // super.onDestroy();
+                    //stopService(serviceIntent);
+                   return true;
                 }
 
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -155,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
 
     @Override
     protected void onDestroy() {
-        stopService(serviceIntent);
+        //stopService(serviceIntent);
         super.onDestroy();
     }
 
