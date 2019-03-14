@@ -244,18 +244,6 @@ public class StatusDetailFragment extends Fragment {
             }
         }
 
-        cursor2 = db.rawQuery("SELECT * FROM TBimage WHERE CONTRACT_ID ='" + paramId +"'",null);
-        cursor2.moveToFirst();
-        if(cursor2.getCount()>0) {
-            cursor2.moveToPosition(0);
-
-            byte[] imgByte = cursor2.getBlob(2);
-
-            //return BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
-
-            imgPembayaran.setImageResource(convertByteArrayToBitmap(imgByte));
-        }
-
         if(txtResult.getText().equals("Janji Bayar")){
             ln_pembayaranditerima.setVisibility(View.GONE);
             ln_sisa_tagihan.setVisibility(View.GONE);
@@ -278,6 +266,20 @@ public class StatusDetailFragment extends Fragment {
         }else if(txtMeetup.getText().equals("Tidak, bertemu dengan orang lain") || txtMeetup.getText().equals("Tidak bertemu siapapun")){
             ln_contactpersonname.setVisibility(View.VISIBLE);
             ln_hubungancostumer.setVisibility(View.VISIBLE);
+        }
+
+        cursor2 = db.rawQuery("SELECT * FROM TBimage WHERE CONTRACT_ID ='" + paramId +"'",null);
+        cursor2.moveToFirst();
+        if(cursor2.getCount()>0) {
+            cursor2.moveToPosition(0);
+
+            byte[] IMAGE = cursor2.getBlob(2);
+            Bitmap bmp= BitmapFactory.decodeByteArray(IMAGE, 0 , IMAGE.length);
+            imgPembayaran.setImageBitmap(bmp);
+            //return BitmapFactory.decodeByteArray(IMAGE, 0, IMAGE.length);
+            //imgPembayaran.setImageResource(convertByteArrayToBitmap(IMAGE));
+            imgPembayaran.setImageBitmap(BitmapFactory.decodeByteArray(IMAGE,0,IMAGE.length));
+            Log.d(TAG,"IMAGE -> "+imgPembayaran);
         }
 
         //--------------------------------------------------------//
@@ -387,6 +389,7 @@ public class StatusDetailFragment extends Fragment {
                         SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
                         String Sql = "update DKH set IS_COLLECT=1 where NOMOR_KONTRAK="+paramId;
                         dbInsert.execSQL(Sql);
+
                         uploadFragment fragment = new uploadFragment();
                         FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();

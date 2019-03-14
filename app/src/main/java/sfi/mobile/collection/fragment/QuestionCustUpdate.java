@@ -29,7 +29,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.CardView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,6 +52,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -177,6 +180,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         imageView = (ImageView) getActivity().findViewById(R.id.image_view);
         imageViewPembayaran = (ImageView) getActivity().findViewById(R.id.image_view_pembayaran);
 
+        pembayaran_diterima.addTextChangedListener(onTextChanedListener());
         /*** ------------------------------------------------------------- ***/
 
         ln_pembayaran_ya.setVisibility(View.GONE);
@@ -484,9 +488,50 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         getDataCustomerByContract((String) contractID.getText());
     }
 
+    private TextWatcher onTextChanedListener(){
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                pembayaran_diterima.removeTextChangedListener(this);
+                try {
+                    String originalString = s.toString();
+
+                    Long longval;
+                    if (originalString.contains(",")) {
+                        originalString = originalString.replaceAll(",", "");
+                    }
+                    longval = Long.parseLong(originalString);
+
+                    DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+                    formatter.applyPattern("#,###,###,###");
+                    String formattedString = formatter.format(longval);
+
+                    //setting text after format to EditText
+                    pembayaran_diterima.setText(formattedString);
+                    pembayaran_diterima.setSelection(pembayaran_diterima.getText().length());
+                } catch (NumberFormatException nfe) {
+                    nfe.printStackTrace();
+                }
+
+                pembayaran_diterima.addTextChangedListener(this);
+            }
+        };
+    }
+
     private void SaveDataResult(){
         String strContractID = txtcontract_id.getText().toString();
         String getDate = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
+
         //Log.e(TAG, "Testing 123 -> "+pembayaran_diterima.getText());
 
         dbhelper = new DBHelper(getActivity());
@@ -507,7 +552,9 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         storeImage(bmap);*/
 
         SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
+
         String SaveImage = "insert into TBimage (CONTRACT_ID,IMAGE,CREATE_DATE) values('"+ strContractID +"','"+ encodedImage +"','"+ getDate  +"')";
+
         String saved = "insert into RESULT (CONTRACT_ID, QUESTION, ANSWER, CREATE_DATE, USER, BRANCH_ID) values" +
                 "('"+ strContractID +"','MS_Q20190226172031880','"+ spinner_name.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
                 "('"+ strContractID +"','MS_Q20190226172302530','"+ contactperson.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
@@ -521,15 +568,19 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
                 "('"+ strContractID +"','MS_Q20190226172603397','"+ txtlng_pembayaran.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
                 "('"+ strContractID +"','MS_Q20190226172624710','"+ txtlat_pertemuan.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
                 "('"+ strContractID +"','MS_Q20190226172628683','"+ txtlng_pertemuan.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                "('"+ strContractID +"','MS_Q20190226172644783','"+ pembayaran_diterima.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
+                "('"+ strContractID +"','MS_Q20190226172644783','"+ pembayaran_diterima.getText().toString().replaceAll(",","") +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
                 "('"+ strContractID +"','MS_Q20190226172753329','gambar/foto','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
                 "('"+ strContractID +"','MS_Q20190226172753330','gambar/foto','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
                 "('"+ strContractID +"','MS_Q20190226172810420','"+ txttgljanjibayar.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
                 "('"+ strContractID +"','MS_Q20190226172818070','"+ hasilkunjungan.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')";
 
+        String Sql = "update DKH set IS_COLLECT=1 where NOMOR_KONTRAK = "+strContractID;
+
         dbInsert.execSQL(saved);
         dbInsert.execSQL(SaveImage);
-        Log.d(TAG,"Byte -> " + bitmapdata);
+        dbInsert.execSQL(Sql);
+
+       // Log.d(TAG,"Byte -> " + bitmapdata);
         String contract_id =  ((TextView) getActivity().findViewById(R.id.nomor_kontrak2)).getText().toString();
         ResultFragment fragment = new ResultFragment();
         Bundle arguments = new Bundle();

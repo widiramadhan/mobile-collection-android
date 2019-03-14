@@ -448,6 +448,7 @@
                                     android:id="@+id/answer_img_pembayaran"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:src="@drawable/adele"
                                     android:layout_marginTop="10dp" />
 
                                 <View
@@ -486,7 +487,8 @@
                                     android:id="@+id/answer_img_pertemuan"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dp" />
+                                    android:layout_marginTop="10dp"
+                                    android:src="@drawable/adele"/>
 
                                 <View
                                     android:layout_width="match_parent"
