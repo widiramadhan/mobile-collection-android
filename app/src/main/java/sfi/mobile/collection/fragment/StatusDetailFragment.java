@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -42,6 +44,8 @@ import sfi.mobile.collection.helper.DBHelper;
 
 public class StatusDetailFragment extends Fragment {
 
+    private static Bitmap bitMapImage;
+
     public StatusDetailFragment() {
     }
     /*** memanggil session yang terdaftar ***/
@@ -68,7 +72,7 @@ public class StatusDetailFragment extends Fragment {
 
     LinearLayout ln_ketemudengankosumen,ln_contactpersonname,ln_hubungancostumer,ln_alamatkunjungan,ln_alamatbaru,ln_apakah_unitada,ln_pembayaranditerima,ln_sisa_tagihan,ln_lokasiPembayaran,ln_lokasipertemuan,ln_tgljanjibayar,ln_hasilKunjungan,ln_bertemukonsumen;
 
-    protected Cursor cursor;
+    protected Cursor cursor, cursor2;
     DBHelper dbhelper;
     private static final String TAG = StatusDetailFragment.class.getSimpleName();
 
@@ -238,7 +242,18 @@ public class StatusDetailFragment extends Fragment {
             }else{
                 ln_alamatbaru.setVisibility(View.GONE);
             }
-            //Log.e(TAG,"result : "+txtResult);
+        }
+
+        cursor2 = db.rawQuery("SELECT * FROM TBimage WHERE CONTRACT_ID ='" + paramId +"'",null);
+        cursor2.moveToFirst();
+        if(cursor2.getCount()>0) {
+            cursor2.moveToPosition(0);
+
+            byte[] imgByte = cursor2.getBlob(2);
+
+            //return BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
+
+            imgPembayaran.setImageResource(convertByteArrayToBitmap(imgByte));
         }
 
         if(txtResult.getText().equals("Janji Bayar")){
@@ -386,6 +401,13 @@ public class StatusDetailFragment extends Fragment {
                 adb.show();
             }
         });
+    }
+
+    public static Bitmap convertByteArrayToBitmap(byte[] byteArrayToBeCOnvertedIntoBitMap) {
+        bitMapImage = BitmapFactory.decodeByteArray(
+                byteArrayToBeCOnvertedIntoBitMap, 0,
+                byteArrayToBeCOnvertedIntoBitMap.length);
+        return bitMapImage;
     }
 
     private void uploadData(final String strQuestion, final String strAnswer){

@@ -491,7 +491,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
 
         dbhelper = new DBHelper(getActivity());
 
-        ImageView iv = (ImageView) getActivity().findViewById(R.id.answer_img_pembayaran);
+        ImageView iv = (ImageView) getActivity().findViewById(R.id.image_view_pembayaran);
        /* Drawable d = iv.getBackground();
         BitmapDrawable bitDw = ((BitmapDrawable) d);*/
 
@@ -501,6 +501,10 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] bitmapdata = stream.toByteArray();
         String encodedImage = Base64.encodeToString(bitmapdata, Base64.DEFAULT);
+        Log.e(TAG, "BLOB -> "+encodedImage);
+
+        /*Bitmap bmap = iv.getDrawingCache();
+        storeImage(bmap);*/
 
         SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
         String SaveImage = "insert into TBimage (CONTRACT_ID,IMAGE,CREATE_DATE) values('"+ strContractID +"','"+ encodedImage +"','"+ getDate  +"')";
@@ -535,27 +539,23 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();
-        /*}catch(Exception e){
-                    e.printStackTrace();
-                }*/
+    }
 
-                /*db.execSQL(sql1);
-                db.execSQL(sql2);
-                db.execSQL(sql3);
-                db.execSQL(sql4);
-                db.execSQL(sql5);
-                db.execSQL(sql6);
-                db.execSQL(sql7);
-                db.execSQL(sql8);
-                db.execSQL(sql9);
-                db.execSQL(sql10);
-                db.execSQL(sql11);
-                db.execSQL(sql12);
-                db.execSQL(sql13);
-                db.execSQL(sql14);
-                db.execSQL(sql15);
-                db.execSQL(sql16);
-                db.execSQL(sql17);*/
+    public void storeImage(Bitmap img){
+        byte[] data = getBitmapAsByteArray(img);
+
+        String strContractID = txtcontract_id.getText().toString();
+        String getDate = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
+
+        dbhelper = new DBHelper(getActivity());
+        SQLiteDatabase db=dbhelper.getWritableDatabase();
+        db.execSQL("insert into TBimage (CONTRACT_ID,IMAGE,CREATE_DATE) values('"+ strContractID +"','"+ data +"','"+ getDate  +"')");
+    }
+
+    public static byte[] getBitmapAsByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+        return outputStream.toByteArray();
     }
 
     private void getDataCustomerByContract(String ContractID) {
