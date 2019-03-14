@@ -287,7 +287,8 @@ public class StatusDetailFragment extends Fragment {
 
                 AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
                 //adb.setView(alertDialogView);
-                adb.setTitle("Apakah anda yakin akan mengupload data ini ?");
+                adb.setTitle("Konfirmasi");
+                adb.setMessage("Apakah anda yakin akan mengupload data ini ?");
                 adb.setIcon(android.R.drawable.ic_dialog_alert);
                 adb.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -371,7 +372,10 @@ public class StatusDetailFragment extends Fragment {
                         SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
                         String Sql = "update DKH set IS_COLLECT=1 where NOMOR_KONTRAK="+paramId;
                         dbInsert.execSQL(Sql);
-                        Toast.makeText(getActivity(), "Upload data berhasil", Toast.LENGTH_LONG).show();
+                        uploadFragment fragment = new uploadFragment();
+                        FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();
                     }
                 });
                 adb.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
@@ -395,7 +399,7 @@ public class StatusDetailFragment extends Fragment {
             StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUploadData, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    Log.d("response", response.toString());
+                    //Log.d("response", response.toString());
                     hideDialog();
 
                     try {
@@ -403,9 +407,9 @@ public class StatusDetailFragment extends Fragment {
                         String pesan = jObject.getString("pesan");
                         String hasil = jObject.getString("result");
                         if (hasil.equalsIgnoreCase("true")) {
-                            Toast.makeText(getActivity(), pesan, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getActivity(), pesan, Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getActivity(), pesan, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getActivity(), pesan, Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
