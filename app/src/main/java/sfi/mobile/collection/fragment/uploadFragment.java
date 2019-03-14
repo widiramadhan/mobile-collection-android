@@ -13,33 +13,26 @@ import android.widget.TextView;
 
 import sfi.mobile.collection.R;
 
-public class ResultFragment extends Fragment {
+public class uploadFragment extends Fragment {
 
     private static final String TAG = ResultFragment.class.getSimpleName();
-    TextView txt_contractId;
 
-    public ResultFragment() {
+    public uploadFragment() {
     }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_result, container, false);
+        View view = inflater.inflate(R.layout.fragment_result_upload, container, false);
 
         Button btnBack = (Button) view.findViewById(R.id.btnBack);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String contract_id =  ((TextView) getActivity().findViewById(R.id.txtcontractid)).getText().toString();
-                StatusDetailFragment fragment = new StatusDetailFragment();
-                Bundle arguments = new Bundle();
-                arguments.putString( "paramId" , contract_id);
-                Log.d(TAG,"Contract ID -> " + contract_id);
-                fragment.setArguments(arguments);
+                DashboardFragment fragment = new DashboardFragment();
                 FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();
             }
         });
+
         return view;
     }
 
@@ -48,9 +41,9 @@ public class ResultFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         super.onCreate(savedInstanceState);
 
-        txt_contractId = (TextView) getActivity().findViewById(R.id.txtcontractid);
-        Bundle arguments = getArguments();
-        final String paramId = arguments.getString("paramId");
-        txt_contractId.setText(paramId);
+        //txt_contractId = (TextView) getActivity().findViewById(R.id.txtcontractid);
+       /* Bundle arguments = getArguments();
+        final String paramId = arguments.getString("paramId");*/
+        //txt_contractId.setText(paramId);
     }
 }

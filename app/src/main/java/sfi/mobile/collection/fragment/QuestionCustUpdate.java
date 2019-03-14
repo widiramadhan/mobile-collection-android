@@ -3,6 +3,7 @@ package sfi.mobile.collection.fragment;
 import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,10 +12,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -26,6 +30,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,6 +81,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
     Intent intent;
     Uri fileUri;
     Bitmap bitmap, decoded;
+    Byte byteimage;
     ImageView imageView, imageViewPembayaran;
     EditText contactperson, alamatbaru, pembayaran_diterima, hasilkunjungan;
     double intPembayaran,intTotaltagihan;
@@ -274,6 +280,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
                  intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, fileUri);
                  startActivityForResult(intent, REQUEST_CAMERA);
                  flagFoto = "1";
+
              }
         });
 
@@ -469,7 +476,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
                     }
                 }else {
                     Toast.makeText(getActivity(), "Silahkan pilih bertemu customer",Toast.LENGTH_LONG).show();
-                    Log.d(TAG,"bertemu customer belum di pilih");
+                    //Log.d(TAG,"bertemu customer belum di pilih");
                 }
             }
         });
@@ -480,12 +487,23 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
     private void SaveDataResult(){
         String strContractID = txtcontract_id.getText().toString();
         String getDate = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
-        Log.e(TAG, "Testing 123 -> "+pembayaran_diterima.getText());
+        //Log.e(TAG, "Testing 123 -> "+pembayaran_diterima.getText());
 
         dbhelper = new DBHelper(getActivity());
 
-        //try{
+        ImageView iv = (ImageView) getActivity().findViewById(R.id.answer_img_pembayaran);
+       /* Drawable d = iv.getBackground();
+        BitmapDrawable bitDw = ((BitmapDrawable) d);*/
+
+        Drawable d = iv.getDrawable();
+        Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] bitmapdata = stream.toByteArray();
+        String encodedImage = Base64.encodeToString(bitmapdata, Base64.DEFAULT);
+
         SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
+        String SaveImage = "insert into TBimage (CONTRACT_ID,IMAGE,CREATE_DATE) values('"+ strContractID +"','"+ encodedImage +"','"+ getDate  +"')";
         String saved = "insert into RESULT (CONTRACT_ID, QUESTION, ANSWER, CREATE_DATE, USER, BRANCH_ID) values" +
                 "('"+ strContractID +"','MS_Q20190226172031880','"+ spinner_name.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
                 "('"+ strContractID +"','MS_Q20190226172302530','"+ contactperson.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
@@ -506,6 +524,8 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
                 "('"+ strContractID +"','MS_Q20190226172818070','"+ hasilkunjungan.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')";
 
         dbInsert.execSQL(saved);
+        dbInsert.execSQL(SaveImage);
+        Log.d(TAG,"Byte -> " + bitmapdata);
         String contract_id =  ((TextView) getActivity().findViewById(R.id.nomor_kontrak2)).getText().toString();
         ResultFragment fragment = new ResultFragment();
         Bundle arguments = new Bundle();
@@ -590,6 +610,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
 
         //menampilkan gambar yang dipilih dari camera/gallery ke ImageView
         imageView.setImageBitmap(decoded);
+        Log.d(TAG,"Image ->" + decoded);
     }
 
     private void setToImageViewPembayaran(Bitmap bmp) {
@@ -607,7 +628,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         int width = image.getWidth();
         int height = image.getHeight();
 
-        float bitmapRatio = (float) width / (float) height;
+        float bitmapRatio= (float) width / (float) height;
         if (bitmapRatio > 1) {
             width = maxSize;
             height = (int) (width / bitmapRatio);

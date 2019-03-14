@@ -43,14 +43,18 @@ public class DBHelper extends SQLiteOpenHelper {
         //create table KUNJUNGAN
         String sql2 = "create table RESULT (ID integer primary key autoincrement, CONTRACT_ID text null, QUESTION text null, ANSWER text null, CREATE_DATE text null, USER text null, BRANCH_ID text null);";
         Log.d( "Data","onCreate: "+sql2);
+        String sql3 = "create table TBimage( ID integer primary key autoincrement, CONTRACT_ID text null, IMAGE BLOB, CREATE_DATE text null)";
+        Log.d( "Data","onCreate: "+sql3);
         db.execSQL(sql);
         db.execSQL(sql2);
+        db.execSQL(sql3);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS DKH");
         db.execSQL("DROP TABLE IF EXISTS RESULT");
+        db.execSQL("DROP TABLE IF EXISTS TBimage");
         // create new tables
         onCreate(db);
     }

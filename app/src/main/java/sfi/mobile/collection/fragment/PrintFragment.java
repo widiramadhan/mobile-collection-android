@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +47,7 @@ public class PrintFragment extends Fragment {
     Spinner mDeviceSp;
     protected Cursor cursor;
     DBHelper dbhelper;
-    String strContractId,strCostumername,strtgljatuhtempo,strAngsuranKe;
+    String strContractId,strCostumername,strtgljatuhtempo,strAngsuranKe,strDevice;
     int strtotal;
     Double strHasil,strAmount;
 
@@ -244,8 +245,8 @@ public class PrintFragment extends Fragment {
         btnPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                printStruk();
 
+                printStruk();
                 /*DashboardTabPriority fragment = new DashboardTabPriority();
                 FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
