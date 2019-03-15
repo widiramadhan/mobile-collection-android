@@ -47,8 +47,8 @@ public class PrintFragment extends Fragment {
     Spinner mDeviceSp;
     protected Cursor cursor;
     DBHelper dbhelper;
-    String strContractId,strCostumername,strtgljatuhtempo,strAngsuranKe,strDevice;
-    int strtotal;
+    String strContractId,strCostumername,strtgljatuhtempo,strAngsuranKe,strDevice,strTotaltagihan;
+    int strtotal,strDenda,strAngsuran;
     Double strHasil,strAmount;
 
     TextView txt_costumername,txt_angsuranke,txt_jatuhtempo,txt_amount,txt_Id,txt_pic,txt_total;
@@ -120,7 +120,7 @@ public class PrintFragment extends Fragment {
 
         dbhelper = new DBHelper(getActivity());
         SQLiteDatabase db = dbhelper.getReadableDatabase();
-        cursor = db.rawQuery("SELECT A.CONTRACT_ID, B.NAMA_KOSTUMER, A.QUESTION, A.ANSWER,B.TANGGAL_JATUH_TEMPO,B.TOTAL_TAGIHAN,B.ANGSURAN_KE FROM RESULT A LEFT JOIN DKH B ON A.CONTRACT_ID=B.NOMOR_KONTRAK WHERE A.CONTRACT_ID ='" + paramId +"'",null);
+        cursor = db.rawQuery("SELECT A.CONTRACT_ID, B.NAMA_KOSTUMER, A.QUESTION, A.ANSWER,B.TANGGAL_JATUH_TEMPO,B.TOTAL_TAGIHAN,B.ANGSURAN_KE,B.ANGSURAN_BERJALAN,B.DENDA FROM RESULT A LEFT JOIN DKH B ON A.CONTRACT_ID=B.NOMOR_KONTRAK WHERE A.CONTRACT_ID ='" + paramId +"'",null);
         cursor.moveToFirst();
         if(cursor.getCount()>0) {
             cursor.moveToPosition(0);
@@ -130,6 +130,9 @@ public class PrintFragment extends Fragment {
             strtgljatuhtempo = cursor.getString(4);
             strtotal = cursor.getInt(5);
             strAngsuranKe = cursor.getString(6);
+            strAngsuran = cursor.getInt(7);
+            strDenda = cursor.getInt(8);
+
             do {
                 String questionID = cursor.getString(2);
                 //Pembayaran yang diterima
@@ -152,6 +155,8 @@ public class PrintFragment extends Fragment {
         Log.d("Data","Angsuran ke ->" + strAngsuranKe);
         Log.d("Data","Bayar ->" + strAmount);
         Log.d("Data","PIC ->" + fullName);
+        Log.d("Data","Denda ->" + strDenda);
+        Log.d("Data","Angsuran Berjalan ->" + strAngsuran);
         Log.d("Data","Total Tagihan ->" + strtotal);
 
 
@@ -360,6 +365,9 @@ public class PrintFragment extends Fragment {
         contentSb.append("Nama Kostumer : "+ strCostumername + "\n");
         contentSb.append("Angsuran Ke   : "+ strAngsuranKe + "\n");
         contentSb.append("Jatuh Tempo   : "+ strtgljatuhtempo + "\n");
+        contentSb.append("Angsuran      : Rp. "+ String.valueOf(formatRupiah.format((double)strAngsuran).replaceAll( "Rp", "" )) + "\n");
+        contentSb.append("Denda         : Rp. "+ String.valueOf(formatRupiah.format((double)strDenda).replaceAll( "Rp", "" )) + "\n");
+        contentSb.append("Total Tagihan : Rp. "+ String.valueOf(formatRupiah.format((double)strtotal).replaceAll( "Rp", "" )) + "\n");
         contentSb.append("Pembayaran    : Rp. "+ String.valueOf(formatRupiah.format((double)strAmount).replaceAll( "Rp", "" )) + "\n");
         contentSb.append("Sisa          : Rp. "+ String.valueOf(formatRupiah.format((double)strHasil).replaceAll( "Rp", "" ))+ "\n");
         contentSb.append("PIC           : "+ fullName + "\n");
