@@ -536,24 +536,24 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
 
         dbhelper = new DBHelper(getActivity());
 
-        ImageView iv = (ImageView) getActivity().findViewById(R.id.image_view_pembayaran);
+        //ImageView iv = (ImageView) getActivity().findViewById(R.id.image_view_pembayaran);
        /* Drawable d = iv.getBackground();
         BitmapDrawable bitDw = ((BitmapDrawable) d);*/
 
-        Drawable d = iv.getDrawable();
+       /* Drawable d = iv.getDrawable();
         Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] bitmapdata = stream.toByteArray();
         String encodedImage = Base64.encodeToString(bitmapdata, Base64.DEFAULT);
-        Log.e(TAG, "BLOB -> "+encodedImage);
+        Log.e(TAG, "BLOB -> "+encodedImage);*/
 
         /*Bitmap bmap = iv.getDrawingCache();
         storeImage(bmap);*/
 
         SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
 
-        String SaveImage = "insert into TBimage (CONTRACT_ID,IMAGE,CREATE_DATE) values('"+ strContractID +"','"+ encodedImage +"','"+ getDate  +"')";
+       // String SaveImage = "insert into TBimage (CONTRACT_ID,IMAGE,CREATE_DATE) values('"+ strContractID +"','"+ encodedImage +"','"+ getDate  +"')";
 
         String saved = "insert into RESULT (CONTRACT_ID, QUESTION, ANSWER, CREATE_DATE, USER, BRANCH_ID) values" +
                 "('"+ strContractID +"','MS_Q20190226172031880','"+ spinner_name.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
@@ -577,7 +577,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         String Sql = "update DKH set IS_COLLECT=1 where NOMOR_KONTRAK = "+strContractID;
 
         dbInsert.execSQL(saved);
-        dbInsert.execSQL(SaveImage);
+        //dbInsert.execSQL(SaveImage);
         dbInsert.execSQL(Sql);
 
        // Log.d(TAG,"Byte -> " + bitmapdata);
