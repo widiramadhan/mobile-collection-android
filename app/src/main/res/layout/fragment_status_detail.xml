@@ -6,9 +6,6 @@
     android:layout_height="match_parent"
     android:background="#EEE"
     >
-
-
-
     <ScrollView
         android:id="@+id/scview"
         android:layout_width="match_parent"

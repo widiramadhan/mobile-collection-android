@@ -88,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -115,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         sharedpreferences = this.getSharedPreferences(my_shared_preferences, Context.MODE_PRIVATE);
         fullName = sharedpreferences.getString(TAG_FULL_NAME, null);
         branchName = sharedpreferences.getString(TAG_BRANCH_NAME, null);
+
         /*** end set session to variable ***/
 
         txtNavHeaderFullName.setText(fullName);

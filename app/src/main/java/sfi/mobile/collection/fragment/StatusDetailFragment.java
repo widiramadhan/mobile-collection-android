@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -36,6 +37,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import sfi.mobile.collection.R;
 import sfi.mobile.collection.app.AppController;
@@ -390,10 +392,12 @@ public class StatusDetailFragment extends Fragment {
                         String Sql = "update DKH set IS_COLLECT=1 where NOMOR_KONTRAK="+paramId;
                         dbInsert.execSQL(Sql);
 
-                        uploadFragment fragment = new uploadFragment();
+                        /*DashboardFragment fragment = new DashboardFragment();
+                        Bundle arguments = new Bundle();
+                        fragment.setArguments(arguments);
                         FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();
+                        fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();*/
                     }
                 });
                 adb.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
@@ -454,6 +458,7 @@ public class StatusDetailFragment extends Fragment {
                     Map<String, String> param = new HashMap<String, String>();
 
                     /*** set session to variable ***/
+
                     sharedpreferences = getActivity().getSharedPreferences(my_shared_preferences, Context.MODE_PRIVATE);
                     String strPic = sharedpreferences.getString(TAG_EMP_ID, null);
                     String strBranchID = sharedpreferences.getString(TAG_BRANCH_ID, null);

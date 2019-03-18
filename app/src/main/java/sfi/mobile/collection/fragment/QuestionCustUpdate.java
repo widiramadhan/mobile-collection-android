@@ -141,10 +141,9 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         txt_angsuran = (TextView) getActivity().findViewById(R.id.angsuran);
         txt_biayaadmin = (TextView) getActivity().findViewById(R.id.biaya_admin);
         txtDenda = (TextView) getActivity().findViewById(R.id.denda);
-        //txt_sisa = (TextView) getActivity().findViewById(R.id.txt_sisaTagihan);
+        txt_sisa = (TextView) getActivity().findViewById(R.id.txt_sisaTagihan);
 
         txt_totalTagihan2 = (TextView) getActivity().findViewById(R.id.txt_totalTagihan2);
-        txttotaltagihan = (TextView) getActivity().findViewById(R.id.total_tagihan2);
 
         txttgljanjibayar = (TextView) getActivity().findViewById(R.id.tgljanjibayar);
         txtlat_pertemuan = (TextView) getActivity().findViewById(R.id.lat_pertemuan);
@@ -208,55 +207,10 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         cardpembayaran_ya.setVisibility(View.GONE);
         cardpembayaran_tidak.setVisibility(View.GONE);
 
-        pembayaran_diterima.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-               // angkaPertama = Double.parseDouble( editText.getText().toString());
-                pembayaran_diterima.removeTextChangedListener(this);
-                try {
-                    String originalString = s.toString();
-
-                    Long longval;
-                    if (originalString.contains(",")) {
-                        originalString = originalString.replaceAll(",", "");
-                    }
-                    longval = Long.parseLong(originalString);
-
-                    DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
-                    formatter.applyPattern("#,###,###,###");
-                    String formattedString = formatter.format(longval);
-
-                    //setting text after format to EditText
-                    pembayaran_diterima.setText(formattedString);
-                    pembayaran_diterima.setSelection(pembayaran_diterima.getText().length());
-                } catch (NumberFormatException nfe) {
-                    nfe.printStackTrace();
-                }
-                pembayaran_diterima.addTextChangedListener(this);
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start,int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start,int before, int count) {
-                //Sangkapertama = editText.getText().toString();
-                //              Sangkakedua = editText2.getText().toString();
-
-                //angkaKedua = Double.parseDouble(Sangkakedua);
-                /*if (pembayaran_diterima.getText().equals("")){
-                    QuestionCustUpdate.this.intPembayaran = 0;
-                }else{
-                    QuestionCustUpdate.this.intPembayaran = Double.parseDouble(pembayaran_diterima.getText().toString());
-                }
-                //intTotaltagihan = Double.parseDouble(txttotaltagihan.getText().toString().replaceAll(".",""));
-                hasil =  intTotaltagihan - (intPembayaran);
-                txt_sisa.setText("Rp. "+hasil);*/
-            }
-        });
+        pembayaran_diterima.setText("0");
+       // txttotaltagihan.setText("0");
+        /*intTotaltagihan = Double.parseDouble(txttotaltagihan.getText().toString());
+        Log.d(TAG,"TotalTagihan -> " + intTotaltagihan);*/
 
         final DatePickerDialog.OnDateSetListener datePickerJanjiBayar = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -482,7 +436,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
                     txtlng_pembayaran.setText("Long : ");
                     txtlat_pertemuan.setText("Lat  : ");
                     txtlng_pertemuan.setText("Long : ");
-                    pembayaran_diterima.setText("");
+                    pembayaran_diterima.setText("0");
                     txttgljanjibayar.setText("");
                 } else if (position == 1) { //ya
                     ln_pembayaran_ya.setVisibility(View.VISIBLE);
@@ -544,15 +498,70 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         });
 
         getDataCustomerByContract((String) contractID.getText());
+
+        //------------------------------------------------------------//
+        pembayaran_diterima.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                // angkaPertama = Double.parseDouble( editText.getText().toString());
+                pembayaran_diterima.removeTextChangedListener(this);
+                /*try {
+                    String originalString = s.toString();
+
+                    Long longval;
+                    if (originalString.contains(",")) {
+                        originalString = originalString.replaceAll(",", "");
+                    }
+                    longval = Long.parseLong(originalString);
+
+                    DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+                    formatter.applyPattern("#,###,###,###");
+                    String formattedString = formatter.format(longval);
+
+                    //setting text after format to EditText
+                    pembayaran_diterima.setText(formattedString);
+                    pembayaran_diterima.setSelection(pembayaran_diterima.getText().length());
+                } catch (NumberFormatException nfe) {
+                    nfe.printStackTrace();
+                }
+                pembayaran_diterima.addTextChangedListener(this);*/
+
+                //Sangkapertama = editText.getText().toString();
+                //              Sangkakedua = editText2.getText().toString();
+
+                //angkaKedua = Double.parseDouble(Sangkakedua);
+
+                // intTotaltagihan = 3000000;
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,int before, int count) {
+
+                //intTotaltagihan = Double.parseDouble(txttotaltagihan.getText().toString());
+                if (pembayaran_diterima.getText().equals("")){
+                    intPembayaran = 0;
+                }else{
+                    intPembayaran = Double.parseDouble(pembayaran_diterima.getText().toString());
+                    hasil =  intPembayaran - intTotaltagihan;
+                    //Log.e(TAG,"Hasil Sisa Pembayaran ->" + hasil);
+                    txt_sisa.setText("Rp. "+hasil);
+                }
+            }
+        });
+//------------------------------------------------------------//
     }
 
    /* private TextWatcher onTextChanedListener(){
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 *//*if (txttotaltagihan.getText().equals("")){
@@ -593,10 +602,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
                 } catch (NumberFormatException nfe) {
                     nfe.printStackTrace();
                 }
-
                 pembayaran_diterima.addTextChangedListener(this);
-
-
             }
         };
     }*/
