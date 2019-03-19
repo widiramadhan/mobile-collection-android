@@ -35,7 +35,9 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -65,7 +67,9 @@ public class StatusDetailFragment extends Fragment {
 
     ProgressDialog progressDialog;
 
-    TextView txtContractID, txtCustomerName, txtResult, txtMeetup, txtContactName, txtHubungan, txtAddress, txtNewAddress, txtUnit, txtAmount, txtSisa, txtLokasiPembayaran, txtLokasiPertemuan, txtJanjiBayar, txtHasilKunjungan;
+    TextView txtContractID, txtCustomerName, txtResult, txtMeetup, txtContactName, txtHubungan, txtAddress, txtNewAddress, txtUnit, txtAmount, txtSisa, txtLokasiPembayaran, txtLokasiPertemuan, txtJanjiBayar, txtHasilKunjungan,txtTotalTagihanStatus,txtpembayaranStatus;
+    double biaya_admin = 10000;
+    double intSisa,intTotal;
     ImageView imgPembayaran, imgPertemuan;
     Button btnUpload;
     ImageButton btnEdit,btnPrint;
@@ -99,6 +103,9 @@ public class StatusDetailFragment extends Fragment {
         txtJanjiBayar = (TextView) view.findViewById(R.id.answer_tgl_janji_bayar);
         txtHasilKunjungan = (TextView) view.findViewById(R.id.answer_hasil_kunjungan);
 
+        txtpembayaranStatus = (TextView) view.findViewById(R.id.pembayaran_status);
+        txtTotalTagihanStatus = (TextView) view.findViewById(R.id.totaltagihan_status);
+
         imgPembayaran = (ImageView) view.findViewById(R.id.answer_img_pembayaran);
         imgPertemuan = (ImageView) view.findViewById(R.id.answer_img_pertemuan);
 
@@ -129,6 +136,9 @@ public class StatusDetailFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         super.onCreate(savedInstanceState);
 
+        Locale localeID = new Locale("in", "ID");
+        NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
+
         /*** Get parameter dari halaman sebelumnya ***/
         Bundle arguments = getArguments();
         final String paramId = arguments.getString("paramId");
@@ -136,13 +146,14 @@ public class StatusDetailFragment extends Fragment {
 
         dbhelper = new DBHelper(getActivity());
         SQLiteDatabase db = dbhelper.getReadableDatabase();
-        cursor = db.rawQuery("SELECT A.CONTRACT_ID, B.NAMA_KOSTUMER, A.QUESTION, A.ANSWER, A.CREATE_DATE FROM RESULT A LEFT JOIN DKH B ON A.CONTRACT_ID=B.NOMOR_KONTRAK WHERE A.CONTRACT_ID ='" + paramId +"'",null);
+        cursor = db.rawQuery("SELECT A.CONTRACT_ID, B.NAMA_KOSTUMER, A.QUESTION, A.ANSWER, A.CREATE_DATE,B.TOTAL_TAGIHAN FROM RESULT A LEFT JOIN DKH B ON A.CONTRACT_ID=B.NOMOR_KONTRAK WHERE A.CONTRACT_ID ='" + paramId +"'",null);
         cursor.moveToFirst();
         if(cursor.getCount()>0) {
             cursor.moveToPosition(0);
             txtContractID.setText(cursor.getString(0));
             txtCustomerName.setText(cursor.getString(1));
             strCreateDate = cursor.getString(4);
+            txtTotalTagihanStatus.setText(String.valueOf(Double.parseDouble(cursor.getString(5))));
 
             do {
                 String questionID = cursor.getString(2);
@@ -228,8 +239,17 @@ public class StatusDetailFragment extends Fragment {
             txtLokasiPertemuan.setText(strLatPertemuan+"\n"+strLngPertemuan);
             txtJanjiBayar.setText(strJanjiBayar);
             txtHasilKunjungan.setText(strHasilKunjungan);
+            txtpembayaranStatus.setText(strAmount);
+            //---------------------------------//
+            txtAmount.setText("Rp. "+String.valueOf(formatRupiah.format(Double.parseDouble(strAmount.toString())).replaceAll("Rp","")));
+            /*Log.d(TAG,"Amount->"+txtAmount.getText().toString());
+            Log.d(TAG,"Amount2 ->"+txtpembayaranStatus.getText().toString());*/
+            intTotal = ((Double.parseDouble(txtTotalTagihanStatus.getText().toString()) + biaya_admin)) - Double.parseDouble(txtpembayaranStatus.getText().toString());
+            txtSisa.setText("Rp ."+formatRupiah.format((double)intTotal).replaceAll("Rp",""));
 
-            if(txtAmount.getText().equals("") || txtAmount.getText().equals(null)){
+            /*Log.d(TAG,"Sisa ->" + intTotal);*/
+            //---------------------------------//
+            if(txtpembayaranStatus.getText().equals("0")){
                 if(txtJanjiBayar.getText().equals("") || txtJanjiBayar.getText().equals(null) || txtMeetup.getText().equals("Tidak bertemu siapapun")){
                     txtResult.setText("Tidak bertemu");
                 }else{

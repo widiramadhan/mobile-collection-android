@@ -49,6 +49,7 @@ public class PrintFragment extends Fragment {
     DBHelper dbhelper;
     String strContractId,strCostumername,strtgljatuhtempo,strAngsuranKe,strDevice,strTotaltagihan;
     int strtotal,strDenda,strAngsuran;
+    double biaya_admin=10000;
     Double strHasil,strAmount;
 
     TextView txt_costumername,txt_angsuranke,txt_jatuhtempo,txt_amount,txt_Id,txt_pic,txt_total;
@@ -164,7 +165,7 @@ public class PrintFragment extends Fragment {
         btnConnect = (Button) getActivity().findViewById(R.id.btn_connect);
         mDeviceSp = (Spinner) getActivity().findViewById(R.id.sp_device);
 
-        strHasil = strtotal - strAmount ;
+        strHasil = ( strtotal + biaya_admin ) - strAmount ;
         Log.d("Data","Hasil->" + strHasil);
 
         /*mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -191,7 +192,6 @@ public class PrintFragment extends Fragment {
             @Override
             public void onConnectionSuccess() {
                 mConnectingDlg.dismiss();
-
                 showConnected();
             }
 
@@ -250,7 +250,6 @@ public class PrintFragment extends Fragment {
         btnPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 printStruk();
                 /*DashboardTabPriority fragment = new DashboardTabPriority();
                 FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
@@ -367,9 +366,10 @@ public class PrintFragment extends Fragment {
         contentSb.append("Jatuh Tempo   : "+ strtgljatuhtempo + "\n");
         contentSb.append("Angsuran      : Rp. "+ String.valueOf(formatRupiah.format((double)strAngsuran).replaceAll( "Rp", "" )) + "\n");
         contentSb.append("Denda         : Rp. "+ String.valueOf(formatRupiah.format((double)strDenda).replaceAll( "Rp", "" )) + "\n");
+        contentSb.append("Biaya Admin   : Rp. 10.000" + "\n");
         contentSb.append("Total Tagihan : Rp. "+ String.valueOf(formatRupiah.format((double)strtotal).replaceAll( "Rp", "" )) + "\n");
         contentSb.append("Pembayaran    : Rp. "+ String.valueOf(formatRupiah.format((double)strAmount).replaceAll( "Rp", "" )) + "\n");
-        contentSb.append("Sisa          : Rp. "+ String.valueOf(formatRupiah.format((double)strHasil).replaceAll( "Rp", "" ))+ "\n");
+        contentSb.append("Sisa Tagihan  : Rp. "+ String.valueOf(formatRupiah.format((double)strHasil).replaceAll( "Rp", "" ))+ "\n");
         contentSb.append("PIC           : "+ fullName + "\n");
 
         String message   = "\n  Simpan bukti pembayaran ini\nSebagai tanda pembayaran yg sah" + "\n\n\n";
@@ -413,5 +413,4 @@ public class PrintFragment extends Fragment {
             e.printStackTrace();
         }
     }
-
 }
