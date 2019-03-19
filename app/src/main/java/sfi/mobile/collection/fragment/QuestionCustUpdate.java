@@ -87,7 +87,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
     Byte byteimage;
     ImageView imageView, imageViewPembayaran;
     EditText contactperson, alamatbaru, pembayaran_diterima, hasilkunjungan;
-    double intPembayaran,intTotaltagihan,hasil;
+    double intPembayaran,intTotaltagihan;
     String strHasilpembayaran,strHasiltotaltagihan;
     int biaya_admin = 10000;
 
@@ -103,13 +103,12 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
     LinearLayout ln_pembayaran_ya, ln_pembayaran_tidak, ln_alamatbaru, ln_contactperson, ln_AlmtKunjungi, ln_unit, ln_customerbayar, ln_alamatberubah,ln_tanggaljanjibayar;
     Spinner spinner_name, spinner_alamatbaru, spinner_unit, spinner_custbayar, spinner_hubungan, spiner_alamat;
     CardView cardcontact, cardalamatbaru, cardunit, cardpembayaran_ya, cardpembayaran_tidak;
-    TextView txtcontract_id, txtcostumername, txttotaltagihan, txttgljanjibayar, txtlat_pembayaran, txtlng_pembayaran, txtlat_pertemuan, txtlng_pertemuan,txt_angsuran,txt_biayaadmin,txtDenda,txt_totalTagihan2,txt_sisa;
+    TextView txtcontract_id, txtcostumername, txttotaltagihan, txttgljanjibayar, txtlat_pembayaran, txtlng_pembayaran, txtlat_pertemuan, txtlng_pertemuan,txt_angsuran,txt_biayaadmin,txtDenda_tagihan,txt_totalTagihan2,txt_sisa;
     Button btnsetlokasi_pertemuan, btnsetlokasi_pembayaran, btnsetfotolokasipertemuan, btnsetfotolokasipembayaran, btnsave;
 
     private static final String TAG = QuestionCustUpdate.class.getSimpleName();
 
     public QuestionCustUpdate() {
-
     }
 
     @Nullable
@@ -119,7 +118,6 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         dbhelper = new DBHelper(getActivity());
         return view;
     }
-
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
@@ -133,6 +131,9 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         /*** end set session to variable ***/
 
         /*** get contract id from fragment ***/
+        Locale localeID = new Locale("in", "ID");
+        NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
+
         final TextView contractID = (TextView) getActivity().findViewById(R.id.contract_id);
 
         txtcontract_id = (TextView) getActivity().findViewById(R.id.nomor_kontrak2);
@@ -140,10 +141,9 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         txttotaltagihan = (TextView) getActivity().findViewById(R.id.total_tagihan2);
         txt_angsuran = (TextView) getActivity().findViewById(R.id.angsuran);
         txt_biayaadmin = (TextView) getActivity().findViewById(R.id.biaya_admin);
-        txtDenda = (TextView) getActivity().findViewById(R.id.denda);
-        txt_sisa = (TextView) getActivity().findViewById(R.id.txt_sisaTagihan);
-
-        txt_totalTagihan2 = (TextView) getActivity().findViewById(R.id.txt_totalTagihan2);
+        txtDenda_tagihan = (TextView) getActivity().findViewById(R.id.denda_tagihan);
+        txt_sisa = (TextView) getActivity().findViewById(R.id.sisa_tagihan);
+        txt_totalTagihan2 = (TextView) getActivity().findViewById(R.id.total_tagihan3);
 
         txttgljanjibayar = (TextView) getActivity().findViewById(R.id.tgljanjibayar);
         txtlat_pertemuan = (TextView) getActivity().findViewById(R.id.lat_pertemuan);
@@ -189,6 +189,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         imageViewPembayaran = (ImageView) getActivity().findViewById(R.id.image_view_pembayaran);
 
         //pembayaran_diterima.addTextChangedListener(onTextChanedListener());
+        txt_biayaadmin.setText(formatRupiah.format((double)biaya_admin).replaceAll("Rp",""));
 
         /*** ------------------------------------------------------------- ***/
 
@@ -206,8 +207,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         cardunit.setVisibility(View.GONE);
         cardpembayaran_ya.setVisibility(View.GONE);
         cardpembayaran_tidak.setVisibility(View.GONE);
-
-        pembayaran_diterima.setText("0");
+        pembayaran_diterima.setText("");
        // txttotaltagihan.setText("0");
         /*intTotaltagihan = Double.parseDouble(txttotaltagihan.getText().toString());
         Log.d(TAG,"TotalTagihan -> " + intTotaltagihan);*/
@@ -506,7 +506,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
             public void afterTextChanged(Editable s) {
 
                 // angkaPertama = Double.parseDouble( editText.getText().toString());
-                pembayaran_diterima.removeTextChangedListener(this);
+               // pembayaran_diterima.removeTextChangedListener(this);
                 /*try {
                     String originalString = s.toString();
 
@@ -525,36 +525,26 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
                     pembayaran_diterima.setSelection(pembayaran_diterima.getText().length());
                 } catch (NumberFormatException nfe) {
                     nfe.printStackTrace();
-                }
-                pembayaran_diterima.addTextChangedListener(this);*/
-
-                //Sangkapertama = editText.getText().toString();
-                //              Sangkakedua = editText2.getText().toString();
-
-                //angkaKedua = Double.parseDouble(Sangkakedua);
-
-                // intTotaltagihan = 3000000;
+                }*/
             }
-
             @Override
             public void beforeTextChanged(CharSequence s, int start,int count, int after) {
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start,int before, int count) {
-
-                //intTotaltagihan = Double.parseDouble(txttotaltagihan.getText().toString());
-                if (pembayaran_diterima.getText().equals("")){
-                    intPembayaran = 0;
-                }else{
-                    intPembayaran = Double.parseDouble(pembayaran_diterima.getText().toString());
-                    hasil =  intPembayaran - intTotaltagihan;
-                    //Log.e(TAG,"Hasil Sisa Pembayaran ->" + hasil);
-                    txt_sisa.setText("Rp. "+hasil);
+                /*double hasil;
+                String pembayaran = pembayaran_diterima.getText().toString();
+                //intTotaltagihan = 5000000;
+                if (pembayaran.equals("")){
+                    pembayaran_diterima.setText("0");
                 }
+                hasil = ((biaya_admin + Double.parseDouble(txt_totalTagihan2.getText().toString())) - Double.parseDouble(pembayaran_diterima.getText().toString()));
+                //Log.e(TAG,"Hasil Sisa Pembayaran ->" + hasil);
+                txt_sisa.setText(""+hasil);*/
             }
         });
-//------------------------------------------------------------//
+    //------------------------------------------------------------//
     }
 
    /* private TextWatcher onTextChanedListener(){
@@ -703,11 +693,9 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
             txtcontract_id.setText(cursor.getString(4));
             txtcostumername.setText(cursor.getString(5));
             txttotaltagihan.setText(String.valueOf(formatRupiah.format(Double.parseDouble(cursor.getString(15)))).replaceAll("Rp", ""));
-            txt_angsuran.setText("Rp. "+String.valueOf(formatRupiah.format(Double.parseDouble(cursor.getString(11)))).replaceAll( "Rp", "" ));
-            txtDenda.setText("Rp. "+String.valueOf(formatRupiah.format(Double.parseDouble(cursor.getString(13)))).replaceAll( "Rp", "" ));
-            txt_biayaadmin.setText(formatRupiah.format((double)biaya_admin).replaceAll("Rp",""));
-            txt_totalTagihan2.setText("Rp. "+String.valueOf(formatRupiah.format(Double.parseDouble(cursor.getString(15)))).replaceAll( "Rp", "" ));
-
+            txt_angsuran.setText(String.valueOf(formatRupiah.format(Double.parseDouble(cursor.getString(11)))).replaceAll( "Rp", "" ));
+            txtDenda_tagihan.setText(String.valueOf(formatRupiah.format(Double.parseDouble(cursor.getString(13))).replaceAll("Rp","")));
+            txt_totalTagihan2.setText(String.valueOf(formatRupiah.format(Double.parseDouble(cursor.getString(15)))).replaceAll( "Rp", "" ));
         }
     }
 

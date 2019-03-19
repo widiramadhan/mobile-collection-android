@@ -574,19 +574,20 @@
                                 android:layout_marginTop="10dp"
                                 android:layout_marginBottom="10dp"
                                 android:background="@android:color/darker_gray"/>
+
                             <!-- Angsuran Berjalan -->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
-                                android:layout_marginLeft="20dp"
-                                android:layout_marginRight="20dp">
+                                android:padding="5dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_marginLeft="15dp">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginRight="5dp"
-                                    android:text="Angsuran :"
+                                    android:text="Angsuran Berjalan  :"
                                     android:textColor="#000"
                                     android:textSize="16sp" />
 
@@ -596,10 +597,18 @@
                                     android:gravity="end">
 
                                     <TextView
-                                        android:id="@+id/angsuran"
-                                        android:layout_width="match_parent"
+                                        android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="-"
+                                        android:text="Rp. "
+                                        android:textAlignment="viewEnd"
+                                        android:textColor="#000"
+                                        android:textSize="16sp" />
+
+                                    <TextView
+                                        android:id="@+id/angsuran"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:text="20.000.000"
                                         android:textAlignment="viewEnd"
                                         android:textSize="16sp"
                                         android:textStyle="bold" />
@@ -607,19 +616,20 @@
                                 </LinearLayout>
 
                             </LinearLayout>
+
                             <!-- DENDA -->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
-                                android:layout_marginLeft="20dp"
-                                android:layout_marginRight="20dp">
+                                android:padding="5dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_marginLeft="15dp">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginRight="5dp"
-                                    android:text="Denda       :"
+                                    android:text="Biaya denda             :"
                                     android:textColor="#000"
                                     android:textSize="16sp" />
 
@@ -629,10 +639,18 @@
                                     android:gravity="end">
 
                                     <TextView
-                                        android:id="@+id/denda"
-                                        android:layout_width="match_parent"
+                                        android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="-"
+                                        android:text="Rp. "
+                                        android:textAlignment="viewEnd"
+                                        android:textColor="#000"
+                                        android:textSize="16sp" />
+
+                                    <TextView
+                                        android:id="@+id/denda_tagihan"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:text="20.000.000"
                                         android:textAlignment="viewEnd"
                                         android:textSize="16sp"
                                         android:textStyle="bold" />
@@ -646,14 +664,14 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
-                                android:layout_marginLeft="20dp"
-                                android:layout_marginRight="20dp">
+                                android:padding="5dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_marginLeft="15dp">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginRight="5dp"
-                                    android:text="Admin       :"
+                                    android:text="Biaya admin             :"
                                     android:textColor="#000"
                                     android:textSize="16sp" />
 
@@ -663,10 +681,18 @@
                                     android:gravity="end">
 
                                     <TextView
-                                        android:id="@+id/biaya_admin"
-                                        android:layout_width="match_parent"
+                                        android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="-"
+                                        android:text="Rp. "
+                                        android:textAlignment="viewEnd"
+                                        android:textColor="#000"
+                                        android:textSize="16sp" />
+
+                                    <TextView
+                                        android:id="@+id/biaya_admin"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:text="20.000.000"
                                         android:textAlignment="viewEnd"
                                         android:textSize="16sp"
                                         android:textStyle="bold" />
@@ -680,14 +706,14 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
-                                android:layout_marginLeft="20dp"
-                                android:layout_marginRight="20dp">
+                                android:padding="5dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_marginLeft="15dp">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginRight="5dp"
-                                    android:text="Total Tagihan       :"
+                                    android:text="Total Tagihan          :"
                                     android:textColor="#000"
                                     android:textSize="16sp" />
 
@@ -697,10 +723,18 @@
                                     android:gravity="end">
 
                                     <TextView
-                                        android:id="@+id/txt_totalTagihan2"
-                                        android:layout_width="match_parent"
+                                        android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="-"
+                                        android:text="Rp. "
+                                        android:textAlignment="viewEnd"
+                                        android:textColor="#000"
+                                        android:textSize="16sp" />
+
+                                    <TextView
+                                        android:id="@+id/total_tagihan3"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:text="20.000.000"
                                         android:textAlignment="viewEnd"
                                         android:textSize="16sp"
                                         android:textStyle="bold" />
@@ -743,14 +777,14 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
-                                android:layout_marginLeft="20dp"
-                                android:layout_marginRight="20dp">
+                                android:padding="5dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_marginLeft="15dp">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginRight="5dp"
-                                    android:text="Sisa Tagihan      :"
+                                    android:text="Sisa Tagihan             :"
                                     android:textColor="#000"
                                     android:textSize="16sp" />
 
@@ -760,9 +794,17 @@
                                     android:gravity="end">
 
                                     <TextView
-                                        android:id="@+id/txt_sisaTagihan"
-                                        android:layout_width="match_parent"
+                                        android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:text="Rp. "
+                                        android:textAlignment="viewEnd"
+                                        android:textColor="#000"
+                                        android:textSize="16sp" />
+
+                                    <TextView
+                                        android:id="@+id/sisa_tagihan"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
                                         android:text="-"
                                         android:textAlignment="viewEnd"
                                         android:textSize="16sp"
