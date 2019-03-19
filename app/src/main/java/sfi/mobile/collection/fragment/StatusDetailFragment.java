@@ -283,7 +283,6 @@ public class StatusDetailFragment extends Fragment {
             imgPembayaran.setImageBitmap(BitmapFactory.decodeByteArray(IMAGE,0,IMAGE.length));
             Log.d(TAG,"IMAGE -> "+imgPembayaran);
         }
-
         //--------------------------------------------------------//
         btnPrint.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -52,6 +52,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.DoubleBuffer;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -103,7 +104,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
     LinearLayout ln_pembayaran_ya, ln_pembayaran_tidak, ln_alamatbaru, ln_contactperson, ln_AlmtKunjungi, ln_unit, ln_customerbayar, ln_alamatberubah,ln_tanggaljanjibayar;
     Spinner spinner_name, spinner_alamatbaru, spinner_unit, spinner_custbayar, spinner_hubungan, spiner_alamat;
     CardView cardcontact, cardalamatbaru, cardunit, cardpembayaran_ya, cardpembayaran_tidak;
-    TextView txtcontract_id, txtcostumername, txttotaltagihan, txttgljanjibayar, txtlat_pembayaran, txtlng_pembayaran, txtlat_pertemuan, txtlng_pertemuan,txt_angsuran,txt_biayaadmin,txtDenda_tagihan,txt_totalTagihan2,txt_sisa;
+    TextView txtcontract_id, txtcostumername, txttotaltagihan, txttgljanjibayar, txtlat_pembayaran, txtlng_pembayaran, txtlat_pertemuan, txtlng_pertemuan,txt_angsuran,txt_biayaadmin,txtDenda_tagihan,txt_totalTagihan2,txt_sisa,txtTotalTagihanAll;
     Button btnsetlokasi_pertemuan, btnsetlokasi_pembayaran, btnsetfotolokasipertemuan, btnsetfotolokasipembayaran, btnsave;
 
     private static final String TAG = QuestionCustUpdate.class.getSimpleName();
@@ -144,6 +145,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         txtDenda_tagihan = (TextView) getActivity().findViewById(R.id.denda_tagihan);
         txt_sisa = (TextView) getActivity().findViewById(R.id.sisa_tagihan);
         txt_totalTagihan2 = (TextView) getActivity().findViewById(R.id.total_tagihan3);
+        txtTotalTagihanAll = (TextView) getActivity().findViewById(R.id.totalTagihanAll);
 
         txttgljanjibayar = (TextView) getActivity().findViewById(R.id.tgljanjibayar);
         txtlat_pertemuan = (TextView) getActivity().findViewById(R.id.lat_pertemuan);
@@ -190,6 +192,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
 
         //pembayaran_diterima.addTextChangedListener(onTextChanedListener());
         txt_biayaadmin.setText(formatRupiah.format((double)biaya_admin).replaceAll("Rp",""));
+
 
         /*** ------------------------------------------------------------- ***/
 
@@ -436,7 +439,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
                     txtlng_pembayaran.setText("Long : ");
                     txtlat_pertemuan.setText("Lat  : ");
                     txtlng_pertemuan.setText("Long : ");
-                    pembayaran_diterima.setText("0");
+                    pembayaran_diterima.setText("");
                     txttgljanjibayar.setText("");
                 } else if (position == 1) { //ya
                     ln_pembayaran_ya.setVisibility(View.VISIBLE);
@@ -506,8 +509,8 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
             public void afterTextChanged(Editable s) {
 
                 // angkaPertama = Double.parseDouble( editText.getText().toString());
-               // pembayaran_diterima.removeTextChangedListener(this);
-                /*try {
+                pembayaran_diterima.removeTextChangedListener(this);
+                try {
                     String originalString = s.toString();
 
                     Long longval;
@@ -525,7 +528,8 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
                     pembayaran_diterima.setSelection(pembayaran_diterima.getText().length());
                 } catch (NumberFormatException nfe) {
                     nfe.printStackTrace();
-                }*/
+                }
+                pembayaran_diterima.addTextChangedListener(this);
             }
             @Override
             public void beforeTextChanged(CharSequence s, int start,int count, int after) {
@@ -533,15 +537,16 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
 
             @Override
             public void onTextChanged(CharSequence s, int start,int before, int count) {
-                /*double hasil;
+                Locale localeID = new Locale("in", "ID");
+                NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
+                double hasil;
                 String pembayaran = pembayaran_diterima.getText().toString();
                 //intTotaltagihan = 5000000;
                 if (pembayaran.equals("")){
                     pembayaran_diterima.setText("0");
                 }
-                hasil = ((biaya_admin + Double.parseDouble(txt_totalTagihan2.getText().toString())) - Double.parseDouble(pembayaran_diterima.getText().toString()));
-                //Log.e(TAG,"Hasil Sisa Pembayaran ->" + hasil);
-                txt_sisa.setText(""+hasil);*/
+                hasil = ((biaya_admin + Double.parseDouble(txtTotalTagihanAll.getText().toString())) - Double.parseDouble(pembayaran_diterima.getText().toString().replaceAll(",","")));
+                txt_sisa.setText(formatRupiah.format((double)hasil).replaceAll("Rp",""));
             }
         });
     //------------------------------------------------------------//
@@ -696,6 +701,10 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
             txt_angsuran.setText(String.valueOf(formatRupiah.format(Double.parseDouble(cursor.getString(11)))).replaceAll( "Rp", "" ));
             txtDenda_tagihan.setText(String.valueOf(formatRupiah.format(Double.parseDouble(cursor.getString(13))).replaceAll("Rp","")));
             txt_totalTagihan2.setText(String.valueOf(formatRupiah.format(Double.parseDouble(cursor.getString(15)))).replaceAll( "Rp", "" ));
+            txtTotalTagihanAll.setText(String.valueOf(Double.parseDouble(cursor.getString(15))));
+
+            intTotaltagihan = Double.parseDouble(txtTotalTagihanAll.getText().toString()) + biaya_admin;
+            txt_totalTagihan2.setText(formatRupiah.format((double)intTotaltagihan).replaceAll("Rp",""));
         }
     }
 
