@@ -157,7 +157,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:id="@+id/ln_editdata">
 
                         <ImageView
                             android:layout_width="32dp"
@@ -183,7 +184,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:id="@+id/ln_printStruk">
 
                         <ImageView
                             android:layout_width="32dp"
@@ -209,7 +211,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:id="@+id/ln_sendemail">
 
                         <ImageView
                             android:layout_width="32dp"
@@ -252,6 +255,19 @@
                         android:background="#FFF"
                         android:orientation="vertical"
                         android:paddingTop="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="PIC"
+                            android:id="@+id/txt_PIC"
+                            android:visibility="gone"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Branch"
+                            android:visibility="gone"
+                            android:id="@+id/txt_branch"/>
 
                             <LinearLayout
                                 android:id="@+id/ln_ketemudengankosumen"
