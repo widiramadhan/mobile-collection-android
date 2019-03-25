@@ -3,7 +3,6 @@ package sfi.mobile.collection.fragment;
 
 import android.app.ProgressDialog;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -15,14 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-
-import org.w3c.dom.Text;
 
 import sfi.mobile.collection.R;
 
-import sfi.mobile.collection.adapter.CustomFragmentPageQuestionAdapter;
+import sfi.mobile.collection.adapter.PageQuestionAdapter;
 import sfi.mobile.collection.helper.DBHelper;
 
 public class QuestionFragment3 extends Fragment {
@@ -55,7 +51,7 @@ public class QuestionFragment3 extends Fragment {
         tabLayout = (TabLayout) view.findViewById(R.id.tabs_2);
         viewPager = (ViewPager) view.findViewById(R.id.view_pager_2);
 
-        viewPager.setAdapter(new CustomFragmentPageQuestionAdapter(getChildFragmentManager()));
+        viewPager.setAdapter(new PageQuestionAdapter(getChildFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
 
         dbhelper = new DBHelper(getActivity());

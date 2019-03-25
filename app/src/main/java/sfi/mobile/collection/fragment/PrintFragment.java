@@ -10,9 +10,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,7 +60,7 @@ public class PrintFragment extends Fragment {
     private ArrayList<BluetoothDevice> mDeviceList = new ArrayList<BluetoothDevice>();
     /*** memanggil session yang terdaftar ***/
     SharedPreferences sharedpreferences;
-    private static final String TAG = DashboardTabTasklist.class.getSimpleName();
+    private static final String TAG = TabNormal.class.getSimpleName();
     public final static String TAG_USER_ID = "USERID";
     public final static String TAG_USERNAME = "USERNAME";
     public final static String TAG_FULL_NAME = "FULLNAME";

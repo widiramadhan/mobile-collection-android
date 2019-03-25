@@ -50,17 +50,17 @@ public class StatusAdapter extends BaseAdapter {
             inflater = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null)
-            convertView = inflater.inflate(R.layout.list_status_layout, null);
+            convertView = inflater.inflate(R.layout.list_progress_layout, null);
 
         TextView txtcontract_id = (TextView) convertView.findViewById(R.id.contract_id);
         TextView txtcustomer_name = (TextView) convertView.findViewById(R.id.customer_name);
-        TextView txttanggal = (TextView) convertView.findViewById(R.id.date);
+        //TextView txttanggal = (TextView) convertView.findViewById(R.id.date);
 
         Status j = itemList.get(position);
 
         txtcontract_id.setText(j.getContractID());
         txtcustomer_name.setText(j.getCustomerName());
-        txttanggal.setText("Saved at "+j.getDate());
+        //txttanggal.setText("Saved at "+j.getDate());
 
         return convertView;
     }

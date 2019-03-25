@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#EEE"
+    android:background="#ECECEC"
     android:padding="5dp"
-    tools:context="sfi.mobile.collection.fragment.DashboardTabPriority">
+    tools:context="sfi.mobile.collection.fragment.TabPriority">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe"

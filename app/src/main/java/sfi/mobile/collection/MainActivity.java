@@ -15,8 +15,6 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -29,7 +27,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,18 +36,12 @@ import android.widget.Toast;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import sfi.mobile.collection.fragment.DashboardFragment;
-import sfi.mobile.collection.fragment.DashboardTabStatus;
-import sfi.mobile.collection.fragment.DashboardTabTasklist;
+import sfi.mobile.collection.fragment.ProgressFragment;
+import sfi.mobile.collection.fragment.TaskFragment;
+import sfi.mobile.collection.fragment.HomeFragment;
 import sfi.mobile.collection.fragment.ProfileFragment;
-import sfi.mobile.collection.fragment.QuestionCustUpdate;
-import sfi.mobile.collection.fragment.StatusFragment;
-import sfi.mobile.collection.fragment.TaskListDetailFragment;
-import sfi.mobile.collection.helper.PermissionHelper;
+import sfi.mobile.collection.fragment.TabDraftWithDelete;
 import sfi.mobile.collection.listener.MyPhoneStateListener;
-import sfi.mobile.collection.services.LocationService;
-import sfi.mobile.collection.services.MyService;
-import sfi.mobile.collection.util.Connectivity;
 
 public class MainActivity extends AppCompatActivity implements LocationListener{
 
@@ -69,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
 
     /*** memanggil session yang terdaftar ***/
     SharedPreferences sharedpreferences;
-    private static final String TAG = DashboardTabTasklist.class.getSimpleName();
+    private static final String TAG = MainActivity.class.getSimpleName();
     public final static String TAG_USER_ID = "USERID";
     public final static String TAG_USERNAME = "USERNAME";
     public final static String TAG_FULL_NAME = "FULLNAME";
@@ -101,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
 
         fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragment = new DashboardFragment();
+        fragment = new HomeFragment();
         fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
         fragmentTransaction.commit();
 
@@ -129,9 +120,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                 int id = item.getItemId();
 
                 if (id == R.id.nav_dashboard) {
-                    fragment = new DashboardFragment();
-                } else if (id == R.id.menu1) {
-                    fragment = new StatusFragment();
+                    fragment = new HomeFragment();
+                } else if (id == R.id.nav_task) {
+                    fragment = new TaskFragment();
+                } else if (id == R.id.nav_progress) {
+                    fragment = new ProgressFragment();
+                } else if (id == R.id.nav_test) {
+                    fragment = new TabDraftWithDelete();
                 } else if (id == R.id.nav_logout){
 
                     SharedPreferences preferences = getSharedPreferences(my_shared_preferences, Context.MODE_PRIVATE);
@@ -158,13 +153,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                 return true;
             }
         });
-
-        //service
-        //serviceIntent = new Intent(this, MyService.class);
-        //startService(serviceIntent);
-
-        /*serviceIntent = new Intent(this, LocationService.class);
-        startService(serviceIntent);*/
     }
 
     @Override
@@ -183,39 +171,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
             super.onBackPressed();
         }
     }
-
-   /* @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        }else{
-            super.onBackPressed();
-        }
-    }*/
-
-    /*boolean doubleBackToExitPressedOnce = false;
-    @Override
-    public void onBackPressed() {
-        //Checking for fragment count on backstack
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
-        } else if (!doubleBackToExitPressedOnce) {
-            this.doubleBackToExitPressedOnce = true;
-            Toast.makeText(this,"Please click BACK again to Exit.", Toast.LENGTH_SHORT).show();
-
-            new Handler().postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-                    doubleBackToExitPressedOnce = false;
-                }
-            }, 2000);
-        } else {
-            super.onBackPressed();
-            return;
-        }
-    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

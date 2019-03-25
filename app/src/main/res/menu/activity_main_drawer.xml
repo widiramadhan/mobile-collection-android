@@ -9,29 +9,17 @@
             android:icon="@drawable/ic_menu_home"
             android:title="Dashboard" />
         <item
-            android:id="@+id/menu1"
-            android:icon="@drawable/ic_format_list_bulleted_black_24dp"
-            android:title="Menu 1" />
+            android:id="@+id/nav_task"
+            android:icon="@drawable/ic_nav_task"
+            android:title="Task" />
         <item
-            android:id="@+id/menu2"
-            android:icon="@drawable/ic_format_list_bulleted_black_24dp"
-            android:title="Menu 2" />
+            android:id="@+id/nav_progress"
+            android:icon="@drawable/ic_nav_task_done"
+            android:title="Progress" />
         <item
-            android:id="@+id/menu3"
+            android:id="@+id/nav_test"
             android:icon="@drawable/ic_format_list_bulleted_black_24dp"
-            android:title="Menu 3" />
-        <item
-            android:id="@+id/menu4"
-            android:icon="@drawable/ic_format_list_bulleted_black_24dp"
-            android:title="Menu 4" />
-        <item
-            android:id="@+id/menu5"
-            android:icon="@drawable/ic_format_list_bulleted_black_24dp"
-            android:title="Menu 5" />
-        <item
-            android:id="@+id/menu6"
-            android:icon="@drawable/ic_format_list_bulleted_black_24dp"
-            android:title="Menu 6" />
+            android:title="Test" />
     </group>
 
     <item android:title="Settings">

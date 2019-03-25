@@ -9,9 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -40,18 +38,17 @@ import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import sfi.mobile.collection.R;
 import sfi.mobile.collection.app.AppController;
 import sfi.mobile.collection.helper.ConnectionHelper;
 import sfi.mobile.collection.helper.DBHelper;
 
-public class StatusDetailFragment extends Fragment {
+public class ProgressDetailFragment extends Fragment {
 
     private static Bitmap bitMapImage;
 
-    public StatusDetailFragment() {
+    public ProgressDetailFragment() {
     }
     /*** memanggil session yang terdaftar ***/
     SharedPreferences sharedpreferences;
@@ -81,7 +78,7 @@ public class StatusDetailFragment extends Fragment {
 
     protected Cursor cursor, cursor2;
     DBHelper dbhelper;
-    private static final String TAG = StatusDetailFragment.class.getSimpleName();
+    private static final String TAG = ProgressDetailFragment.class.getSimpleName();
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_status_detail, container, false);

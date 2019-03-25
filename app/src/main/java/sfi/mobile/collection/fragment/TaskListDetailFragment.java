@@ -2,7 +2,6 @@ package sfi.mobile.collection.fragment;
 
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -18,32 +17,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonArrayRequest;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
 import sfi.mobile.collection.R;
-import sfi.mobile.collection.app.AppController;
-import sfi.mobile.collection.helper.ConnectionHelper;
 import sfi.mobile.collection.helper.DBHelper;
-import sfi.mobile.collection.model.DetailTasklist;
-import sfi.mobile.collection.model.TaskList;
-import sfi.mobile.collection.util.HttpsTrustManager;
 
 
 public class TaskListDetailFragment extends Fragment {
@@ -66,7 +49,7 @@ public class TaskListDetailFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_tasklist_detail, container, false);
+        View view = inflater.inflate(R.layout.fragment_task_detail, container, false);
 
         return view;
     }

@@ -1,0 +1,142 @@
+<RelativeLayout
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="2dp">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:minHeight="80dp"
+            card_view:cardBackgroundColor="#FFF"
+            card_view:cardElevation="2dp"
+            card_view:cardUseCompatPadding="true"
+            android:layout_alignParentLeft="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tgl"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="18"
+                                    android:textAlignment="center"
+                                    android:textColor="#999999"
+                                    android:textSize="30dp"/>
+
+                                <TextView
+                                    android:id="@+id/bulan"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="JAN 19"
+                                    android:textAlignment="center"
+                                    android:textColor="#999999"
+                                    android:textSize="14dp"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.3"
+                            android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/customer_name"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Widi Ramadhan"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/colorPrimary" />
+
+                                <TextView
+                                    android:id="@+id/contract_id"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/customer_name"
+                                    android:text="12345678"
+                                    android:textColor="#999" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                        <TextView
+                                            android:id="@+id/rp"
+                                            android:layout_width="22dp"
+                                            android:layout_height="20dp"
+                                            android:text="Rp."
+                                            android:textColor="@color/colorPrimary" />
+
+                                        <TextView
+                                            android:id="@+id/total_tagihan"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="20dp"
+                                            android:layout_below="@+id/contract_id"
+                                            android:layout_toEndOf="@+id/rp"
+                                            android:layout_toRightOf="@+id/rp"
+                                            android:text="1.080.000"
+                                            android:textColor="#999" />
+
+                                        <TextView
+                                            android:id="@+id/textView5"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="20dp"
+                                            android:text="  |  "
+                                            android:textColor="@color/colorPrimary" />
+
+                                        <ImageView
+                                            android:id="@+id/imageView4"
+                                            android:layout_width="13dp"
+                                            android:layout_height="20dp"
+                                            card_view:srcCompat="@drawable/location" />
+
+                                        <TextView
+                                            android:id="@+id/jarak"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="20dp"
+                                            android:text="1.7 KM"
+                                            android:textColor="#999"/>
+
+                                </LinearLayout>
+
+
+
+
+
+
+
+
+                                <TextView
+                                    android:id="@+id/od"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="20dp"
+                                    android:layout_below="@+id/rp"
+                                    android:text="Keterlambatan selama 0 Hari"
+                                    android:textColor="@color/colorPrimary"/>
+
+                        </LinearLayout>
+
+                </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+
+</RelativeLayout>

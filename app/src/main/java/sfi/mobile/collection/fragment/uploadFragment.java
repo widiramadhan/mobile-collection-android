@@ -6,12 +6,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import sfi.mobile.collection.R;
 
@@ -40,7 +38,7 @@ public class uploadFragment extends Fragment {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DashboardFragment fragment = new DashboardFragment();
+                TaskFragment fragment = new TaskFragment();
                 FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();

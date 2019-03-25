@@ -30,7 +30,7 @@ public class ResultFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String contract_id =  ((TextView) getActivity().findViewById(R.id.txtcontractid)).getText().toString();
-                StatusDetailFragment fragment = new StatusDetailFragment();
+                ProgressDetailFragment fragment = new ProgressDetailFragment();
                 Bundle arguments = new Bundle();
                 arguments.putString( "paramId" , contract_id);
                 Log.d(TAG,"Contract ID -> " + contract_id);

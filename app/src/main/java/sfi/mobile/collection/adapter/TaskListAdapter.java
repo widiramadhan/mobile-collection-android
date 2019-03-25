@@ -8,13 +8,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
-
 import java.util.List;
 
 import sfi.mobile.collection.R;
-import sfi.mobile.collection.app.AppController;
-import sfi.mobile.collection.fragment.DashboardTabPriority;
 import sfi.mobile.collection.model.TaskList;
 
 public class TaskListAdapter extends BaseAdapter {
@@ -48,7 +44,7 @@ public class TaskListAdapter extends BaseAdapter {
             inflater = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null)
-            convertView = inflater.inflate(R.layout.list_tasklist_layout, null);
+            convertView = inflater.inflate(R.layout.list_task_layout, null);
 
         TextView contract_id = (TextView) convertView.findViewById(R.id.contract_id);
         TextView customer_name = (TextView) convertView.findViewById(R.id.customer_name);

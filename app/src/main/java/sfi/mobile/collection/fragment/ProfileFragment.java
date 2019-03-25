@@ -15,7 +15,7 @@ public class ProfileFragment extends Fragment {
 
     /*** memanggil session yang terdaftar ***/
     SharedPreferences sharedpreferences;
-    private static final String TAG = DashboardTabTasklist.class.getSimpleName();
+    private static final String TAG = TabNormal.class.getSimpleName();
     public final static String TAG_USER_ID = "USERID";
     public final static String TAG_USERNAME = "USERNAME";
     public final static String TAG_FULL_NAME = "FULLNAME";

@@ -5,16 +5,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import sfi.mobile.collection.fragment.QuestionCustInfo;
-import sfi.mobile.collection.fragment.QuestionCustResult;
 import sfi.mobile.collection.fragment.QuestionCustUpdate;
 
-public class CustomFragmentPageQuestionAdapter extends FragmentPagerAdapter {
+public class PageQuestionAdapter extends FragmentPagerAdapter {
 
-    private static final String TAG = CustomFragmentPageQuestionAdapter.class.getSimpleName();
+    private static final String TAG = PageQuestionAdapter.class.getSimpleName();
 
     private static final int FRAGMENT_COUNT = 2;
 
-    public CustomFragmentPageQuestionAdapter(FragmentManager fm) {
+    public PageQuestionAdapter(FragmentManager fm) {
         super(fm);
     }
 
