@@ -1,10 +1,7 @@
 package sfi.mobile.collection.fragment;
 
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,7 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import sfi.mobile.collection.R;
-import sfi.mobile.collection.adapter.StatusAdapter;
+import sfi.mobile.collection.adapter.DraftAdapter;
+import sfi.mobile.collection.adapter.TaskDoneAdapter;
 import sfi.mobile.collection.helper.DBHelper;
 import sfi.mobile.collection.model.Status;
 
@@ -36,7 +34,7 @@ public class TabDone extends Fragment implements
 
     SwipeRefreshLayout swipe;
     ListView list;
-    StatusAdapter statusAdapter;
+    TaskDoneAdapter taskDoneAdapter;
     List<Status> itemList = new ArrayList<>();
     TextView txtcontractid, txtcusrtomername;
 
@@ -55,8 +53,8 @@ public class TabDone extends Fragment implements
         txtcusrtomername = (TextView) view.findViewById(R.id.customer_name);
 
         // mengisi data dari adapter ke listview
-        statusAdapter = new StatusAdapter(getActivity(), itemList);
-        list.setAdapter(statusAdapter);
+        taskDoneAdapter = new TaskDoneAdapter(getActivity(), itemList);
+        list.setAdapter(taskDoneAdapter);
 
         swipe.setOnRefreshListener(this);
 
@@ -115,6 +113,6 @@ public class TabDone extends Fragment implements
         }
 
         swipe.setRefreshing(false);
-        statusAdapter.notifyDataSetChanged();
+        taskDoneAdapter.notifyDataSetChanged();
     }
 }

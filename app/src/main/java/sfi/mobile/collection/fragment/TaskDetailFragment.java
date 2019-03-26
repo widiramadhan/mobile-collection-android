@@ -29,9 +29,9 @@ import sfi.mobile.collection.R;
 import sfi.mobile.collection.helper.DBHelper;
 
 
-public class TaskListDetailFragment extends Fragment {
+public class TaskDetailFragment extends Fragment {
 
-    private static final String TAG = TaskListDetailFragment.class.getSimpleName();
+    private static final String TAG = TaskDetailFragment.class.getSimpleName();
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -44,7 +44,7 @@ public class TaskListDetailFragment extends Fragment {
     DBHelper dbhelper;
     protected Cursor cursor;
 
-    public TaskListDetailFragment() {
+    public TaskDetailFragment() {
     }
 
     @Override

@@ -62,8 +62,6 @@ public class DBHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
 
-        //Log.e("select sqlite ", "" + wordList);
-
         database.close();
         return wordList;
     }
@@ -80,12 +78,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("CONTRACT_ID", cursor.getString(0));
                 map.put("NAMA_KOSTUMER", cursor.getString(1));
-                map.put("DATE", String.valueOf(cursor.getInt(2)));
+                map.put("DATE", String.valueOf(cursor.getString(2)));
                 wordList.add(map);
             } while (cursor.moveToNext());
         }
-
-        //Log.e("select sqlite ", "" + wordList);
 
         database.close();
 

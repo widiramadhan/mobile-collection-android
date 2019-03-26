@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import sfi.mobile.collection.R;
-import sfi.mobile.collection.adapter.StatusAdapter;
+import sfi.mobile.collection.adapter.DraftAdapter;
 import sfi.mobile.collection.helper.DBHelper;
 import sfi.mobile.collection.model.Status;
 
@@ -33,7 +33,7 @@ public class TabDraftWithDelete extends Fragment implements
 
     SwipeRefreshLayout swipe;
     ListView list;
-    StatusAdapter statusAdapter;
+    DraftAdapter draftAdapter;
     List<Status> itemList = new ArrayList<>();
     TextView txtcontractid, txtcusrtomername;
 
@@ -51,8 +51,8 @@ public class TabDraftWithDelete extends Fragment implements
         txtcusrtomername = (TextView) view.findViewById(R.id.customer_name);*/
 
         // mengisi data dari adapter ke listview
-        statusAdapter = new StatusAdapter(getActivity(), itemList);
-        list.setAdapter(statusAdapter);
+        draftAdapter = new DraftAdapter(getActivity(), itemList);
+        list.setAdapter(draftAdapter);
 
         swipe.setOnRefreshListener(this);
 
@@ -129,6 +129,6 @@ public class TabDraftWithDelete extends Fragment implements
         }
 
         swipe.setRefreshing(false);
-        statusAdapter.notifyDataSetChanged();
+        draftAdapter.notifyDataSetChanged();
     }
 }

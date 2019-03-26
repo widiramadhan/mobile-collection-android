@@ -160,7 +160,7 @@ public class TabNormal extends Fragment implements
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String contract_id = ((TextView) view.findViewById(R.id.contract_id)).getText().toString();
-                TaskListDetailFragment fragment = new TaskListDetailFragment();
+                TaskDetailFragment fragment = new TaskDetailFragment();
                 Bundle arguments = new Bundle();
                 arguments.putString("paramId", contract_id);
                 Log.e(TAG, "Kontrak Id->" + contract_id);

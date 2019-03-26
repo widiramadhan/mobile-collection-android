@@ -49,17 +49,17 @@ public class ProgressFragment extends Fragment {
 
         dbhelper = new DBHelper(getActivity());
 
+        /*** Get parameter dari halaman sebelumnya ***/
+        Bundle arguments = getArguments();
+        final String flag = arguments.getString("flag");
+        /*** end Get parameter dari halaman sebelumnya ***/
+
+        if(flag.equals("0")) {
+            viewPager.setCurrentItem(0);
+        }else{
+            viewPager.setCurrentItem(1);
+        }
 
         return view;
-    }
-
-    private void showDialog() {
-        if (!pDialog.isShowing())
-            pDialog.show();
-    }
-
-    private void hideDialog() {
-        if (pDialog.isShowing())
-            pDialog.dismiss();
     }
 }
