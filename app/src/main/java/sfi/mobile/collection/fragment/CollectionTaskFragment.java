@@ -12,7 +12,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
 
@@ -21,9 +20,9 @@ import sfi.mobile.collection.R;
 import sfi.mobile.collection.adapter.PageQuestionAdapter;
 import sfi.mobile.collection.helper.DBHelper;
 
-public class QuestionFragment3 extends Fragment {
+public class CollectionTaskFragment extends Fragment {
 
-    private static final String TAG = QuestionFragment3.class.getSimpleName();
+    private static final String TAG = CollectionTaskFragment.class.getSimpleName();
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -32,11 +31,9 @@ public class QuestionFragment3 extends Fragment {
     protected Cursor cursor;
     DBHelper dbhelper;
 
-    EditText tgljatuhtempo,overduedays,tenor,jmloverdue,angsuranberjalan,angsurantertunggak,denda,titipan,totaltagihan,outstandingAR,
-            alamatktp,mobilephone,alamatkantor,nomorkantor,alamatsurat,nomorsurat,picterakhir,penanganganterakhir,tgljanjibayar;
-    TextView contract_id,costumername,amount;
+    TextView contract_id;
 
-    public QuestionFragment3() {
+    public CollectionTaskFragment() {
 
 
     }
@@ -46,7 +43,7 @@ public class QuestionFragment3 extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_dashboard_customer, container, false);
+        View view = inflater.inflate(R.layout.fragment_collection_task, container, false);
 
         tabLayout = (TabLayout) view.findViewById(R.id.tabs_2);
         viewPager = (ViewPager) view.findViewById(R.id.view_pager_2);
@@ -70,24 +67,7 @@ public class QuestionFragment3 extends Fragment {
         TextView contractID = (TextView) getActivity().findViewById(R.id.contract_id);
         contractID.setText(paramId);
         /*** end Get parameter dari halaman sebelumnya ***/
-
-        //getInfoDataCustomerByContract(paramId);
     }
-
-    /*private void getInfoDataCustomerByContract(String ContractID){
-        dbhelper = new DBHelper(getActivity());
-        contract_id = (TextView) getActivity().findViewById(R.id.nomorkontrak);
-
-        SQLiteDatabase db = dbhelper.getReadableDatabase();
-        cursor = db.rawQuery("SELECT * FROM dkhc WHERE NOMOR_KONTRAK='" + ContractID +"'",null);
-        cursor.moveToFirst();
-        if(cursor.getCount()>0)
-        {
-            cursor.moveToPosition(0);
-            contract_id.setText(cursor.getString(3));
-        }
-
-    }*/
 
     private void showDialog() {
         if (!pDialog.isShowing())

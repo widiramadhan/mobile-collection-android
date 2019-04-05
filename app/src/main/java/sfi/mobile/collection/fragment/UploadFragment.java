@@ -13,11 +13,11 @@ import android.widget.Button;
 
 import sfi.mobile.collection.R;
 
-public class uploadFragment extends Fragment {
+public class UploadFragment extends Fragment {
 
     private static final String TAG = ResultFragment.class.getSimpleName();
 
-    public uploadFragment() {
+    public UploadFragment() {
     }
 
     SharedPreferences sharedpreferences;

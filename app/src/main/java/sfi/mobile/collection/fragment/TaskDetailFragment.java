@@ -133,7 +133,7 @@ public class TaskDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String contract_id = ((TextView) getActivity().findViewById(R.id.app_id)).getText().toString();
-                QuestionFragment3 fragment = new QuestionFragment3();
+                CollectionTaskFragment fragment = new CollectionTaskFragment();
                 Bundle arguments = new Bundle();
                 arguments.putString( "paramId" , contract_id);
                 fragment.setArguments(arguments);

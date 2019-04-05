@@ -310,7 +310,7 @@ public class ProgressDetailFragment extends Fragment {
             imgPembayaran.setImageBitmap(bmp);
             //return BitmapFactory.decodeByteArray(IMAGE, 0, IMAGE.length);
             //imgPembayaran.setImageResource(convertByteArrayToBitmap(IMAGE));
-            imgPembayaran.setImageBitmap(BitmapFactory.decodeByteArray(IMAGE,0,IMAGE.length));
+            //imgPembayaran.setImageBitmap(BitmapFactory.decodeByteArray(IMAGE,0,IMAGE.length));
             Log.d(TAG,"IMAGE -> "+imgPembayaran);
         }
         //--------------------------------------------------------//
@@ -371,6 +371,7 @@ public class ProgressDetailFragment extends Fragment {
 
                             String questionID = "";
                             String answer = "";
+                            int loop = 0;
 
                             for (int i = 1; i <= 17; i++) {
                                 if (i == 1) {
@@ -442,24 +443,30 @@ public class ProgressDetailFragment extends Fragment {
                                     questionID = "MS_Q20190226172818070";
                                     answer = strHasilKunjungan;
                                 }
-                                uploadData(questionID, answer);
-                                /*Log.d(TAG, "Question->" + questionID);
-                                Log.d(TAG, "Question->" + answer);*/
 
+                                uploadData(questionID, answer);
+                                loop++;
+                                Log.d(TAG, "Nilai i ->" + i);
+                                Log.d(TAG, "Looping ke ->" + loop);
+                                Log.d(TAG, "Question ->" + questionID);
+                                Log.d(TAG, "Answer ->" + answer);
+
+                                /*if(i==17) {
+                                    dbhelper = new DBHelper(getActivity());
+                                    SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
+                                    String Sql = "update DKH set IS_COLLECT=1 where NOMOR_KONTRAK=" + txtContractID.getText().toString();
+                                    dbInsert.execSQL(Sql);
+
+                                    UploadFragment fragment = new UploadFragment();
+                                    FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
+                                    FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                                    fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();
+                                }*/
                             }
 
-                            dbhelper = new DBHelper(getActivity());
-                            SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
-                            String Sql = "update DKH set IS_COLLECT=1 where NOMOR_KONTRAK=" + txtContractID.getText().toString();
-                            dbInsert.execSQL(Sql);
-
-                            uploadFragment fragment = new uploadFragment();
-                            FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
-                            FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                            fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();
-
-                            //Toast.makeText(getActivity(), "Success Upload", Toast.LENGTH_SHORT).show();
-
+                            if(loop == 17){
+                                Log.e(TAG, "Data berhasil dikirim ke server");
+                            }
                     }
 
                 });

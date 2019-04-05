@@ -11,9 +11,10 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/success"
+        android:src="@drawable/success_saved"
         android:layout_gravity="center"
-        android:layout_marginTop="100dp"/>
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="50dp"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -33,9 +34,9 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
         android:textAlignment="center"
-        android:textColor="#666"
-        android:textSize="20dp"
-        android:text="Tasklist anda berhasil di simpan, silahkan ke menu status untuk mengupload data Tasklist anda."
+        android:textColor="#999"
+        android:textSize="14dp"
+        android:text="Tasklist anda berhasil di simpan. Silahkan ke menu status untuk mengupload data Tasklist anda."
         android:fontFamily="sans-serif"/>
 
     <TextView

@@ -4,8 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import sfi.mobile.collection.fragment.QuestionCustInfo;
-import sfi.mobile.collection.fragment.QuestionCustUpdate;
+import sfi.mobile.collection.fragment.TabCustomerInfo;
+import sfi.mobile.collection.fragment.TabQuestion;
 
 public class PageQuestionAdapter extends FragmentPagerAdapter {
 
@@ -21,11 +21,11 @@ public class PageQuestionAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return new QuestionCustUpdate();
+                return new TabQuestion();
             /*case 1:
                 return new QuestionCustResult();*/
             case 1:
-                return new QuestionCustInfo();
+                return new TabCustomerInfo();
         }
         return null;
     }

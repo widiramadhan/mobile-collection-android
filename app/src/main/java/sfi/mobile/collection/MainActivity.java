@@ -125,6 +125,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                     fragment = new TaskFragment();
                 } else if (id == R.id.nav_progress) {
                     fragment = new ProgressFragment();
+                    Bundle arguments = new Bundle();
+                    arguments.putString( "flag" , "0");
+                    fragment.setArguments(arguments);
                 } else if (id == R.id.nav_test) {
                     fragment = new TabDraftWithDelete();
                 } else if (id == R.id.nav_logout){

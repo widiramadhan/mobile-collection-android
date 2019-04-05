@@ -3,7 +3,6 @@ package sfi.mobile.collection.fragment;
 import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,15 +12,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -32,13 +28,11 @@ import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -51,8 +45,6 @@ import android.widget.Toast;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.nio.DoubleBuffer;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -64,7 +56,7 @@ import sfi.mobile.collection.BuildConfig;
 import sfi.mobile.collection.R;
 import sfi.mobile.collection.helper.DBHelper;
 
-public class QuestionCustUpdate extends Fragment implements LocationListener {
+public class TabQuestion extends Fragment implements LocationListener {
 
     /*** memanggil session yang terdaftar ***/
     SharedPreferences sharedpreferences;
@@ -107,15 +99,15 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
     TextView txtcontract_id, txtcostumername, txttotaltagihan, txttgljanjibayar, txtlat_pembayaran, txtlng_pembayaran, txtlat_pertemuan, txtlng_pertemuan,txt_angsuran,txt_biayaadmin,txtDenda_tagihan,txt_totalTagihan2,txt_sisa,txtTotalTagihanAll;
     Button btnsetlokasi_pertemuan, btnsetlokasi_pembayaran, btnsetfotolokasipertemuan, btnsetfotolokasipembayaran, btnsave;
 
-    private static final String TAG = QuestionCustUpdate.class.getSimpleName();
+    private static final String TAG = TabQuestion.class.getSimpleName();
 
-    public QuestionCustUpdate() {
+    public TabQuestion() {
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_question2, container, false);
+        View view = inflater.inflate(R.layout.tab_question, container, false);
         dbhelper = new DBHelper(getActivity());
         return view;
     }
@@ -255,7 +247,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, QuestionCustUpdate.this);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, TabQuestion.this);
                 Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 if (location != null) {
                     double lat = location.getLatitude();
@@ -280,7 +272,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, QuestionCustUpdate.this);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, TabQuestion.this);
                 Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 if (location != null) {
                     double lat = location.getLatitude();
@@ -627,7 +619,7 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
 
         SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
 
-       // String SaveImage = "insert into TBimage (CONTRACT_ID,IMAGE,CREATE_DATE) values('"+ strContractID +"','"+ encodedImage +"','"+ getDate  +"')";
+        //String SaveImage = "insert into TBimage (CONTRACT_ID,IMAGE,CREATE_DATE) values('"+ strContractID +"','"+ imageViewToByte(imageViewPembayaran) +"','"+ getDate  +"')";
 
         String saved = "insert into RESULT (CONTRACT_ID, QUESTION, ANSWER, CREATE_DATE, USER, BRANCH_ID) values" +
                 "('"+ strContractID +"','MS_Q20190226172031880','"+ spinner_name.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
@@ -654,6 +646,8 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         //dbInsert.execSQL(SaveImage);
         dbInsert.execSQL(Sql);
 
+        dbhelper.insertDataImage(strContractID, imageViewToByte(imageViewPembayaran), getDate);
+
        // Log.d(TAG,"Byte -> " + bitmapdata);
         String contract_id =  ((TextView) getActivity().findViewById(R.id.nomor_kontrak2)).getText().toString();
         ResultFragment fragment = new ResultFragment();
@@ -664,6 +658,10 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();
+
+        Log.e(TAG, "Test -> "+imageViewToByte(imageViewPembayaran));
+
+
     }
 
     public void storeImage(Bitmap img){
@@ -795,22 +793,8 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
         }
     }
 
-    void getLocationPertemuan() {
-        try {
-            locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
-        }
-        catch(SecurityException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public void onLocationChanged(Location location) {
-        /*txtlat_pertemuan.setText("Lat : " + location.getLatitude());
-        txtlng_pertemuan.setText("Long : " + location.getLongitude());
-        txtlat_pembayaran.setText("Lat : " + location.getLatitude());
-        txtlng_pembayaran.setText("Long : " + location.getLongitude());*/
     }
 
     @Override
@@ -826,5 +810,13 @@ public class QuestionCustUpdate extends Fragment implements LocationListener {
     @Override
     public void onProviderEnabled(String provider) {
 
+    }
+
+    public static byte[] imageViewToByte(ImageView image) {
+        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        return byteArray;
     }
 }

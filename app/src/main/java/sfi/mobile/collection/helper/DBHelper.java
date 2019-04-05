@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -221,5 +222,19 @@ public class DBHelper extends SQLiteOpenHelper {
 
         database.close();
         return wordList;
+    }
+
+    public void insertDataImage(String contractID, byte[] image, String create_date){
+        SQLiteDatabase database = getWritableDatabase();
+        String sql = "INSERT INTO TBimage VALUES (NULL, ?, ?, ?)";
+
+        SQLiteStatement statement = database.compileStatement(sql);
+        statement.clearBindings();
+
+        statement.bindString(1, contractID);
+        statement.bindBlob(2, image);
+        statement.bindString(3, create_date);
+
+        statement.executeInsert();
     }
 }

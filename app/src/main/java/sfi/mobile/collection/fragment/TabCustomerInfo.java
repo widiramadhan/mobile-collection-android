@@ -9,11 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -24,7 +20,7 @@ import sfi.mobile.collection.R;
 import sfi.mobile.collection.helper.DBHelper;
 import sfi.mobile.collection.model.DKHC;
 
-public class QuestionCustInfo extends Fragment {
+public class TabCustomerInfo extends Fragment {
     protected Cursor cursor;
     DBHelper dbhelper;
     ProgressDialog progressDialog;
@@ -33,13 +29,13 @@ public class QuestionCustInfo extends Fragment {
             txttgljatuhtempo, txtoverduedays, txtangsuranke, txtjmlangsuranoverdue, txttenor, txtangsuranberjalan, txtangsurantertunggak, txtdenda, txttitipan, txtoustandingar,
             txtalamagktp, txtnotlp, txtalamatkantor, txtnotlpkantor, txtalamatsurat, txtnotlpsurat, txtpicterakhir, txtpenangananterakhir, txttgljanjibayar ;
 
-    public QuestionCustInfo(){
+    public TabCustomerInfo(){
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_question_cust_info, container, false);
+        View view = inflater.inflate(R.layout.tab_cust_info, container, false);
 
         return view;
     }
