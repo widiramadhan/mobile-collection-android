@@ -36,6 +36,7 @@ import android.widget.Toast;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import sfi.mobile.collection.fragment.ChangePasswordFragment;
 import sfi.mobile.collection.fragment.ProgressFragment;
 import sfi.mobile.collection.fragment.TaskFragment;
 import sfi.mobile.collection.fragment.HomeFragment;
@@ -202,14 +203,15 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
             return true;
         }
         if (id == R.id.action_ganti_password) {
+            fragment = new ChangePasswordFragment();
+
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.main_container_wrapper, fragment);
+            transaction.commit();
+
             return true;
         }
         if (id == R.id.action_profile) {
-            SharedPreferences preferences = getSharedPreferences(my_shared_preferences, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.clear();
-            editor.commit();
-
             fragment = new ProfileFragment();
 
             FragmentTransaction transaction = fragmentManager.beginTransaction();

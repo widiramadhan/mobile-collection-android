@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ public class TabDraft extends Fragment implements
 
     SwipeRefreshLayout swipe;
     ListView list;
+    View view;
     DraftAdapter draftAdapter;
     List<Status> itemList = new ArrayList<>();
     TextView txtcontractid, txtcusrtomername;
@@ -44,7 +46,7 @@ public class TabDraft extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.tab_draft, container, false);
+        view = inflater.inflate(R.layout.tab_draft, container, false);
 
         list = (ListView) view.findViewById(R.id.listStatus);
         swipe = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
@@ -68,7 +70,7 @@ public class TabDraft extends Fragment implements
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String contract_id = ((TextView) view.findViewById(R.id.contract_id)).getText().toString();
-                ProgressDetailFragment fragment = new ProgressDetailFragment();
+                DraftDetailFragment fragment = new DraftDetailFragment();
                 Bundle arguments = new Bundle();
                 arguments.putString("paramId", contract_id);
                 Log.e(TAG, "Kontrak Id->" + contract_id);
@@ -78,7 +80,6 @@ public class TabDraft extends Fragment implements
                 fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();
             }
         });
-
         return view;
     }
 
@@ -93,7 +94,7 @@ public class TabDraft extends Fragment implements
 
     private void getAllStatus(){
         dbhelper = new DBHelper(getActivity());
-        ArrayList<HashMap<String, String>> row = dbhelper.getStatus();
+        ArrayList<HashMap<String, String>> row = dbhelper.getDraft();
         swipe.setRefreshing(true);
 
         itemList.clear();

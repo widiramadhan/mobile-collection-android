@@ -32,19 +32,25 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import sfi.mobile.collection.R;
 import sfi.mobile.collection.adapter.DKHCAdapter;
@@ -146,66 +152,28 @@ public class TabPriority extends Fragment implements
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String strSort = arrayAdapter.getItem(which);
-                        AlertDialog.Builder builderInner = new AlertDialog.Builder(getActivity());
-                        /*builderInner.setMessage(strName);
-                        builderInner.setTitle("Your Selected Item is");
-                        builderInner.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        builderInner.show();*/
                         if (strSort == "Jarak Terdekat") {
                             Log.e(TAG, "Anda memilih Jarak Terdekat");
                             dialog.dismiss();
-                        } else {
-                            Log.e(TAG, "Anda memilih selain Jarak Terdekat");
-                            dialog.dismiss();
-                        }
-
-                        if (strSort == "Jarak Terjauh") {
+                        } else if (strSort == "Jarak Terjauh") {
                             Log.e(TAG, "Anda memilih Jarak Terjauh");
                             dialog.dismiss();
-                        } else {
-                            Log.e(TAG, "Anda memilih selain Jarak Terjauh");
-                            dialog.dismiss();
-                        }
-
-                        if (strSort == "Tagihan Terbesar") {
+                        } else if (strSort == "Tagihan Terbesar") {
                             Log.e(TAG, "Anda memilih Tagihan Terbesar");
                             dialog.dismiss();
                             getDKHTagihanTerbesar();
-                        } else {
-                            Log.e(TAG, "Anda memilih selain Tagihan Terbesar");
-                            dialog.dismiss();
-                        }
-
-                        if (strSort == "Tagihan Terendah") {
+                        } else if (strSort == "Tagihan Terendah") {
                             Log.e(TAG, "Anda memilih Tagihan Terendah");
                             dialog.dismiss();
                             getDKHTagihanTerendah();
-                        } else {
-                            Log.e(TAG, "Anda memilih selain Tagihan Terendah");
-                            dialog.dismiss();
-                        }
-
-                        if (strSort == "Overdue Tertinggi") {
+                        } else if (strSort == "Overdue Tertinggi") {
                             Log.e(TAG, "Anda memilih Overdue Tertinggi");
                             dialog.dismiss();
                             getDKHODtertinggi();
-                        } else {
-                            Log.e(TAG, "Anda memilih selain Overdue Tertinggi");
-                            dialog.dismiss();
-                        }
-
-                        if (strSort == "Overdue Terendah") {
+                        } else if (strSort == "Overdue Terendah") {
                             Log.e(TAG, "Anda memilih Overdue Terendah");
                             dialog.dismiss();
                             getDKHODterendah();
-                        } else {
-                            Log.e(TAG, "Anda memilih selain Overdue Terendah");
-                            dialog.dismiss();
                         }
                     }
                 });
@@ -217,15 +185,22 @@ public class TabPriority extends Fragment implements
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String contract_id = ((TextView) view.findViewById(R.id.contract_id)).getText().toString();
-                TaskDetailFragment fragment = new TaskDetailFragment();
-                Bundle arguments = new Bundle();
-                arguments.putString("paramId", contract_id);
-                fragment.setArguments(arguments);
-                FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
-                fragmentTransaction.addToBackStack("A_B_TAG");
-                fragmentTransaction.commit();
+
+                ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo info = cm.getActiveNetworkInfo();
+                if(info == null) {
+                    TaskDetailFragment fragment = new TaskDetailFragment();
+                    Bundle arguments = new Bundle();
+                    arguments.putString("paramId", contract_id);
+                    fragment.setArguments(arguments);
+                    FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
+                    fragmentTransaction.addToBackStack("A_B_TAG");
+                    fragmentTransaction.commit();
+                }else{
+                    checkCollectibility(contract_id);
+                }
             }
         });
 
@@ -236,19 +211,11 @@ public class TabPriority extends Fragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         super.onCreate(savedInstanceState);
-        //init();
     }
 
     private void init() {
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
@@ -259,11 +226,11 @@ public class TabPriority extends Fragment implements
             txtLatitude.setText(String.valueOf(lat));
             txtLongitude.setText(String.valueOf(lng));
         }
-        //getLocation();
-        getDKHCPriority();
+
+        checkData();
     }
 
-    private void getDKHCPriority() {
+    private void checkData() {
         //cek koneksi
         ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
@@ -271,7 +238,7 @@ public class TabPriority extends Fragment implements
             Log.e(TAG, "Tidak ada koneksi");
             dbhelper = new DBHelper(getActivity());
             SQLiteDatabase db = dbhelper.getReadableDatabase();
-            cursor = db.rawQuery("SELECT * FROM DKH WHERE PIC = '"+employeeID+"' AND BRANCH_ID = '"+branchID+"' AND PERIOD = case strftime('%m','now') when '01' then 'January' when '02' then 'Febuary' when '03' then 'March' when '04' then 'April' when '05' then 'May' when '06' then 'June' when '07' then 'July' when '08' then 'August' when '09' then 'September' when '10' then 'October' when '11' then 'November' when '12' then 'December' else '' end  || ' ' || strftime('%Y','now')",null);
+            cursor = db.rawQuery("SELECT * FROM DKH WHERE PIC = '"+employeeID+"' AND BRANCH_ID = '"+branchID+"' AND PERIOD = '"+new SimpleDateFormat("YMM").format(new Date())+"01"+"'",null);
             cursor.moveToFirst();
             if(cursor.getCount() == 0){
                 Toast.makeText(getActivity(), "Membutuhkan koneksi internet untuk synchonize data", Toast.LENGTH_LONG).show();
@@ -283,16 +250,107 @@ public class TabPriority extends Fragment implements
             //cek data ada atau tidak
             dbhelper = new DBHelper(getActivity());
             SQLiteDatabase db = dbhelper.getReadableDatabase();
-            cursor = db.rawQuery("SELECT * FROM DKH WHERE PIC = '"+employeeID+"' AND BRANCH_ID = '"+branchID+"' AND PERIOD = case strftime('%m','now') when '01' then 'January' when '02' then 'Febuary' when '03' then 'March' when '04' then 'April' when '05' then 'May' when '06' then 'June' when '07' then 'July' when '08' then 'August' when '09' then 'September' when '10' then 'October' when '11' then 'November' when '12' then 'December' else '' end  || ' ' || strftime('%Y','now')",null);
+            cursor = db.rawQuery("SELECT * FROM DKH WHERE PIC = '"+employeeID+"' AND BRANCH_ID = '"+branchID+"' AND PERIOD = '"+new SimpleDateFormat("YMM").format(new Date())+"01"+"'",null);
             cursor.moveToFirst();
             if(cursor.getCount() == 0){ //jika data tidak ada
-                Log.e(TAG, "Data tidak ada, insert ke sqlite");
-                saveDataSQLite();
+                Log.e(TAG, "Data di sqlite belum ada, insert data....");
+                saveDataSQLite(employeeID, branchID);
             }else {
-                Log.e(TAG, "Data ada di sqlite, load dari sqlite");
+                Log.e(TAG, "Data di sqlite sudah ada, load data....");
                 getAllDKHC();
             }
         }
+    }
+
+    public void saveDataSQLite(final String employeeID, final String branchID){
+        String urlGetDKHC = ConnectionHelper.URL + "getTasklist.php";
+
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Loading...");
+            progressDialog.show();
+        }
+
+        JsonArrayRequest jArr = new JsonArrayRequest(urlGetDKHC+"?employeeID="+employeeID+"&branchID="+branchID,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.e(TAG, response.toString());
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                JSONObject obj = response.getJSONObject(i);
+                                DKHC j = new DKHC();
+                                j.setBranchID(obj.getString("BRANCH_ID"));
+                                j.setBranchName(obj.getString("BRANCH_NAME"));
+                                j.setPic(obj.getString("EMP_ID"));
+                                j.setNomorKontrak(obj.getString("NOMOR_KONTRAK"));
+                                j.setNamaKostumer(obj.getString("NAMA_KOSTUMER"));
+                                j.setTanggalJatuhTempo(obj.getString("TANGGAL_JATUH_TEMPO"));
+                                j.setOverDueDays(obj.getInt("OVERDUE_DAYS"));
+                                j.setAngsuranKe(obj.getInt("ANGSURAN_KE"));
+                                j.setJumlahAngsuranOverDue(obj.getInt("JUMLAH_ANGSURAN_OVERDUE"));
+                                j.setTenor(obj.getInt("TENOR"));
+                                j.setAngsuranBerjalan(obj.getInt("ANGSURAN_BERJALAN"));
+                                j.setAngsuranTertunggak(obj.getInt("ANGSURAN_TERTUNGGAK"));
+                                j.setDenda(obj.getInt("DENDA"));
+                                j.setTitipan(obj.getInt("TITIPAN"));
+                                j.setTotalTagihan(obj.getInt("TOTAL_TAGIHAN"));
+                                j.setOutstandingAR(obj.getInt("OUTSTANDING_AR"));
+                                j.setAlamatKTP(obj.getString("ALAMAT_KTP"));
+                                j.setNomorTlpRumah(obj.getString("NOMOR_TELEPON_RUMAH"));
+                                j.setNomorHanphone(obj.getString("NOMOR_HANDPHONE"));
+                                j.setAlamatKantor(obj.getString("ALAMAT_KANTOR"));
+                                j.setNomorTlpKantor(obj.getString("NOMOR_TELEPON_KANTOR"));
+                                j.setAlamatSurat(obj.getString("ALAMAT_SURAT"));
+                                j.setNomorTlpSurat(obj.getString("NOMOR_TELEPON_SURAT"));
+                                j.setPicTerakhir(obj.getString("PIC_TERAKHIR"));
+                                j.setPenangananTerakhir(obj.getString("PENANGANAN_TERAKHIR"));
+                                j.setTanggalJanjiBayar(obj.getString("TANGGAL_JANJI_BAYAR"));
+                                j.setDailyCollectibility(obj.getString("DailyCollectibility"));
+                                j.setOdHarian(obj.getInt("OvdDaysHarian"));
+                                j.setTanggalJatuhTempoHarian(obj.getString("TglJatuhTempoHarian"));
+                                j.setARin(obj.getInt("ARIN"));
+                                j.setFlowUp(obj.getInt("FlowUp"));
+                                j.setTanggalTarikHarian(obj.getString("TglTarikHarian"));
+                                j.setTanggalTerimaKlaim(obj.getString("TglTerimaKlaim"));
+                                j.setLat(obj.getString("LATITUDE"));
+                                j.setLng(obj.getString("LONGITUDE"));
+                                j.setApproval(obj.getInt("APPROVAL"));
+                                j.setIsCollect(obj.getInt("IS_COLLECT"));
+                                j.setPeriod(obj.getString("PERIOD"));
+                                j.setColAreaID(obj.getDouble("M_AREA_COLL_ID"));
+                                j.setCreateUser(obj.getString("CREATE_USER"));
+                                j.setCreateDate(obj.getString("CREATE_DATE"));
+                                j.setStatusVoid(obj.getInt("VOID"));
+
+                                dbhelper = new DBHelper(getActivity().getApplicationContext());
+                                dbhelper.insertDataDKH(j.getBranchID(), j.getBranchName(), j.getPic(), j.getNomorKontrak(), j.getNamaKostumer(), j.getTanggalJatuhTempo(),
+                                        j.getOverDueDays(), j.getAngsuranKe(), j.getJumlahAngsuranOverDue(), j.getTenor(), j.getAngsuranBerjalan(), j.getAngsuranTertunggak(),
+                                        j.getDenda(), j.getTitipan(), j.getTotalTagihan(), j.getOutstandingAR(), j.getAlamatKTP(), j.getNomorTlpRumah(), j.getNomorHanphone(),
+                                        j.getAlamatKantor(), j.getNomorTlpKantor(), j.getAlamatSurat(), j.getNomorTlpSurat(), j.getPicTerakhir(), j.getPenangananTerakhir(),
+                                        j.getTanggalJanjiBayar(), j.getDailyCollectibility(), j.getOdHarian(), j.getTanggalJatuhTempoHarian(), j.getARin(), j.getFlowUp(),
+                                        j.getTanggalTarikHarian(), j.getTanggalTerimaKlaim(), j.getLat(), j.getLng(), j.getApproval(), j.getIsCollect(), j.getPeriod(),  j.getColAreaID(),
+                                        j.getCreateUser(), j.getCreateDate(), j.getStatusVoid() );
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Log.e(TAG, "Masuk catch");
+                            }
+                        }
+                        progressDialog.hide();
+                        swipe.setRefreshing(false);
+                        getAllDKHC();
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e(TAG, "Error: " + error.getMessage());
+                Toast.makeText(getActivity().getApplicationContext(), "Terjadi kesalahan, mohon hubungi administrator", Toast.LENGTH_LONG).show();
+                progressDialog.hide();
+            }
+        });
+        AppController.getInstance().addToRequestQueue(jArr);
     }
 
     private void getAllDKHC(){
@@ -514,90 +572,67 @@ public class TabPriority extends Fragment implements
         dkhcAdapter.notifyDataSetChanged();
     }
 
-    private void saveDataSQLite(){
-        //HttpsTrustManager.allowAllSSL();
-        String urlGetDKHC = ConnectionHelper.URL + "getTasklist.php";
-        Log.e(TAG, "link -> "+urlGetDKHC+"?employeeID="+employeeID+"&branchID="+branchID);
+    private void checkCollectibility(final String strContractID){
+        String urlCheck = ConnectionHelper.URL + "checkCollectibility.php";
+        String tag_json = "tag_json";
 
-        if (progressDialog == null) {
+        if(progressDialog == null){
             progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("Loading...");
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Loading..");
             progressDialog.show();
         }
 
-        JsonArrayRequest jArr = new JsonArrayRequest(urlGetDKHC+"?employeeID="+employeeID+"&branchID="+branchID,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.e(TAG, response.toString());
-                        for (int i = 0; i < response.length(); i++) {
-                            try {
-                                JSONObject obj = response.getJSONObject(i);
-                                DKHC j = new DKHC();
-                                j.setBranchID(obj.getString("BRANCH_ID"));
-                                j.setBranchName(obj.getString("BRANCH_NAME"));
-                                j.setPic(obj.getString("EMP_ID"));
-                                j.setNomorKontrak(obj.getString("NOMOR_KONTRAK"));
-                                j.setNamaKostumer(obj.getString("NAMA_KOSTUMER"));
-                                j.setTanggalJatuhTempo(obj.getString("TANGGAL_JATUH_TEMPO"));
-                                j.setOverDueDays(obj.getInt("OVERDUE_DAYS"));
-                                j.setAngsuranKe(obj.getInt("ANGSURAN_KE"));
-                                j.setJumlahAngsuranOverDue(obj.getInt("JUMLAH_ANGSURAN_OVERDUE"));
-                                j.setTenor(obj.getInt("TENOR"));
-                                j.setAngsuranBerjalan(obj.getInt("ANGSURAN_BERJALAN"));
-                                j.setAngsuranTertunggak(obj.getInt("ANGSURAN_TERTUNGGAK"));
-                                j.setDenda(obj.getInt("DENDA"));
-                                j.setTitipan(obj.getInt("TITIPAN"));
-                                j.setTotalTagihan(obj.getInt("TOTAL_TAGIHAN"));
-                                j.setOutstandingAR(obj.getInt("OUTSTANDING_AR"));
-                                j.setAlamatKTP(obj.getString("ALAMAT_KTP"));
-                                j.setNomorTlpRumah(obj.getString("NOMOR_TELEPON_RUMAH"));
-                                j.setNomorHanphone(obj.getString("NOMOR_HANDPHONE"));
-                                j.setAlamatKantor(obj.getString("ALAMAT_KANTOR"));
-                                j.setNomorTlpKantor(obj.getString("NOMOR_TELEPON_KANTOR"));
-                                j.setAlamatSurat(obj.getString("ALAMAT_SURAT"));
-                                j.setNomorTlpSurat(obj.getString("NOMOR_TELEPON_SURAT"));
-                                j.setPicTerakhir(obj.getString("PIC_TERAKHIR"));
-                                j.setPenangananTerakhir(obj.getString("PENANGANAN_TERAKHIR"));
-                                j.setTanggalJanjiBayar(obj.getString("TANGGAL_JANJI_BAYAR"));
-                                j.setDailyCollectibility(obj.getString("DailyCollectibility"));
-                                j.setOdHarian(obj.getInt("OvdDaysHarian"));
-                                j.setTanggalJatuhTempoHarian(obj.getString("TglJatuhTempoHarian"));
-                                j.setARin(obj.getInt("ARIN"));
-                                j.setFlowUp(obj.getInt("FlowUp"));
-                                j.setTanggalTarikHarian(obj.getString("TglTarikHarian"));
-                                j.setTanggalTerimaKlaim(obj.getString("TglTerimaKlaim"));
-                                j.setLat(obj.getString("LATITUDE"));
-                                j.setLng(obj.getString("LONGITUDE"));
-                                j.setApproval(obj.getInt("APPROVAL"));
-                                j.setIsCollect(obj.getInt("IS_COLLECT"));
-                                j.setPeriod(obj.getString("PERIOD"));
-                                //insert to database sqlite
-                                dbhelper = new DBHelper(getActivity());
-                                SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
-                                String Sql = "insert into DKH (BRANCH_ID, BRANCH_NAME, PIC, NOMOR_KONTRAK, NAMA_KOSTUMER, TANGGAL_JATUH_TEMPO,OVERDUE_DAYS,ANGSURAN_KE,JUMLAH_ANGSURAN_OVERDUE,TENOR,ANGSURAN_BERJALAN,ANGSURAN_TERTUNGGAK,DENDA,TITIPAN,TOTAL_TAGIHAN,OUTSTANDING_AR,ALAMAT_KTP,NOMOR_TELEPON_RUMAH,NOMOR_HANDPHONE,ALAMAT_KANTOR,NOMOR_TELEPON_RUMAH,ALAMAT_SURAT,NOMOR_TELEPON_SURAT,PIC_TERAKHIR,PENANGANAN_TERAKHIR,TANGGAL_JANJI_BAYAR,DailyCollectibility,OvdDaysHarian,TglJatuhTempoHarian,ARIN,FlowUp,TglTarikHarian,TglTerimaKlaim,LATITUDE,LONGITUDE,APPROVAL,IS_COLLECT,PERIOD)" +
-                                        " values ('" + j.getBranchID().toString() + "','"+ j.getBranchName().toString() +"','"+ j.getPic().toString() +"','"+ j.getNomorKontrak().toString() +"','"+ j.getNamaKostumer().toString() +"','"+ j.getTanggalJatuhTempo().toString()+"','"+ Integer.valueOf(j.getOverDueDays()) +"','"+ Integer.valueOf(j.getAngsuranKe()) +"','"+ Integer.valueOf(j.getJumlahAngsuranOverDue()).toString() +"','"+ Integer.valueOf(j.getTenor()).toString() +"','"+ Integer.valueOf(j.getAngsuranBerjalan()).toString() +"','"+ Integer.valueOf(j.getAngsuranTertunggak()).toString() +"','"+ Integer.valueOf(j.getDenda()) +"','"+ Integer.valueOf(j.getTitipan()) +"','"+ j.getTotalTagihan() +"','"+ j.getOutstandingAR() +"','"+ j.getAlamatKTP() +"','"+ j.getNomorTlpRumah() +"','"+ j.getNomorHanphone() +"','"+ j.getAlamatKantor() +"','"+ j.getNomorTlpKantor() +"','"+ j.getAlamatSurat() +"','"+ j.getNomorTlpSurat() +"','"+ j.getPicTerakhir() +"','"+ j .getPenangananTerakhir()+"','"+ j.getTanggalJanjiBayar() +"','"+ j.getDailyCollectibility() +"','"+ j.getOdHarian() +"','"+ j.getTanggalJatuhTempoHarian() +"','"+ j.getARin() +"','"+ j.getFlowUp() +"','"+ j.getTanggalTarikHarian() +"','"+ j.getTanggalTerimaKlaim() +"','"+ j.getLat() +"','"+ j.getLng() +"','"+ j.getApproval() +"','"+ j.getIsCollect() +"','"+ j.getPeriod() +"')";
-                                dbInsert.execSQL(Sql);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                Log.e(TAG, "Masuk catch");
-                            }
-                        }
-                        progressDialog.hide();
-                        swipe.setRefreshing(false);
-                        getAllDKHC();
-                    }
-                }, new Response.ErrorListener() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, urlCheck, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("response", response.toString());
+                progressDialog.dismiss();
 
+                try {
+                    JSONObject jObject = new JSONObject(response);
+                    String pesan = jObject.getString("pesan");
+                    String hasil = jObject.getString("result");
+                    if (hasil.equalsIgnoreCase("true")) { //Coll Harian
+                        TaskDetailFragment fragment = new TaskDetailFragment();
+                        Bundle arguments = new Bundle();
+                        arguments.putString("paramId", strContractID);
+                        fragment.setArguments(arguments);
+                        FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
+                        fragmentTransaction.addToBackStack("A_B_TAG");
+                        fragmentTransaction.commit();
+                    } else { //Non Coll Harian
+                        Toast.makeText(getActivity(), "Customer ini sudah membayar dengan metode pembayaran lain", Toast.LENGTH_LONG).show();
+
+                        dbhelper = new DBHelper(getActivity());
+                        SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
+                        String updateCollectibility = "update DKH set IS_COLLECT=0 and DailyCollectibility='Non Coll Harian' where NOMOR_KONTRAK = "+strContractID;
+                        dbInsert.execSQL(updateCollectibility);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getActivity(), "Error JSON", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.e(TAG, "Error: " + error.getMessage());
-                //Toast.makeText(getActivity().getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-                Toast.makeText(getActivity().getApplicationContext(), "Terjadi kesalahan, mohon hubungi administrator", Toast.LENGTH_LONG).show();
-                progressDialog.hide();
+                VolleyLog.d("ERROR", error.getMessage());
+                Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
-        });
-        AppController.getInstance().addToRequestQueue(jArr);
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> param = new HashMap<String, String>();
+                param.put("contractID", strContractID);
+                return param;
+            }
+        };
+
+        AppController.getInstance().addToRequestQueue(stringRequest, tag_json);
     }
 
     @Override
@@ -605,43 +640,19 @@ public class TabPriority extends Fragment implements
         init();
     }
 
-    void getLocation() {
-        try {
-            locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
-
-        }
-        catch(SecurityException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public void onLocationChanged(Location location) {
-        if(location==null){
-            txtLatitude.setText("-");
-            txtLongitude.setText("-");
-        }else {
-            double lat = location.getLatitude();
-            double lng = location.getLongitude();
-            txtLatitude.setText(String.valueOf(lat));
-            txtLongitude.setText(String.valueOf(lng));
-        }
-        /*Log.e(TAG, "Lat : " + txtLatitude.getText() + ", Lng : " + txtLongitude.getText());*/
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        Toast.makeText(getActivity(), "Please Enable GPS and Internet", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-
     }
 
     @Override
     public void onProviderEnabled(String provider) {
+    }
 
+    @Override
+    public void onProviderDisabled(String provider) {
     }
 }

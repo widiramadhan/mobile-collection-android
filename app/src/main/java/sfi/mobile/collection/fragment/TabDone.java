@@ -37,6 +37,7 @@ public class TabDone extends Fragment implements
     TaskDoneAdapter taskDoneAdapter;
     List<Status> itemList = new ArrayList<>();
     TextView txtcontractid, txtcusrtomername;
+    View view;
 
     protected Cursor cursor;
     DBHelper dbhelper;

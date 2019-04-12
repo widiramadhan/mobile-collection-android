@@ -31,6 +31,14 @@
                             android:orientation="vertical">
 
                                 <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="JATUH TEMPO"
+                                    android:textAlignment="center"
+                                    android:textColor="#999999"
+                                    android:textSize="8dp"/>
+
+                                <TextView
                                     android:id="@+id/tgl"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"

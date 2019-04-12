@@ -14,7 +14,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginBottom="50dp">
+        android:layout_marginBottom="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -135,14 +135,13 @@
                             android:layout_height="32dp"
                             android:layout_gravity="center"
                             android:layout_marginTop="10dp"
-                            android:src="@drawable/ic_edit_disabled"/>
+                            android:src="@drawable/ic_edit_primary"/>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="8dp"
                             android:textAlignment="center"
-                            android:textColor="#CCC"
                             android:text="Edit Data" />
                     </LinearLayout>
 
@@ -163,12 +162,13 @@
                             android:layout_height="32dp"
                             android:layout_gravity="center"
                             android:layout_marginTop="10dp"
-                            android:src="@drawable/ic_print_primary"/>
+                            android:src="@drawable/ic_print_disabled"/>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="8dp"
+                            android:textColor="#CCC"
                             android:textAlignment="center"
                             android:text="Print Struk" />
                     </LinearLayout>
@@ -196,8 +196,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="8dp"
-                            android:textColor="#CCC"
                             android:textAlignment="center"
+                            android:textColor="#CCC"
                             android:text="Send Email" />
                     </LinearLayout>
                 </LinearLayout>
@@ -241,38 +241,38 @@
                             android:visibility="gone"
                             android:id="@+id/txt_branch"/>
 
-                            <LinearLayout
-                                android:id="@+id/ln_ketemudengankosumen"
+                        <LinearLayout
+                            android:id="@+id/ln_ketemudengankosumen"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical">
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginRight="20dp"
+                                android:text="Apakah Ketemu Dengan Customer ?"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="12dp"
+                                android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="20dp"
-                                    android:layout_marginRight="20dp"
-                                    android:text="Apakah Ketemu Dengan Customer ?"
-                                    android:textColor="@color/colorPrimary"
-                                    android:textSize="12dp"
-                                    android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/answer_meetup"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginRight="20dp"
+                                android:text="Ya" />
 
-                                <TextView
-                                    android:id="@+id/answer_meetup"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="20dp"
-                                    android:layout_marginRight="20dp"
-                                    android:text="Ya" />
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.5dp"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginTop="10dp"
+                                android:background="@android:color/darker_gray" />
 
-                                <View
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0.5dp"
-                                    android:layout_marginBottom="10dp"
-                                    android:layout_marginTop="10dp"
-                                    android:background="@android:color/darker_gray" />
-
-                            </LinearLayout>
+                        </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/ln_bertemukonsumen"
@@ -548,12 +548,6 @@
                                     android:layout_marginRight="20dp"
                                     android:text="-" />
 
-                                <ImageView
-                                    android:id="@+id/answer_img_pembayaran"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dp" />
-
                                 <View
                                     android:layout_width="match_parent"
                                     android:layout_height="0.5dp"
@@ -586,11 +580,35 @@
                                     android:layout_marginRight="20dp"
                                     android:text="-" />
 
-                                <ImageView
-                                    android:id="@+id/answer_img_pertemuan"
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0.5dp"
+                                    android:layout_marginBottom="10dp"
+                                    android:layout_marginTop="10dp"
+                                    android:background="@android:color/darker_gray" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/ln_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dp"/>
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginRight="20dp"
+                                    android:text="Foto"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="12dp"
+                                    android:textStyle="bold" />
+
+                                <ImageView
+                                    android:id="@+id/answer_img_pembayaran"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="10dp" />
 
                                 <View
                                     android:layout_width="match_parent"
@@ -666,22 +684,4 @@
 
         </LinearLayout>
     </ScrollView>
-
-    <LinearLayout
-        android:id="@+id/buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true">
-
-        <Button
-            android:id="@+id/btnUpload"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:text="UPLOAD TO SERVER"
-            android:textColor="#FFF"
-            android:background="@color/colorPrimary"/>
-
-
-    </LinearLayout>
 </RelativeLayout>

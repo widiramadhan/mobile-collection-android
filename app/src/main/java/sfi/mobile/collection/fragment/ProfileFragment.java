@@ -4,10 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import sfi.mobile.collection.R;
@@ -31,6 +34,7 @@ public class ProfileFragment extends Fragment {
     public static final String my_shared_preferences = "my_shared_preferences";
 
     TextView txtnameHeader, txtjobHeader, txtnamaLengkap, txtusername, txtnik, txtjabatan;
+    Button btnChangePassword;
 
 
     @Override
@@ -43,6 +47,7 @@ public class ProfileFragment extends Fragment {
         txtusername = (TextView) view.findViewById(R.id.username);
         txtnik = (TextView) view.findViewById(R.id.nik);
         txtjabatan = (TextView) view.findViewById(R.id.jabatan);
+        btnChangePassword = (Button) view.findViewById(R.id.btnChangePassword);
 
         /*** set session to variable ***/
         sharedpreferences = getActivity().getSharedPreferences(my_shared_preferences, Context.MODE_PRIVATE);
@@ -64,6 +69,16 @@ public class ProfileFragment extends Fragment {
         txtusername.setText(username);
         txtnik.setText(employeeID);
         txtjabatan .setText(job);
+
+        btnChangePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChangePasswordFragment fragment = new ChangePasswordFragment();
+                FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.main_container_wrapper,fragment).commit();
+            }
+        });
 
         return view;
     }

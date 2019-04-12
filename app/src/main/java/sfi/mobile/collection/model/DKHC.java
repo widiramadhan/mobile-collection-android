@@ -1,9 +1,9 @@
 package sfi.mobile.collection.model;
 
 public class DKHC {
-    String branchID, branchName, pic, nomorKontrak, namaKostumer, tanggalJatuhTempo, alamatKTP, nomorTlpRumah, nomorHanphone, alamatKantor, nomorTlpKantor, alamatSurat, nomorTlpSurat, picTerakhir, penangananTerakhir, tanggalJanjiBayar, dailyCollectibility, tanggalJatuhTempoHarian, tanggalTarikHarian, tanggalTerimaKlaim, lat, lng, period;
-    int overDueDays, angsuranKe, jumlahAngsuranOverDue, tenor, angsuranBerjalan, angsuranTertunggak, denda, titipan, totalTagihan, outstandingAR, odHarian, ARin, flowUp, approval, isCollect;
-    double jarak;
+    String branchID, branchName, pic, nomorKontrak, namaKostumer, tanggalJatuhTempo, alamatKTP, nomorTlpRumah, nomorHanphone, alamatKantor, nomorTlpKantor, alamatSurat, nomorTlpSurat, picTerakhir, penangananTerakhir, tanggalJanjiBayar, dailyCollectibility, tanggalJatuhTempoHarian, tanggalTarikHarian, tanggalTerimaKlaim, lat, lng, period, createUser, createDate;
+    int overDueDays, angsuranKe, jumlahAngsuranOverDue, tenor, angsuranBerjalan, angsuranTertunggak, denda, titipan, totalTagihan, outstandingAR, odHarian, ARin, flowUp, approval, isCollect, statusVoid;
+    double jarak, colAreaID;
 
     public String getBranchID() {
         return branchID;
@@ -189,6 +189,22 @@ public class DKHC {
         this.period = period;
     }
 
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
     public int getOverDueDays() {
         return overDueDays;
     }
@@ -309,11 +325,27 @@ public class DKHC {
         this.isCollect = isCollect;
     }
 
+    public int getStatusVoid() {
+        return statusVoid;
+    }
+
+    public void setStatusVoid(int statusVoid) {
+        this.statusVoid = statusVoid;
+    }
+
     public double getJarak() {
         return jarak;
     }
 
     public void setJarak(double jarak) {
         this.jarak = jarak;
+    }
+
+    public double getColAreaID() {
+        return colAreaID;
+    }
+
+    public void setColAreaID(double colAreaID) {
+        this.colAreaID = colAreaID;
     }
 }
