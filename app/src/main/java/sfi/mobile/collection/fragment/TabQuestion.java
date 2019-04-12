@@ -578,20 +578,25 @@ public class TabQuestion extends Fragment implements LocationListener {
 
         String updateCollectibility = "";
         Log.e(TAG,"spinner -> "+spinner_custbayar.getSelectedItem().toString());
-        if(spinner_custbayar.getSelectedItem().toString() == "Ya") {
-            if(pembayaran_diterima.getText().toString() == ""){
+        if(spinner_custbayar.getSelectedItem().toString().equals("Ya") ) {
+            if(pembayaran_diterima.getText().toString().equals("") || pembayaran_diterima.getText().toString().equals("0") ){
                 updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
+                Log.d(TAG,"Masuk ke if Pembayaran diterima");
             }else {
                 updateCollectibility = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
+                Log.d(TAG,"Masuk ke if Pembayaran tidak diterima");
             }
-        }else if(spinner_custbayar.getSelectedItem().toString() == "Tidak"){
-            if(txttgljanjibayar.getText().toString() == ""){
+        }else if(spinner_custbayar.getSelectedItem().toString().equals("Tidak")){
+            if(txttgljanjibayar.getText().toString().equals("")){
                 updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
+                Log.d(TAG,"Masuk ke if tanggal janji bayar kosong");
             }else {
                 updateCollectibility = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
+                Log.d(TAG,"Masuk ke if tanggal janji bayar tidak kosong");
             }
         }else{
             updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
+            Log.d(TAG,"test");
         }
 
         dbInsert.execSQL(saved);

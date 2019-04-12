@@ -33,7 +33,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Upload at"
+                    android:text="Upload in"
                     android:textAlignment="center"
                     android:textColor="#999999"
                     android:textSize="10dp"/>

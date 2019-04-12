@@ -16,7 +16,7 @@ public class PageProgressAdapter extends FragmentPagerAdapter{
 
     private static final int FRAGMENT_COUNT = 2;
 
-    public PageProgressAdapter(FragmentManager fm) {
+    public  PageProgressAdapter(FragmentManager fm) {
         super(fm);
     }
 

@@ -16,10 +16,14 @@
             android:id="@+id/nav_progress"
             android:icon="@drawable/ic_nav_task_done"
             android:title="Progress" />
-        <item
+        <!--<item
             android:id="@+id/nav_test"
             android:icon="@drawable/ic_format_list_bulleted_black_24dp"
-            android:title="Test" />
+            android:title="Test" />-->
+        <item
+            android:id="@+id/nav_history"
+            android:icon="@drawable/ic_menu_refresh"
+            android:title="History" />
     </group>
 
     <item android:title="Settings">

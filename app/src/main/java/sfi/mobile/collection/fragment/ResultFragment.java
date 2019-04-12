@@ -29,12 +29,12 @@ public class ResultFragment extends Fragment {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String contract_id =  ((TextView) getActivity().findViewById(R.id.txtcontractid)).getText().toString();
-                ProgressDetailFragment fragment = new ProgressDetailFragment();
+                //String contract_id =  ((TextView) getActivity().findViewById(R.id.txtcontractid)).getText().toString();
+                HomeFragment fragment = new HomeFragment();
                 Bundle arguments = new Bundle();
-                arguments.putString( "paramId" , contract_id);
+                /*arguments.putString( "paramId" , contract_id);
                 Log.d(TAG,"Contract ID -> " + contract_id);
-                fragment.setArguments(arguments);
+                fragment.setArguments(arguments);*/
                 FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();
@@ -42,15 +42,13 @@ public class ResultFragment extends Fragment {
         });
         return view;
     }
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         super.onCreate(savedInstanceState);
-
-        txt_contractId = (TextView) getActivity().findViewById(R.id.txtcontractid);
+        /*txt_contractId = (TextView) getActivity().findViewById(R.id.txtcontractid);
         Bundle arguments = getArguments();
         final String paramId = arguments.getString("paramId");
-        txt_contractId.setText(paramId);
+        txt_contractId.setText(paramId);*/
     }
 }

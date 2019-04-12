@@ -238,7 +238,7 @@ public class TabPriority extends Fragment implements
             Log.e(TAG, "Tidak ada koneksi");
             dbhelper = new DBHelper(getActivity());
             SQLiteDatabase db = dbhelper.getReadableDatabase();
-            cursor = db.rawQuery("SELECT * FROM DKH WHERE PIC = '"+employeeID+"' AND BRANCH_ID = '"+branchID+"' AND PERIOD = '"+new SimpleDateFormat("YMM").format(new Date())+"01"+"'",null);
+            cursor = db.rawQuery("SELECT * FROM DKH WHERE PIC = '"+employeeID+"' AND BRANCH_ID = '"+branchID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"'",null);
             cursor.moveToFirst();
             if(cursor.getCount() == 0){
                 Toast.makeText(getActivity(), "Membutuhkan koneksi internet untuk synchonize data", Toast.LENGTH_LONG).show();
@@ -250,7 +250,7 @@ public class TabPriority extends Fragment implements
             //cek data ada atau tidak
             dbhelper = new DBHelper(getActivity());
             SQLiteDatabase db = dbhelper.getReadableDatabase();
-            cursor = db.rawQuery("SELECT * FROM DKH WHERE PIC = '"+employeeID+"' AND BRANCH_ID = '"+branchID+"' AND PERIOD = '"+new SimpleDateFormat("YMM").format(new Date())+"01"+"'",null);
+            cursor = db.rawQuery("SELECT * FROM DKH WHERE PIC = '"+employeeID+"' AND BRANCH_ID = '"+branchID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"'",null);
             cursor.moveToFirst();
             if(cursor.getCount() == 0){ //jika data tidak ada
                 Log.e(TAG, "Data di sqlite belum ada, insert data....");

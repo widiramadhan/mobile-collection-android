@@ -38,6 +38,7 @@ import java.util.TimerTask;
 
 import sfi.mobile.collection.fragment.ChangePasswordFragment;
 import sfi.mobile.collection.fragment.ProgressFragment;
+import sfi.mobile.collection.fragment.TabHistory;
 import sfi.mobile.collection.fragment.TaskFragment;
 import sfi.mobile.collection.fragment.HomeFragment;
 import sfi.mobile.collection.fragment.ProfileFragment;
@@ -129,8 +130,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                     Bundle arguments = new Bundle();
                     arguments.putString( "flag" , "0");
                     fragment.setArguments(arguments);
-                } else if (id == R.id.nav_test) {
-                    fragment = new TabDraftWithDelete();
+                } else if (id == R.id.nav_history) {
+                    //fragment = new TabDraftWithDelete();
+                    fragment = new TabHistory();
                 } else if (id == R.id.nav_logout){
 
                     SharedPreferences preferences = getSharedPreferences(my_shared_preferences, Context.MODE_PRIVATE);

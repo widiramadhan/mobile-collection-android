@@ -89,6 +89,26 @@ public class DBHelper extends SQLiteOpenHelper {
         return wordList;
     }
 
+    public ArrayList<HashMap<String, String>> getHistory() {
+        ArrayList<HashMap<String, String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+
+        String selectQuery = "SELECT DISTINCT A.CONTRACT_ID, B.NAMA_KOSTUMER, A.CREATE_DATE AS DATE FROM RESULT A LEFT JOIN DKH B ON A.CONTRACT_ID = B.NOMOR_KONTRAK WHERE B.IS_COLLECT=1 AND B.DailyCollectibility='Coll non Harian'" ;
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("CONTRACT_ID", cursor.getString(0));
+                map.put("NAMA_KOSTUMER", cursor.getString(1));
+                map.put("DATE", String.valueOf(cursor.getString(2)));
+                wordList.add(map);
+            } while (cursor.moveToNext());
+        }
+        database.close();
+        return wordList;
+    }
+
     public ArrayList<HashMap<String, String>> getDraft() {
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();
