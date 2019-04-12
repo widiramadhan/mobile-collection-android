@@ -1,6 +1,7 @@
 package sfi.mobile.collection.fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -9,16 +10,20 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -36,6 +41,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -43,6 +51,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import sfi.mobile.collection.BuildConfig;
 import sfi.mobile.collection.R;
 import sfi.mobile.collection.helper.DBHelper;
 
@@ -285,6 +294,31 @@ public class TabQuestionEdit extends Fragment implements LocationListener {
             }
         });
 
+        btnsetfotolokasipembayaran.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                fileUri = getOutputMediaFileUri();
+                intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, fileUri);
+                startActivityForResult(intent, REQUEST_CAMERA);
+                flagFoto = "1";
+
+            }
+        });
+
+        btnsetfotolokasipertemuan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                fileUri = getOutputMediaFileUri();
+                intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, fileUri);
+                startActivityForResult(intent, REQUEST_CAMERA);
+                flagFoto = "2";
+            }
+        });
+
+
+
         //------------------------------------------------------------//
         pembayaran_diterima.addTextChangedListener(new TextWatcher() {
 
@@ -491,7 +525,125 @@ public class TabQuestionEdit extends Fragment implements LocationListener {
             Log.d(TAG,"Unit ->" + strUnit);
             Log.d(TAG,"bayar ->" + strQbayar);
         }
+//-----------------------------------------------------------//
+        //Spinner Apakah ketemu Dengan Costumer //
+        if(spinner_name.getSelectedItem().toString().equals("Pilih")){
+            ln_contactperson.setVisibility(View.GONE);
+            ln_AlmtKunjungi.setVisibility(View.GONE);
+            ln_alamatberubah.setVisibility(View.GONE);
+            cardcontact.setVisibility(View.GONE);
+            cardalamatbaru.setVisibility(View.GONE);
+            cardunit.setVisibility(View.GONE);
+            cardpembayaran_ya.setVisibility(View.GONE);
+            cardpembayaran_tidak.setVisibility(View.GONE);
+            txtlat_pertemuan.setText("Lat  : " );
+            txtlng_pertemuan.setText("Long : " );
+            spiner_alamat.setSelection(0);
+            spinner_alamatbaru.setSelection(0);
+            spinner_hubungan.setSelection(0);
+            contactperson.setText("");
+        }else if (spinner_name.getSelectedItem().toString().equals("Ya, bertemu dengan customer")){
+            ln_contactperson.setVisibility(View.GONE);
+            ln_AlmtKunjungi.setVisibility(View.VISIBLE);
+            ln_alamatberubah.setVisibility(View.VISIBLE);
+            cardcontact.setVisibility(View.VISIBLE);
+            cardpembayaran_tidak.setVisibility(View.GONE);
+            txtlat_pertemuan.setText("Lat  : " );
+            txtlng_pertemuan.setText("Long : " );
+            contactperson.setText("");
+            spinner_hubungan.setSelection(0);
+            btnupdate.setEnabled(true);
+        }else if (spinner_name.getSelectedItem().toString().equals("Tidak, bertemu dengan orang lain")){
+            ln_contactperson.setVisibility(View.GONE);
+            ln_AlmtKunjungi.setVisibility(View.VISIBLE);
+            ln_alamatberubah.setVisibility(View.VISIBLE);
+            cardcontact.setVisibility(View.VISIBLE);
+            cardpembayaran_tidak.setVisibility(View.GONE);
+            txtlat_pertemuan.setText("Lat  : " );
+            txtlng_pertemuan.setText("Long : " );
+            contactperson.setText("");
+            spinner_hubungan.setSelection(0);
+            btnupdate.setEnabled(true);
+        }else if(spinner_name.getSelectedItem().toString().equals("Tidak bertemu siapapun")){
+            ln_contactperson.setVisibility(View.GONE);
+            ln_AlmtKunjungi.setVisibility(View.GONE);
+            ln_alamatberubah.setVisibility(View.GONE);
+            cardcontact.setVisibility(View.GONE);
+            cardalamatbaru.setVisibility(View.GONE);
+            cardunit.setVisibility(View.GONE);
+            cardpembayaran_ya.setVisibility(View.GONE);
+            cardpembayaran_tidak.setVisibility(View.VISIBLE);
+            ln_pembayaran_tidak.setVisibility(View.VISIBLE);
+            ln_tanggaljanjibayar.setVisibility(View.GONE);
+            spiner_alamat.setSelection(0);
+            spinner_alamatbaru.setSelection(0);
+            spinner_hubungan.setSelection(0);
+            contactperson.setText("");
+                    /*spinner_unit.setSelection(0);
+                    spinner_custbayar.setSelection(0);*/
+            btnupdate.setEnabled(true);
+        }
 
+        //Spinner alamat baru atau tidak//
+        if(spinner_name.getSelectedItem().toString().equals("Pilih")){
+            ln_alamatbaru.setVisibility(View.GONE);
+            ln_unit.setVisibility(View.GONE);
+            cardunit.setVisibility(View.GONE);
+            ln_customerbayar.setVisibility(View.GONE);
+            cardalamatbaru.setVisibility(View.GONE);
+            cardunit.setVisibility(View.GONE);
+            cardpembayaran_ya.setVisibility(View.GONE);
+            cardpembayaran_tidak.setVisibility(View.GONE);
+            alamatbaru.setText("");
+        }else if(spinner_name.getSelectedItem().toString().equals("Ya")){
+            ln_alamatbaru.setVisibility(View.VISIBLE);
+            ln_unit.setVisibility(View.VISIBLE);
+            ln_customerbayar.setVisibility(View.VISIBLE);
+            cardunit.setVisibility(View.VISIBLE);
+            cardalamatbaru.setVisibility(View.VISIBLE);
+        }else if(spinner_name.getSelectedItem().toString().equals("Tidak")){
+            ln_alamatbaru.setVisibility(View.GONE);
+            ln_unit.setVisibility(View.VISIBLE);
+            ln_customerbayar.setVisibility(View.VISIBLE);
+            cardunit.setVisibility(View.VISIBLE);
+            cardalamatbaru.setVisibility(View.GONE);
+            alamatbaru.setText("");
+        }
+
+        //customer bayar atau tidak//
+        if(spinner_custbayar.getSelectedItem().toString().equals("Pilih")){
+            ln_pembayaran_tidak.setVisibility(View.GONE);
+            ln_pembayaran_ya.setVisibility(View.GONE);
+            cardpembayaran_ya.setVisibility(View.GONE);
+            cardpembayaran_tidak.setVisibility(View.GONE);
+            cardpembayaran_ya.setVisibility(View.GONE);
+            cardpembayaran_tidak.setVisibility(View.GONE);
+            txtlat_pembayaran.setText("Lat  : ");
+            txtlng_pembayaran.setText("Long : ");
+            txtlat_pertemuan.setText("Lat  : ");
+            txtlng_pertemuan.setText("Long : ");
+            pembayaran_diterima.setText("");
+            txttgljanjibayar.setText("");
+        }else if(spinner_custbayar.getSelectedItem().toString().equals("Ya")){
+            ln_pembayaran_ya.setVisibility(View.VISIBLE);
+            ln_pembayaran_tidak.setVisibility(View.GONE);
+            cardpembayaran_ya.setVisibility(View.VISIBLE);
+            cardpembayaran_tidak.setVisibility(View.GONE);
+            txtlat_pertemuan.setText("Lat  : ");
+            txtlng_pertemuan.setText("Long : ");
+            txttgljanjibayar.setText("");
+        }else if(spinner_custbayar.getSelectedItem().toString().equals("Tidak")){
+            ln_pembayaran_tidak.setVisibility(View.VISIBLE);
+            ln_pembayaran_ya.setVisibility(View.GONE);
+            cardpembayaran_ya.setVisibility(View.GONE);
+            cardpembayaran_tidak.setVisibility(View.VISIBLE);
+            ln_tanggaljanjibayar.setVisibility(View.VISIBLE);
+            txtlat_pembayaran.setText("Lat  : ");
+            txtlng_pembayaran.setText("Long : ");
+            pembayaran_diterima.setText("");
+        }
+
+//-----------------------------------------------------------//
         //Spinner Apakah ketemu Dengan Costumer //
         spinner_name.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -546,8 +698,8 @@ public class TabQuestionEdit extends Fragment implements LocationListener {
                     spinner_alamatbaru.setSelection(0);
                     spinner_hubungan.setSelection(0);
                     contactperson.setText("");
-                    /*spinner_unit.setSelection(0);
-                    spinner_custbayar.setSelection(0);*/
+                    spinner_unit.setSelection(0);
+                    spinner_custbayar.setSelection(0);
                     btnupdate.setEnabled(true);
                 }
 
@@ -559,7 +711,6 @@ public class TabQuestionEdit extends Fragment implements LocationListener {
 
             }
         });
-
         //Spinner Alamat Baru atau Tidak //
         spinner_alamatbaru.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -672,7 +823,7 @@ public class TabQuestionEdit extends Fragment implements LocationListener {
 
     private void UpdateDataResult(){
         String StrContractID = txtcontract_id.getText().toString();
-        String getDate = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
+        String getDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         dbhelper = new DBHelper(getActivity());
         SQLiteDatabase dbUpdate = dbhelper.getWritableDatabase();
         String Update1 = "UPDATE RESULT Set ANSWER ='"+ spinner_name.getSelectedItem().toString() +"',CREATE_DATE = '"+ getDate +"' WHERE QUESTION = 'MS_Q20190226172031880' and CONTRACT_ID ='"+ StrContractID +"'";
@@ -697,6 +848,31 @@ public class TabQuestionEdit extends Fragment implements LocationListener {
 
         String Sql = "update DKH set IS_COLLECT=2 where NOMOR_KONTRAK = '"+ StrContractID +"'";
         //Exec DB update
+        String updateCollectibility = "";
+
+        Log.e(TAG,"spinner pembayaran-> "+spinner_custbayar.getSelectedItem().toString());
+
+        if(spinner_custbayar.getSelectedItem().toString().equals("Ya") ) {
+            if(pembayaran_diterima.getText().toString().equals("") || pembayaran_diterima.getText().toString().equals("0") ){
+                updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + StrContractID;
+                Log.d(TAG,"Masuk ke if Pembayaran diterima");
+            }else {
+                updateCollectibility = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + StrContractID;
+                Log.d(TAG,"Masuk ke if Pembayaran tidak diterima");
+            }
+        }else if(spinner_custbayar.getSelectedItem().toString().equals("Tidak")){
+            if(txttgljanjibayar.getText().toString().equals("")){
+                updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + StrContractID;
+                Log.d(TAG,"Masuk ke if tanggal janji bayar kosong");
+            }else {
+                updateCollectibility = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + StrContractID;
+                Log.d(TAG,"Masuk ke if tanggal janji bayar tidak kosong");
+            }
+        }else{
+            updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + StrContractID;
+            Log.d(TAG,"masuk draft");
+        }
+
         dbUpdate.execSQL(Update1);
         dbUpdate.execSQL(Update2);
         dbUpdate.execSQL(Update3);
@@ -713,8 +889,18 @@ public class TabQuestionEdit extends Fragment implements LocationListener {
         dbUpdate.execSQL(Update14);
         dbUpdate.execSQL(Update15);
         dbUpdate.execSQL(Sql);
+        dbUpdate.execSQL(updateCollectibility);
+
         // Log.d(TAG,"Byte -> " + bitmapdata);
         //String contract_id =  ((TextView) getActivity().findViewById(R.id.nomor_kontrak2)).getText().toString();
+        /*if(imageViewPembayaran.getDrawable() != null){
+            dbhelper.updateDataImage(StrContractID, imageViewToByte(imageViewPembayaran), getDate);
+        }
+
+        if(imageView.getDrawable() != null){
+            dbhelper.updateDataImage(StrContractID, imageViewToByte(imageView), getDate);
+        }*/
+
         ResultFragment fragment = new ResultFragment();
         Bundle arguments = new Bundle();
         arguments.putString( "paramId" , StrContractID);
@@ -725,6 +911,105 @@ public class TabQuestionEdit extends Fragment implements LocationListener {
         fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();
     }
 
+    public Uri getOutputMediaFileUri() {
+        return FileProvider.getUriForFile(getActivity(),
+                BuildConfig.APPLICATION_ID + ".provider",
+                getOutputMediaFile());
+    }
+
+    private static File getOutputMediaFile() {
+        // External sdcard location
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "MobileCollection");
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.e("Monitoring", "Oops! Failed create Monitoring directory");
+                return null;
+            }
+        }
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        File mediaFile;
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
+
+        return mediaFile;
+    }
+
+    public static byte[] imageViewToByte(ImageView image) {
+        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        return byteArray;
+    }
+
+    // Untuk menampilkan bitmap pada ImageView
+    private void setToImageView(Bitmap bmp) {
+        //compress image
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, bitmap_size, bytes);
+        decoded = BitmapFactory.decodeStream(new ByteArrayInputStream(bytes.toByteArray()));
+
+        //menampilkan gambar yang dipilih dari camera/gallery ke ImageView
+        if(imageView.getDrawable() !=  null) {
+            imageView.setImageBitmap(decoded);
+        }else{
+            imageView.setImageBitmap(decoded);
+        }
+    }
+
+    private void setToImageViewPembayaran(Bitmap bmp) {
+        //compress image
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, bitmap_size, bytes);
+        decoded = BitmapFactory.decodeStream(new ByteArrayInputStream(bytes.toByteArray()));
+
+        //menampilkan gambar yang dipilih dari camera/gallery ke ImageView
+        if(imageViewPembayaran.getDrawable() !=  null) {
+            imageViewPembayaran.setImageBitmap(decoded);
+        }else{
+            imageViewPembayaran.setImageBitmap(decoded);
+        }
+    }
+
+    // Untuk resize bitmap
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio= (float) width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+        return Bitmap.createScaledBitmap(image, width, height, true);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.e("onActivityResult", "requestCode " + requestCode + ", resultCode " + resultCode);
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_CAMERA) {
+                try {
+                    Log.e("CAMERA", fileUri.getPath());
+
+                    bitmap = BitmapFactory.decodeFile(fileUri.getPath());
+                    Log.e(TAG,"Bitmap -> "+bitmap);
+                    if(flagFoto == "2") {
+                        setToImageView(getResizedBitmap(bitmap, max_resolution_image));
+                    }else if(flagFoto == "1"){
+                        setToImageViewPembayaran(getResizedBitmap(bitmap, max_resolution_image));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
     @Override
     public void onLocationChanged(Location location) {
     }

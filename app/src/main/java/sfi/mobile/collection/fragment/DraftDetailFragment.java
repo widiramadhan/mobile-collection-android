@@ -259,6 +259,7 @@ public class DraftDetailFragment extends Fragment {
         }
 
         txtResult.setText("Draft");
+
         //contact person name
         if(txtContactName.getText().equals("")){
             ln_contactpersonname.setVisibility(View.GONE);
@@ -281,7 +282,7 @@ public class DraftDetailFragment extends Fragment {
         }
 
         //alamat baru
-        if(txtNewAddress.getText().equals("")){
+        if(txtNewAddress.getText().equals("Pilih")){
             ln_alamatbaru.setVisibility(View.GONE);
         }else{
             ln_alamatbaru.setVisibility(View.VISIBLE);

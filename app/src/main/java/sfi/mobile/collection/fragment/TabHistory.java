@@ -91,7 +91,7 @@ public class TabHistory extends Fragment implements
 
     private void getAllhistory(){
         dbhelper = new DBHelper(getActivity());
-        ArrayList<HashMap<String, String>> row = dbhelper.getStatus();
+        ArrayList<HashMap<String, String>> row = dbhelper.getHistory();
         swipe.setRefreshing(true);
 
         itemList.clear();

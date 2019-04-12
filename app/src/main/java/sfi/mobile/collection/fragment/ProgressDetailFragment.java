@@ -304,15 +304,27 @@ public class ProgressDetailFragment extends Fragment {
             ln_hubungancostumer.setVisibility(View.VISIBLE);
         }
 
-        cursor2 = db.rawQuery("SELECT * FROM TBimage WHERE CONTRACT_ID ='" + paramId +"'",null);
+        cursor2 = db.rawQuery("SELECT * FROM TBimage WHERE CONTRACT_ID ='" + txtContractID.getText().toString() +"'",null);
         cursor2.moveToFirst();
         if(cursor2.getCount()>0) {
             cursor2.moveToPosition(0);
-
-            byte[] IMAGE = cursor2.getBlob(2);
-            Bitmap bmp= BitmapFactory.decodeByteArray(IMAGE, 0 , IMAGE.length);
-            imgPembayaran.setImageBitmap(bmp);
-            Log.d(TAG,"IMAGE -> "+imgPembayaran);
+            if(txtResult.getText().toString().equals("Janji Bayar")){
+                byte[] IMAGE = cursor2.getBlob(2);
+                Bitmap bmp= BitmapFactory.decodeByteArray(IMAGE, 0 , IMAGE.length);
+                imgPertemuan.setImageBitmap(bmp);
+                //return BitmapFactory.decodeByteArray(IMAGE, 0, IMAGE.length);
+                //imgPembayaran.setImageResource(convertByteArrayToBitmap(IMAGE));
+                //imgPembayaran.setImageBitmap(BitmapFactory.decodeByteArray(IMAGE,0,IMAGE.length));
+                Log.d(TAG,"IMAGE -> "+imgPertemuan);
+            }else if (txtResult.getText().toString().equals("Customer Membayar")){
+                byte[] IMAGE = cursor2.getBlob(2);
+                Bitmap bmp= BitmapFactory.decodeByteArray(IMAGE, 0 , IMAGE.length);
+                imgPembayaran.setImageBitmap(bmp);
+                //return BitmapFactory.decodeByteArray(IMAGE, 0, IMAGE.length);
+                //imgPembayaran.setImageResource(convertByteArrayToBitmap(IMAGE));
+                //imgPembayaran.setImageBitmap(BitmapFactory.decodeByteArray(IMAGE,0,IMAGE.length));
+                Log.d(TAG,"IMAGE -> "+imgPembayaran);
+            }
         }
     /*  //--------------------------------------------------------//
         btnPrint.setOnClickListener(new View.OnClickListener() {
@@ -453,15 +465,17 @@ public class ProgressDetailFragment extends Fragment {
                             Log.d(TAG, "Answer ->" + answer);
 
                                 /*if(i==17) {
-                                    dbhelper = new DBHelper(getActivity());
-                                    SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
-                                    String Sql = "update DKH set IS_COLLECT=1 where NOMOR_KONTRAK=" + txtContractID.getText().toString();
-                                    dbInsert.execSQL(Sql);
-                                    UploadFragment fragment = new UploadFragment();
-                                    FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
-                                    FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                                    fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();
+
                                 }*/
+
+                            dbhelper = new DBHelper(getActivity());
+                            SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
+                            String Sql = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll non Harian' where NOMOR_KONTRAK=" + txtContractID.getText().toString();
+                            dbInsert.execSQL(Sql);
+                            UploadFragment fragment = new UploadFragment();
+                            FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
+                            FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                            fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();
                         }
 
                         if(loop == 17){

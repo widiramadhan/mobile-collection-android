@@ -371,7 +371,6 @@ public class TabQuestion extends Fragment implements LocationListener {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
@@ -552,7 +551,7 @@ public class TabQuestion extends Fragment implements LocationListener {
 
     private void SaveDataResult(){
         String strContractID = txtcontract_id.getText().toString();
-        String getDate = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
+        String getDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
         dbhelper = new DBHelper(getActivity());
 
@@ -581,10 +580,10 @@ public class TabQuestion extends Fragment implements LocationListener {
         if(spinner_custbayar.getSelectedItem().toString().equals("Ya") ) {
             if(pembayaran_diterima.getText().toString().equals("") || pembayaran_diterima.getText().toString().equals("0") ){
                 updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
-                Log.d(TAG,"Masuk ke if Pembayaran diterima");
+                Log.d(TAG,"Masuk ke if Pembayaran tidak diterima");
             }else {
                 updateCollectibility = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
-                Log.d(TAG,"Masuk ke if Pembayaran tidak diterima");
+                Log.d(TAG,"Masuk ke if Pembayaran diterima");
             }
         }else if(spinner_custbayar.getSelectedItem().toString().equals("Tidak")){
             if(txttgljanjibayar.getText().toString().equals("")){
@@ -596,7 +595,7 @@ public class TabQuestion extends Fragment implements LocationListener {
             }
         }else{
             updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
-            Log.d(TAG,"test");
+            Log.d(TAG,"masuk draft");
         }
 
         dbInsert.execSQL(saved);

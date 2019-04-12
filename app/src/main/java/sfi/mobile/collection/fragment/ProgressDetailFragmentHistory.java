@@ -266,7 +266,7 @@ public class ProgressDetailFragmentHistory extends Fragment {
             ln_pembayaranditerima.setVisibility(View.GONE);
             ln_sisa_tagihan.setVisibility(View.GONE);
             ln_lokasiPembayaran.setVisibility(View.GONE);
-            btnPrint.setVisibility(View.GONE);
+/*            btnPrint.setVisibility(View.GONE);*/
         }else if (txtResult.getText().equals("Customer Membayar")){
             ln_sisa_tagihan.setVisibility(View.GONE);
             ln_lokasipertemuan.setVisibility(View.GONE);
@@ -275,7 +275,7 @@ public class ProgressDetailFragmentHistory extends Fragment {
             ln_bertemukonsumen.setVisibility(View.GONE);
             ln_hasilKunjungan.setVisibility(View.VISIBLE);
             ln_ketemudengankosumen.setVisibility(View.VISIBLE);
-            btnPrint.setVisibility(View.GONE);
+            /*btnPrint.setVisibility(View.GONE);*/
         }
 
         if(txtMeetup.getText().equals("Ya, bertemu dengan customer")){
@@ -290,14 +290,23 @@ public class ProgressDetailFragmentHistory extends Fragment {
         cursor2.moveToFirst();
         if(cursor2.getCount()>0) {
             cursor2.moveToPosition(0);
-
-            byte[] IMAGE = cursor2.getBlob(2);
-            Bitmap bmp= BitmapFactory.decodeByteArray(IMAGE, 0 , IMAGE.length);
-            imgPembayaran.setImageBitmap(bmp);
-            //return BitmapFactory.decodeByteArray(IMAGE, 0, IMAGE.length);
-            //imgPembayaran.setImageResource(convertByteArrayToBitmap(IMAGE));
-            //imgPembayaran.setImageBitmap(BitmapFactory.decodeByteArray(IMAGE,0,IMAGE.length));
-            Log.d(TAG,"IMAGE -> "+imgPembayaran);
+            if(txtResult.getText().toString().equals("Janji Bayar")){
+                byte[] IMAGE = cursor2.getBlob(2);
+                Bitmap bmp= BitmapFactory.decodeByteArray(IMAGE, 0 , IMAGE.length);
+                imgPertemuan.setImageBitmap(bmp);
+                //return BitmapFactory.decodeByteArray(IMAGE, 0, IMAGE.length);
+                //imgPembayaran.setImageResource(convertByteArrayToBitmap(IMAGE));
+                //imgPembayaran.setImageBitmap(BitmapFactory.decodeByteArray(IMAGE,0,IMAGE.length));
+                Log.d(TAG,"IMAGE -> "+imgPertemuan);
+            }else{
+                byte[] IMAGE = cursor2.getBlob(2);
+                Bitmap bmp= BitmapFactory.decodeByteArray(IMAGE, 0 , IMAGE.length);
+                imgPembayaran.setImageBitmap(bmp);
+                //return BitmapFactory.decodeByteArray(IMAGE, 0, IMAGE.length);
+                //imgPembayaran.setImageResource(convertByteArrayToBitmap(IMAGE));
+                //imgPembayaran.setImageBitmap(BitmapFactory.decodeByteArray(IMAGE,0,IMAGE.length));
+                Log.d(TAG,"IMAGE -> "+imgPembayaran);
+            }
         }
 
         ln_printStruk.setOnClickListener(new View.OnClickListener() {

@@ -38,7 +38,7 @@ public class UploadFragment extends Fragment {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TaskFragment fragment = new TaskFragment();
+                HomeFragment fragment = new HomeFragment();
                 FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();

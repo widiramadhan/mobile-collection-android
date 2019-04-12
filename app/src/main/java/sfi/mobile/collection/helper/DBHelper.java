@@ -85,7 +85,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         database.close();
-
         return wordList;
     }
 
@@ -275,6 +274,20 @@ public class DBHelper extends SQLiteOpenHelper {
         statement.bindString(3, create_date);
 
         statement.executeInsert();
+    }
+
+    public void updateDataImage(String contractID, byte[] image, String create_date){
+        SQLiteDatabase database = getWritableDatabase();
+        String sql = "UPDATE TBimage SET IMAGE = ? , create_date = ? where CONTRACT_ID = ? ";
+
+        SQLiteStatement statement = database.compileStatement(sql);
+        statement.clearBindings();
+
+        statement.bindString(1, contractID);
+        statement.bindBlob(2, image);
+        statement.bindString(3, create_date);
+
+        statement.executeUpdateDelete();
     }
 
     public void insertDataDKH(String branchID, String branchName, String pic, String noKontrak, String namaKostumer, String tglJatuhTempo, int overDueDays, int angsuranKe,
