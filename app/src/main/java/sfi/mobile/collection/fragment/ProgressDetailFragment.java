@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -150,7 +151,7 @@ public class ProgressDetailFragment extends Fragment {
         String strBranchID = sharedpreferences.getString(TAG_BRANCH_ID, null);
 
         txt_pic.setText(strPic);
-        txt_pic.setText(strBranchID);
+        txt_branch.setText(strBranchID);
 
         dbhelper = new DBHelper(getActivity());
         SQLiteDatabase db = dbhelper.getReadableDatabase();
@@ -458,29 +459,28 @@ public class ProgressDetailFragment extends Fragment {
                             }
 
                             uploadData(questionID, answer);
+
                             loop++;
                             Log.d(TAG, "Nilai i ->" + i);
                             Log.d(TAG, "Looping ke ->" + loop);
                             Log.d(TAG, "Question ->" + questionID);
                             Log.d(TAG, "Answer ->" + answer);
 
-                                /*if(i==17) {
-
-                                }*/
-
                             dbhelper = new DBHelper(getActivity());
                             SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
                             String Sql = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll non Harian' where NOMOR_KONTRAK=" + txtContractID.getText().toString();
                             dbInsert.execSQL(Sql);
-                            UploadFragment fragment = new UploadFragment();
-                            FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
-                            FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                            fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();
                         }
 
                         if(loop == 17){
                             Log.e(TAG, "Data berhasil dikirim ke server");
                         }
+
+                        UploadFragment fragment = new UploadFragment();
+                        FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();
+
                     }
 
                 });
@@ -501,7 +501,7 @@ public class ProgressDetailFragment extends Fragment {
         return bitMapImage;
     }
 
-    private void uploadData(final String strQuestion, final String strAnswer){
+    private void uploadData(final String strQuestion, final String strAnswer) {
         String urlUploadData = ConnectionHelper.URL+"saveResult.php";
         String tag_json = "tag_json";
 
@@ -543,8 +543,8 @@ public class ProgressDetailFragment extends Fragment {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> param = new HashMap<String, String>();
 
-                /*** set session to variable ***/
-                /*** end set session to variable ***/
+                //*//**//**//**//*** set session to variable ***//**//**//**//*
+                //*//**//**//**//*** end set session to variable ***//**//**//**//*
                 Log.d(TAG,"Masuk SIni Loh");
 
                 param.put("contractID", txtContractID.getText().toString());
@@ -560,6 +560,30 @@ public class ProgressDetailFragment extends Fragment {
 
         AppController.getInstance().addToRequestQueue(stringRequest, tag_json);
     }
+//------------------------
+    /*abstract class Asyn_Task extends AsyncTask<Void, Void, Void> {
+        private final ProgressDialog dialog = new ProgressDialog(getActivity());
+        // can use UI thread here
+        protected void onPreExecute() {
+            this.dialog.setMessage("Loading...");
+            this.dialog.setCancelable(false);
+            this.dialog.show();
+        }
+
+        protected Void doInBackground(String... params) {
+            uploadData(strQuestion,strAnswer );
+            // Do your all Stuffs
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+
+            if (this.dialog.isShowing()) {
+                this.dialog.dismiss();
+            }
+        }
+    }*/
 
     private void showDialog() {
         if (!progressDialog.isShowing())

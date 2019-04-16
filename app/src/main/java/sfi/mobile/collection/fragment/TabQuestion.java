@@ -601,7 +601,6 @@ public class TabQuestion extends Fragment implements LocationListener {
         dbInsert.execSQL(saved);
         dbInsert.execSQL(updateCollectibility);
 
-
         if(imageViewPembayaran.getDrawable() != null){
             dbhelper.insertDataImage(strContractID, imageViewToByte(imageViewPembayaran), getDate);
         }

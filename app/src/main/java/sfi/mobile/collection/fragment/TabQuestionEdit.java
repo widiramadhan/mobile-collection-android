@@ -893,13 +893,35 @@ public class TabQuestionEdit extends Fragment implements LocationListener {
 
         // Log.d(TAG,"Byte -> " + bitmapdata);
         //String contract_id =  ((TextView) getActivity().findViewById(R.id.nomor_kontrak2)).getText().toString();
-        /*if(imageViewPembayaran.getDrawable() != null){
-            dbhelper.updateDataImage(StrContractID, imageViewToByte(imageViewPembayaran), getDate);
-        }
 
+        if(imageViewPembayaran.getDrawable() != null){
+            SQLiteDatabase db = dbhelper.getReadableDatabase();
+            cursor = db.rawQuery("SELECT * FROM TBimage WHERE CONTRACT_ID = '"+ StrContractID +"'",null);
+            cursor.moveToFirst();
+            if(cursor.getCount() > 0) {
+                dbhelper.updateImage(StrContractID, imageViewToByte(imageViewPembayaran), getDate);
+            /*String imgpembayaran = "UPDATE TBimage SET IMAGE = '"+ imageViewToByte(imageViewPembayaran) +"', CREATE_DATE = '"+ getDate +"' WHERE CONTRACT_ID = '"+ StrContractID +"'";
+            dbUpdate.execSQL(imgpembayaran);*/
+                Log.d(TAG, "masuk update ImagePembayaran ->" + imageViewToByte(imageViewPembayaran));
+            }else{
+                dbhelper.insertDataImage(StrContractID, imageViewToByte(imageViewPembayaran), getDate);
+                Log.d(TAG, "masuk insert ImagePembayaran ->" );
+            }
+        }
         if(imageView.getDrawable() != null){
-            dbhelper.updateDataImage(StrContractID, imageViewToByte(imageView), getDate);
-        }*/
+            SQLiteDatabase db = dbhelper.getReadableDatabase();
+            cursor = db.rawQuery("SELECT * FROM TBimage WHERE CONTRACT_ID = '"+ StrContractID +"'",null);
+            cursor.moveToFirst();
+            if(cursor.getCount() > 0) {
+                dbhelper.updateImage(StrContractID, imageViewToByte(imageView), getDate);
+            /*String imgpembayaran = "UPDATE TBimage SET IMAGE = '"+ imageViewToByte(imageViewPembayaran) +"', CREATE_DATE = '"+ getDate +"' WHERE CONTRACT_ID = '"+ StrContractID +"'";
+            dbUpdate.execSQL(imgpembayaran);*/
+                Log.d(TAG, "masuk update ImageView ->" + imageViewToByte(imageViewPembayaran));
+            }else{
+                dbhelper.insertDataImage(StrContractID, imageViewToByte(imageView), getDate);
+                Log.d(TAG, "masuk insert ImageView ->" );
+            }
+        }
 
         ResultFragment fragment = new ResultFragment();
         Bundle arguments = new Bundle();

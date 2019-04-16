@@ -1,5 +1,6 @@
 package sfi.mobile.collection.helper;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -276,18 +277,13 @@ public class DBHelper extends SQLiteOpenHelper {
         statement.executeInsert();
     }
 
-    public void updateDataImage(String contractID, byte[] image, String create_date){
-        SQLiteDatabase database = getWritableDatabase();
-        String sql = "UPDATE TBimage SET IMAGE = ? , create_date = ? where CONTRACT_ID = ? ";
-
-        SQLiteStatement statement = database.compileStatement(sql);
-        statement.clearBindings();
-
-        statement.bindString(1, contractID);
-        statement.bindBlob(2, image);
-        statement.bindString(3, create_date);
-
-        statement.executeUpdateDelete();
+    public boolean updateImage(String contractID, byte[] image,String create_date) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("IMAGE",image);
+        contentValues.put("CREATE_DATE", create_date);
+        db.update("TBimage", contentValues, "CONTRACT_ID = ? ", new String[]{String.valueOf(contractID)});
+        return true;
     }
 
     public void insertDataDKH(String branchID, String branchName, String pic, String noKontrak, String namaKostumer, String tglJatuhTempo, int overDueDays, int angsuranKe,
