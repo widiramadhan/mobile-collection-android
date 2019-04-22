@@ -377,8 +377,6 @@ public class PrintFragment extends Fragment {
        // byte[] imageLogo = "";
         String imageLogo = "";
 
-
-
         //header
         byte[] titleByte    = Printer.printfont(titleStr, FontDefine.FONT_24PX, FontDefine.Align_CENTER,
                 (byte)0x1A, PocketPos.LANGUAGE_ENGLISH);

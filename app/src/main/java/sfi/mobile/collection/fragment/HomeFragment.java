@@ -72,7 +72,7 @@ public class HomeFragment extends Fragment implements
 
     ProgressDialog progressDialog;
 
-    String branchID, employeeID, employeeJobID;
+    String branchID, employeeID, employeeJobID,branchName;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
@@ -92,7 +92,7 @@ public class HomeFragment extends Fragment implements
         branchID = sharedpreferences.getString(TAG_BRANCH_ID, null);
         employeeID = sharedpreferences.getString(TAG_EMP_ID, null);
         employeeJobID = sharedpreferences.getString(TAG_EMP_JOB_ID, null);
-
+        //branchName = sharedpreferences.getString(TAG_BRANCH_NAME, null);
         dbhelper = new DBHelper(getActivity());
 
         SQLiteDatabase db = dbhelper.getReadableDatabase();
@@ -284,19 +284,19 @@ public class HomeFragment extends Fragment implements
     private void CountData(){
         SQLiteDatabase db = dbhelper.getReadableDatabase();
         //cek jumlah task yang ada
-        cursor = db.rawQuery("SELECT * FROM DKH WHERE IS_COLLECT = 0 AND DailyCollectibility = 'Coll Harian'",null);
+        cursor = db.rawQuery("SELECT * FROM DKH WHERE IS_COLLECT = 0 AND DailyCollectibility = 'Coll Harian' AND PIC = '"+employeeID+"'" ,null);
         cursor.moveToFirst();
         int count = cursor.getCount();
         txtTotalTask.setText(String.valueOf(count));
 
         //cek jumlah task yang sudah di upload ke server
-        cursor2 = db.rawQuery("SELECT * FROM DKH WHERE IS_COLLECT = 1 AND DailyCollectibility = 'Coll Harian'",null);
+        cursor2 = db.rawQuery("SELECT * FROM DKH WHERE IS_COLLECT = 1 AND DailyCollectibility = 'Coll Harian' AND PIC = '"+employeeID+"'",null);
         cursor2.moveToFirst();
         int count2 = cursor2.getCount();
         txtTotalDone.setText(String.valueOf(count2));
 
         //cek jumlah task yang ada di draft
-        cursor3 = db.rawQuery("SELECT * FROM DKH WHERE IS_COLLECT = 2 AND DailyCollectibility = 'Coll Harian'",null);
+        cursor3 = db.rawQuery("SELECT * FROM DKH WHERE IS_COLLECT = 2 AND DailyCollectibility = 'Coll Harian' AND PIC = '"+employeeID+"'",null);
         cursor3.moveToFirst();
         int count3 = cursor3.getCount();
         txtTotalDraft.setText(String.valueOf(count3));

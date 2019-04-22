@@ -140,7 +140,6 @@ public class ProgressDetailFragment extends Fragment {
 
         Locale localeID = new Locale("in", "ID");
         NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
-
         /*** Get parameter dari halaman sebelumnya ***/
         Bundle arguments = getArguments();
         final String paramId = arguments.getString("paramId");
@@ -285,7 +284,7 @@ public class ProgressDetailFragment extends Fragment {
             ln_pembayaranditerima.setVisibility(View.GONE);
             ln_sisa_tagihan.setVisibility(View.GONE);
             ln_lokasiPembayaran.setVisibility(View.GONE);
-/*            btnPrint.setVisibility(View.GONE);*/
+            ln_printStruk.setEnabled(true);
         }else if (txtResult.getText().equals("Customer Membayar")){
             ln_sisa_tagihan.setVisibility(View.GONE);
             ln_lokasipertemuan.setVisibility(View.GONE);
@@ -327,6 +326,9 @@ public class ProgressDetailFragment extends Fragment {
                 Log.d(TAG,"IMAGE -> "+imgPembayaran);
             }
         }
+
+
+
     /*  //--------------------------------------------------------//
         btnPrint.setOnClickListener(new View.OnClickListener() {
             @Override

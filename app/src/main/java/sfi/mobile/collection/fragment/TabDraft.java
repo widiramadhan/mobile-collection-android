@@ -1,7 +1,10 @@
 package sfi.mobile.collection.fragment;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -42,7 +45,19 @@ public class TabDraft extends Fragment implements
     protected Cursor cursor;
     DBHelper dbhelper;
 
+    /*** memanggil session yang terdaftar ***/
+    SharedPreferences sharedpreferences;
     private static final String TAG = TabDraft.class.getSimpleName();
+    public final static String TAG_USER_ID = "USERID";
+    public final static String TAG_USERNAME = "USERNAME";
+    public final static String TAG_FULL_NAME = "FULLNAME";
+    public final static String TAG_BRANCH_ID = "BRANCH_ID";
+    public final static String TAG_EMP_ID = "EMP_ID";
+    public final static String TAG_EMP_JOB_ID = "EMP_JOB_ID";
+    public final static String TAG_BRANCH_NAME = "BRANCH_NAME";
+
+    public static final String my_shared_preferences = "my_shared_preferences";
+    String branchID, employeeID, employeeJobID;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,6 +68,14 @@ public class TabDraft extends Fragment implements
         txtcontractid = (TextView) view.findViewById(R.id.contract_id);
         txtcusrtomername = (TextView) view.findViewById(R.id.customer_name);
 
+        sharedpreferences = getActivity().getSharedPreferences(my_shared_preferences, Context.MODE_PRIVATE);
+        String fullName = sharedpreferences.getString(TAG_FULL_NAME, null);
+        //txtName.setText("Hello,\n"+fullName);
+        branchID = sharedpreferences.getString(TAG_BRANCH_ID, null);
+        employeeID = sharedpreferences.getString(TAG_EMP_ID, null);
+        employeeJobID = sharedpreferences.getString(TAG_EMP_JOB_ID, null);
+
+        dbhelper = new DBHelper(getActivity());
         // mengisi data dari adapter ke listview
         draftAdapter = new DraftAdapter(getActivity(), itemList);
         list.setAdapter(draftAdapter);
@@ -83,6 +106,12 @@ public class TabDraft extends Fragment implements
         return view;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        super.onCreate(savedInstanceState);
+    }
+
     public void init(){
         getAllStatus();
     }
@@ -94,7 +123,7 @@ public class TabDraft extends Fragment implements
 
     private void getAllStatus(){
         dbhelper = new DBHelper(getActivity());
-        ArrayList<HashMap<String, String>> row = dbhelper.getDraft();
+        ArrayList<HashMap<String, String>> row = getDraft();
         swipe.setRefreshing(true);
 
         itemList.clear();
@@ -114,5 +143,28 @@ public class TabDraft extends Fragment implements
 
         swipe.setRefreshing(false);
         draftAdapter.notifyDataSetChanged();
+    }
+
+    //-----------------HELPER-----------------------------
+    public ArrayList<HashMap<String, String>> getDraft() {
+        ArrayList<HashMap<String, String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+
+        String selectQuery = "SELECT DISTINCT A.CONTRACT_ID, B.NAMA_KOSTUMER, A.CREATE_DATE AS DATE FROM RESULT A LEFT JOIN DKH B ON A.CONTRACT_ID = B.NOMOR_KONTRAK WHERE B.IS_COLLECT=2 AND B.DailyCollectibility='Coll Harian' AND B.PIC='"+employeeID+"'" ;
+        SQLiteDatabase database = dbhelper.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("CONTRACT_ID", cursor.getString(0));
+                map.put("NAMA_KOSTUMER", cursor.getString(1));
+                map.put("DATE", String.valueOf(cursor.getString(2)));
+                wordList.add(map);
+            } while (cursor.moveToNext());
+        }
+
+        database.close();
+
+        return wordList;
     }
 }

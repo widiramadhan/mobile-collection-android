@@ -441,6 +441,38 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/ln_apakah_CustMembayar"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginRight="20dp"
+                                    android:text="Apakah Customer Membayar?"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="12dp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/answer_apakahCustMembayar"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginRight="20dp"
+                                    android:text="Ya" />
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0.5dp"
+                                    android:layout_marginBottom="10dp"
+                                    android:layout_marginTop="10dp"
+                                    android:background="@android:color/darker_gray" />
+                            </LinearLayout>
+
+                            <LinearLayout
                                 android:id="@+id/ln_pembayaranditerima"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -557,6 +589,36 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/ln_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginRight="20dp"
+                                    android:text="Foto Pembayaran"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="12dp"
+                                    android:textStyle="bold" />
+
+                                <ImageView
+                                    android:id="@+id/answer_img_pembayaran"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="10dp" />
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0.5dp"
+                                    android:layout_marginBottom="10dp"
+                                    android:layout_marginTop="10dp"
+                                    android:background="@android:color/darker_gray" />
+                            </LinearLayout>
+
+                            <LinearLayout
                                 android:id="@+id/ln_lokasipertemuan"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -589,7 +651,7 @@
                             </LinearLayout>
 
                             <LinearLayout
-                                android:id="@+id/ln_image"
+                                android:id="@+id/ln_image_lokasi"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical">
@@ -599,13 +661,13 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="20dp"
                                     android:layout_marginRight="20dp"
-                                    android:text="Foto"
+                                    android:text="Foto Lokasi"
                                     android:textColor="@color/colorPrimary"
                                     android:textSize="12dp"
                                     android:textStyle="bold" />
 
                                 <ImageView
-                                    android:id="@+id/answer_img_pembayaran"
+                                    android:id="@+id/answer_img_pertemuan"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="10dp" />

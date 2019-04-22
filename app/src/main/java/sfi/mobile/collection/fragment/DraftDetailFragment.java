@@ -65,7 +65,7 @@ public class DraftDetailFragment extends Fragment {
 
     ProgressDialog progressDialog;
 
-    TextView txtContractID, txtCustomerName, txtResult, txtMeetup, txtContactName, txtHubungan, txtAddress, txtNewAddress, txtUnit, txtAmount, txtSisa, txtLokasiPembayaran, txtLokasiPertemuan, txtJanjiBayar, txtHasilKunjungan,txtTotalTagihanStatus,txtpembayaranStatus,txt_pic,txt_branch;
+    TextView txtContractID, txtCustomerName, txtResult, txtMeetup, txtContactName, txtHubungan, txtAddress, txtNewAddress, txtUnit,txtapakahCustMembayar, txtAmount, txtSisa, txtLokasiPembayaran, txtLokasiPertemuan, txtJanjiBayar, txtHasilKunjungan,txtTotalTagihanStatus,txtpembayaranStatus,txt_pic,txt_branch;
     double biaya_admin = 10000;
     double intSisa,intTotal;
     ImageView imgPembayaran, imgPertemuan;
@@ -74,7 +74,7 @@ public class DraftDetailFragment extends Fragment {
 
     String strMeetup, strContactName, strHubungan, strAddress, strQAddress, strNewAddress, strUnit, strQbayar, strAmount, strSisa, strLatPembayaran, strLngPembayaran, strLatPertemuan, strLngPertemuan, strJanjiBayar, strHasilKunjungan, strCreateDate,strTotal;
 
-    LinearLayout ln_ketemudengankosumen,ln_contactpersonname,ln_hubungancostumer,ln_alamatkunjungan,ln_alamatbaru,ln_apakah_unitada,ln_pembayaranditerima,ln_sisa_tagihan,ln_lokasiPembayaran,ln_lokasipertemuan,ln_tgljanjibayar,ln_hasilKunjungan,ln_bertemukonsumen,ln_editData,ln_printStruk,ln_sendEmail, ln_image;
+    LinearLayout ln_ketemudengankosumen,ln_contactpersonname,ln_hubungancostumer,ln_alamatkunjungan,ln_alamatbaru,ln_apakah_unitada,ln_pembayaranditerima,ln_sisa_tagihan,ln_lokasiPembayaran,ln_lokasipertemuan,ln_tgljanjibayar,ln_hasilKunjungan,ln_bertemukonsumen,ln_editData,ln_printStruk,ln_sendEmail, ln_image,ln_image_lokasi,ln_apakah_custMembayar;
 
     protected Cursor cursor, cursor2;
     DBHelper dbhelper;
@@ -102,6 +102,7 @@ public class DraftDetailFragment extends Fragment {
         txtHasilKunjungan = (TextView) view.findViewById(R.id.answer_hasil_kunjungan);
         txt_pic = (TextView) view.findViewById(R.id.txt_PIC);
         txt_branch = (TextView) view.findViewById(R.id.txt_branch);
+        txtapakahCustMembayar = (TextView) view.findViewById(R.id.answer_apakahCustMembayar);
 
         txtpembayaranStatus = (TextView) view.findViewById(R.id.pembayaran_status);
         txtTotalTagihanStatus = (TextView) view.findViewById(R.id.totaltagihan_status);
@@ -129,6 +130,8 @@ public class DraftDetailFragment extends Fragment {
         ln_printStruk = (LinearLayout) view.findViewById(R.id.ln_printStruk);
         ln_sendEmail = (LinearLayout) view.findViewById(R.id.ln_sendemail);
         ln_image = (LinearLayout) view.findViewById(R.id.ln_image);
+        ln_image_lokasi = (LinearLayout) view.findViewById(R.id.ln_image_lokasi);
+        ln_apakah_custMembayar = (LinearLayout) view.findViewById(R.id.ln_apakah_CustMembayar);
 
         return view;
     }
@@ -249,6 +252,7 @@ public class DraftDetailFragment extends Fragment {
             txtJanjiBayar.setText(strJanjiBayar);
             txtHasilKunjungan.setText(strHasilKunjungan);
             txtpembayaranStatus.setText(strAmount);
+            txtapakahCustMembayar.setText(strQbayar);
             //---------------------------------//
 
             if(strAmount.equals("")){
@@ -288,12 +292,22 @@ public class DraftDetailFragment extends Fragment {
             ln_alamatbaru.setVisibility(View.VISIBLE);
         }
 
-
         //apakah unit ada
         if(txtUnit.getText().equals("Ya")){
             ln_apakah_unitada.setVisibility(View.VISIBLE);
         }else if (strUnit.equals("Tidak") || strUnit.equals("Pilih")){
             ln_apakah_unitada.setVisibility(View.GONE);
+        }
+
+        //apakah Cust Membayar
+        if(txtapakahCustMembayar.getText().toString().equals("Pilih")){
+            ln_apakah_custMembayar.setVisibility(View.GONE);
+        }else if (txtapakahCustMembayar.getText().toString().equals("Ya")){
+            ln_apakah_custMembayar.setVisibility(View.VISIBLE);
+            ln_image_lokasi.setVisibility(View.GONE);
+        }else if (txtapakahCustMembayar.getText().toString().equals("Tidak")){
+            ln_apakah_custMembayar.setVisibility(View.VISIBLE);
+            ln_image.setVisibility(View.GONE);
         }
 
         //if pembayaran diterima
@@ -334,17 +348,26 @@ public class DraftDetailFragment extends Fragment {
             ln_hasilKunjungan.setVisibility(View.VISIBLE);
         }
 
+
+
         cursor2 = db.rawQuery("SELECT * FROM TBimage WHERE CONTRACT_ID ='" + paramId +"'",null);
         cursor2.moveToFirst();
         if(cursor2.getCount()>0) {
             cursor2.moveToPosition(0);
-            byte[] IMAGE = cursor2.getBlob(2);
-            Bitmap bmp= BitmapFactory.decodeByteArray(IMAGE, 0 , IMAGE.length);
-            imgPembayaran.setImageBitmap(bmp);
-
-            ln_image.setVisibility(View.VISIBLE);
+            if(txtapakahCustMembayar.getText().toString().equals("Ya")) {
+                byte[] IMAGE = cursor2.getBlob(2);
+                Bitmap bmp = BitmapFactory.decodeByteArray(IMAGE, 0, IMAGE.length);
+                imgPembayaran.setImageBitmap(bmp);
+                ln_image.setVisibility(View.VISIBLE);
+            }else if(txtapakahCustMembayar.getText().toString().equals("Tidak")) {
+                byte[] IMAGE = cursor2.getBlob(2);
+                Bitmap bmp = BitmapFactory.decodeByteArray(IMAGE, 0, IMAGE.length);
+                imgPertemuan.setImageBitmap(bmp);
+                ln_image_lokasi.setVisibility(View.VISIBLE);
+            }
         }else{
             ln_image.setVisibility(View.GONE);
+            ln_image_lokasi.setVisibility(View.GONE);
         }
 
         ln_editData.setOnClickListener(new View.OnClickListener() {

@@ -2,10 +2,12 @@ package sfi.mobile.collection.helper;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
+import android.os.Bundle;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -15,7 +17,6 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String TAG = DBHelper.class.getSimpleName();
     private static final String DATABASE_NAME = "mobile_collection.db";
     private static final int DATABASE_VERSION = 1;
-
 
     public DBHelper(Context context){
         super (context, DATABASE_NAME,null,DATABASE_VERSION);

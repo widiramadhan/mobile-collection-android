@@ -226,7 +226,6 @@ public class TabPriority extends Fragment implements
             txtLatitude.setText(String.valueOf(lat));
             txtLongitude.setText(String.valueOf(lng));
         }
-
         checkData();
     }
 
@@ -355,7 +354,7 @@ public class TabPriority extends Fragment implements
 
     private void getAllDKHC(){
         dbhelper = new DBHelper(getActivity());
-        ArrayList<HashMap<String, String>> row = dbhelper.getPriority();
+        ArrayList<HashMap<String, String>> row = getPriority();
         swipe.setRefreshing(true);
 
         itemList.clear();
@@ -399,7 +398,7 @@ public class TabPriority extends Fragment implements
 
     private void getDKHTagihanTerbesar(){
         dbhelper = new DBHelper(getActivity());
-        ArrayList<HashMap<String, String>> row = dbhelper.getDKHTagihanTerbesar();
+        ArrayList<HashMap<String, String>> row = getDKHtagihanTerbesar();
         swipe.setRefreshing(true);
 
         itemList.clear();
@@ -443,7 +442,7 @@ public class TabPriority extends Fragment implements
 
     private void getDKHTagihanTerendah(){
         dbhelper = new DBHelper(getActivity());
-        ArrayList<HashMap<String, String>> row = dbhelper.getDKHTagihanTerendah();
+        ArrayList<HashMap<String, String>> row = getDKHtagihanTerendah();
         swipe.setRefreshing(true);
 
         itemList.clear();
@@ -486,7 +485,7 @@ public class TabPriority extends Fragment implements
     }
     private void getDKHODtertinggi(){
         dbhelper = new DBHelper(getActivity());
-        ArrayList<HashMap<String, String>> row = dbhelper.getDKHODTertinggi();
+        ArrayList<HashMap<String, String>> row = getDKHODTertinggi();
         swipe.setRefreshing(true);
 
         itemList.clear();
@@ -530,7 +529,7 @@ public class TabPriority extends Fragment implements
 
     private void getDKHODterendah(){
         dbhelper = new DBHelper(getActivity());
-        ArrayList<HashMap<String, String>> row = dbhelper.getDKHODTerendah();
+        ArrayList<HashMap<String, String>> row = getDKHODTerendah();
         swipe.setRefreshing(true);
 
         itemList.clear();
@@ -571,7 +570,140 @@ public class TabPriority extends Fragment implements
         swipe.setRefreshing(false);
         dkhcAdapter.notifyDataSetChanged();
     }
+//-----------------------------------------HELPER------------------------------------------
+    public ArrayList<HashMap<String, String>> getPriority() {
+        ArrayList<HashMap<String, String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS,TANGGAL_JANJI_BAYAR FROM DKH WHERE IS_COLLECT = 0 AND DailyCollectibility = 'Coll Harian' AND PIC='"+employeeID+"' order by OVERDUE_DAYS desc limit 5";
+        SQLiteDatabase database = dbhelper.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("NOMOR_KONTRAK", cursor.getString(0));
+                map.put("NAMA_KOSTUMER", cursor.getString(1));
+                map.put("TOTAL_TAGIHAN", String.valueOf(cursor.getInt(2)));
+                map.put("TANGGAL_JATUH_TEMPO", cursor.getString(3));
+                map.put("LAT", cursor.getString(4));
+                map.put("LNG", cursor.getString(5));
+                map.put("OVERDUE_DAYS", cursor.getString(6));
+                map.put("TANGGAL_JANJI_BAYAR", cursor.getString(7));
+                wordList.add(map);
+            } while (cursor.moveToNext());
+        }
+        database.close();
+        return wordList;
+    }
 
+    public ArrayList<HashMap<String, String>> getDKHtagihanTerbesar() {
+        ArrayList<HashMap<String, String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS,TANGGAL_JANJI_BAYAR FROM DKH WHERE IS_COLLECT = 0 AND PIC='"+employeeID+"' order by TOTAL_TAGIHAN desc limit 5";
+        SQLiteDatabase database = dbhelper.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("NOMOR_KONTRAK", cursor.getString(0));
+                map.put("NAMA_KOSTUMER", cursor.getString(1));
+                map.put("TOTAL_TAGIHAN", String.valueOf(cursor.getInt(2)));
+                map.put("TANGGAL_JATUH_TEMPO", cursor.getString(3));
+                map.put("LAT", cursor.getString(4));
+                map.put("LNG", cursor.getString(5));
+                map.put("OVERDUE_DAYS", cursor.getString(6));
+                map.put("TANGGAL_JANJI_BAYAR", cursor.getString(7));
+                wordList.add(map);
+            } while (cursor.moveToNext());
+        }
+
+        //Log.e("select sqlite ", "" + wordList);
+
+        database.close();
+        return wordList;
+    }
+
+    public ArrayList<HashMap<String, String>> getDKHtagihanTerendah() {
+        ArrayList<HashMap<String, String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS,TANGGAL_JANJI_BAYAR FROM DKH WHERE IS_COLLECT = 0 PIC='"+employeeID+"' order by TOTAL_TAGIHAN asc limit 5";
+        SQLiteDatabase database = dbhelper.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("NOMOR_KONTRAK", cursor.getString(0));
+                map.put("NAMA_KOSTUMER", cursor.getString(1));
+                map.put("TOTAL_TAGIHAN", String.valueOf(cursor.getInt(2)));
+                map.put("TANGGAL_JATUH_TEMPO", cursor.getString(3));
+                map.put("LAT", cursor.getString(4));
+                map.put("LNG", cursor.getString(5));
+                map.put("OVERDUE_DAYS", cursor.getString(6));
+                map.put("TANGGAL_JANJI_BAYAR", cursor.getString(7));
+                wordList.add(map);
+            } while (cursor.moveToNext());
+        }
+
+        //Log.e("select sqlite ", "" + wordList);
+
+        database.close();
+        return wordList;
+    }
+
+    public ArrayList<HashMap<String, String>> getDKHODTerendah() {
+        ArrayList<HashMap<String, String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS,TANGGAL_JANJI_BAYAR FROM DKH WHERE IS_COLLECT = 0 AND PIC='"+employeeID+"' order by OVERDUE_DAYS asc limit 5";
+        SQLiteDatabase database = dbhelper.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("NOMOR_KONTRAK", cursor.getString(0));
+                map.put("NAMA_KOSTUMER", cursor.getString(1));
+                map.put("TOTAL_TAGIHAN", String.valueOf(cursor.getInt(2)));
+                map.put("TANGGAL_JATUH_TEMPO", cursor.getString(3));
+                map.put("LAT", cursor.getString(4));
+                map.put("LNG", cursor.getString(5));
+                map.put("OVERDUE_DAYS", cursor.getString(6));
+                map.put("TANGGAL_JANJI_BAYAR", cursor.getString(7));
+                wordList.add(map);
+            } while (cursor.moveToNext());
+        }
+
+        //Log.e("select sqlite ", "" + wordList);
+
+        database.close();
+        return wordList;
+    }
+
+    public ArrayList<HashMap<String, String>> getDKHODTertinggi() {
+        ArrayList<HashMap<String, String>> wordList;
+        wordList = new ArrayList<HashMap<String, String>>();
+        String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS,TANGGAL_JANJI_BAYAR FROM DKH WHERE IS_COLLECT = 0 AND PIC='"+employeeID+"'order by OVERDUE_DAYS desc limit 5";
+        SQLiteDatabase database = dbhelper.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("NOMOR_KONTRAK", cursor.getString(0));
+                map.put("NAMA_KOSTUMER", cursor.getString(1));
+                map.put("TOTAL_TAGIHAN", String.valueOf(cursor.getInt(2)));
+                map.put("TANGGAL_JATUH_TEMPO", cursor.getString(3));
+                map.put("LAT", cursor.getString(4));
+                map.put("LNG", cursor.getString(5));
+                map.put("OVERDUE_DAYS", cursor.getString(6));
+                map.put("TANGGAL_JANJI_BAYAR", cursor.getString(7));
+                wordList.add(map);
+            } while (cursor.moveToNext());
+        }
+
+        //Log.e("select sqlite ", "" + wordList);
+
+        database.close();
+        return wordList;
+    }
+
+//----------------------------------------------------
     private void checkCollectibility(final String strContractID){
         String urlCheck = ConnectionHelper.URL + "checkCollectibility.php";
         String tag_json = "tag_json";

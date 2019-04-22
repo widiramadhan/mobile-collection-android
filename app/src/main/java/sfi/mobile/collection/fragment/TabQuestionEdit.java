@@ -916,10 +916,10 @@ public class TabQuestionEdit extends Fragment implements LocationListener {
                 dbhelper.updateImage(StrContractID, imageViewToByte(imageView), getDate);
             /*String imgpembayaran = "UPDATE TBimage SET IMAGE = '"+ imageViewToByte(imageViewPembayaran) +"', CREATE_DATE = '"+ getDate +"' WHERE CONTRACT_ID = '"+ StrContractID +"'";
             dbUpdate.execSQL(imgpembayaran);*/
-                Log.d(TAG, "masuk update ImageView ->" + imageViewToByte(imageViewPembayaran));
+/*                Log.d(TAG, "masuk update ImageView ->" + imageViewToByte(imageViewPembayaran));*/
             }else{
                 dbhelper.insertDataImage(StrContractID, imageViewToByte(imageView), getDate);
-                Log.d(TAG, "masuk insert ImageView ->" );
+                /*Log.d(TAG, "masuk insert ImageView ->" );*/
             }
         }
 
