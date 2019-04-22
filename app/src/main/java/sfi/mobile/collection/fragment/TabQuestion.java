@@ -576,24 +576,34 @@ public class TabQuestion extends Fragment implements LocationListener {
                 "('"+ strContractID +"','MS_Q20190226172818070','"+ hasilkunjungan.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')";
 
         String updateCollectibility = "";
+        String updateCollectibility2 = "";
         Log.e(TAG,"spinner -> "+spinner_custbayar.getSelectedItem().toString());
-        if(spinner_custbayar.getSelectedItem().toString().equals("Ya") ) {
+        if(spinner_name.getSelectedItem().toString().equals("Tidak bertemu siapapun")) {
+            if (imageView.getDrawable() != null) {
+                dbhelper.insertDataImage(strContractID, imageViewToByte(imageView), getDate);
+                updateCollectibility = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
+                Log.d(TAG, "Masuk ke Done karna foto lokasi tidak kosong");
+            } else {
+                updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
+                Log.d(TAG, "Masuk ke Draft karna foto lokasi kosong");
+            }
+        }else if (spinner_custbayar.getSelectedItem().toString().equals("Ya") ) {
             if(pembayaran_diterima.getText().toString().equals("") || pembayaran_diterima.getText().toString().equals("0") ){
                 updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
-                Log.d(TAG,"Masuk ke if Pembayaran tidak diterima");
+                Log.d(TAG,"Masuk ke Draf Pembayaran tidak diterima");
             }else {
                 updateCollectibility = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
-                Log.d(TAG,"Masuk ke if Pembayaran diterima");
+                Log.d(TAG,"Masuk ke Done Pembayaran diterima");
             }
         }else if(spinner_custbayar.getSelectedItem().toString().equals("Tidak")){
             if(txttgljanjibayar.getText().toString().equals("")){
                 updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
-                Log.d(TAG,"Masuk ke if tanggal janji bayar kosong");
+                Log.d(TAG,"Masuk ke Done tanggal janji bayar kosong");
             }else {
                 updateCollectibility = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
-                Log.d(TAG,"Masuk ke if tanggal janji bayar tidak kosong");
+                Log.d(TAG,"Masuk ke Done tanggal janji bayar tidak kosong");
             }
-        }else{
+        }else if(spinner_custbayar.getSelectedItem().toString().equals("Pilih")) {
             updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
             Log.d(TAG,"masuk draft");
         }

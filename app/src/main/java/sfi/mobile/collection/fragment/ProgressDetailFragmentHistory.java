@@ -59,7 +59,7 @@ public class ProgressDetailFragmentHistory extends Fragment {
 
     String strMeetup, strContactName, strHubungan, strAddress, strQAddress, strNewAddress, strUnit, strQbayar, strAmount, strSisa, strLatPembayaran, strLngPembayaran, strLatPertemuan, strLngPertemuan, strJanjiBayar, strHasilKunjungan, strCreateDate;
 
-    LinearLayout ln_ketemudengankosumen,ln_contactpersonname,ln_hubungancostumer,ln_alamatkunjungan,ln_alamatbaru,ln_apakah_unitada,ln_pembayaranditerima,ln_sisa_tagihan,ln_lokasiPembayaran,ln_lokasipertemuan,ln_tgljanjibayar,ln_hasilKunjungan,ln_bertemukonsumen,ln_editData,ln_printStruk,ln_sendEmail,ln_btnUpload;
+    LinearLayout ln_ketemudengankosumen,ln_contactpersonname,ln_hubungancostumer,ln_alamatkunjungan,ln_alamatbaru,ln_apakah_unitada,ln_pembayaranditerima,ln_sisa_tagihan,ln_lokasiPembayaran,ln_lokasipertemuan,ln_tgljanjibayar,ln_hasilKunjungan,ln_bertemukonsumen,ln_editData,ln_printStruk,ln_sendEmail,ln_btnUpload,ln_print_disable;
 
     protected Cursor cursor, cursor2;
     DBHelper dbhelper;
@@ -114,6 +114,7 @@ public class ProgressDetailFragmentHistory extends Fragment {
         ln_printStruk = (LinearLayout) view.findViewById(R.id.ln_printStruk);
         ln_sendEmail = (LinearLayout) view.findViewById(R.id.ln_sendemail);
         ln_btnUpload = (LinearLayout) view.findViewById(R.id.buttons);
+        ln_print_disable = (LinearLayout) view.findViewById(R.id.ln_printStruk_disable);
 
     return view;
 
@@ -245,10 +246,10 @@ public class ProgressDetailFragmentHistory extends Fragment {
 
             /*Log.d(TAG,"Sisa ->" + intTotal);*/
             //---------------------------------//
-            if(txtpembayaranStatus.getText().equals("0")){
-                if(txtJanjiBayar.getText().equals("") || txtJanjiBayar.getText().equals(null) || txtMeetup.getText().equals("Tidak bertemu siapapun")){
+            if(txtpembayaranStatus.getText().equals("0")|| txtpembayaranStatus.getText().equals("")) {
+                if(txtJanjiBayar.getText().equals("") || txtJanjiBayar.getText().equals(null) || txtMeetup.getText().equals("Tidak bertemu siapapun") ){
                     txtResult.setText("Tidak bertemu");
-                }else{
+                }else {
                     txtResult.setText("Janji Bayar");
                 }
             }else{
@@ -266,24 +267,50 @@ public class ProgressDetailFragmentHistory extends Fragment {
             ln_pembayaranditerima.setVisibility(View.GONE);
             ln_sisa_tagihan.setVisibility(View.GONE);
             ln_lokasiPembayaran.setVisibility(View.GONE);
-/*            btnPrint.setVisibility(View.GONE);*/
+            ln_print_disable.setVisibility(View.VISIBLE);
+            ln_printStruk.setVisibility(View.GONE);
         }else if (txtResult.getText().equals("Customer Membayar")){
             ln_sisa_tagihan.setVisibility(View.GONE);
             ln_lokasipertemuan.setVisibility(View.GONE);
             ln_tgljanjibayar.setVisibility(View.GONE);
+            ln_printStruk.setVisibility(View.VISIBLE);
+            ln_print_disable.setVisibility(View.GONE);
         }else if (txtResult.getText().equals("Tidak bertemu")){
-            ln_bertemukonsumen.setVisibility(View.GONE);
+            /*
             ln_hasilKunjungan.setVisibility(View.VISIBLE);
             ln_ketemudengankosumen.setVisibility(View.VISIBLE);
-            /*btnPrint.setVisibility(View.GONE);*/
+            */
+            /*ln_hubungancostumer.setVisibility(View.GONE);
+            ln_contactpersonname.setVisibility(View.GONE);
+            ln_pembayaranditerima.setVisibility(View.GONE);
+            ln_sisa_tagihan.setVisibility(View.GONE);
+            ln_pembayaranditerima.setVisibility(View.GONE);
+            ln_lokasiPembayaran.setVisibility(View.GONE);
+            ln_apakah_unitada.setVisibility(View.GONE);
+            ln_lokasipertemuan.setVisibility(View.VISIBLE);*/
+            ln_print_disable.setVisibility(View.VISIBLE);
+            ln_printStruk.setVisibility(View.GONE);
         }
+
 
         if(txtMeetup.getText().equals("Ya, bertemu dengan customer")){
             ln_contactpersonname.setVisibility(View.GONE);
             ln_hubungancostumer.setVisibility(View.GONE);
-        }else if(txtMeetup.getText().equals("Tidak, bertemu dengan orang lain") || txtMeetup.getText().equals("Tidak bertemu siapapun")){
+        }else if(txtMeetup.getText().equals("Tidak, bertemu dengan orang lain")){
             ln_contactpersonname.setVisibility(View.VISIBLE);
             ln_hubungancostumer.setVisibility(View.VISIBLE);
+            ln_lokasipertemuan.setVisibility(View.VISIBLE);
+        }else if(txtMeetup.getText().equals("Tidak bertemu siapapun")){
+            ln_hubungancostumer.setVisibility(View.GONE);
+            ln_contactpersonname.setVisibility(View.GONE);
+            ln_pembayaranditerima.setVisibility(View.GONE);
+            ln_sisa_tagihan.setVisibility(View.GONE);
+            ln_pembayaranditerima.setVisibility(View.GONE);
+            ln_lokasiPembayaran.setVisibility(View.GONE);
+            ln_apakah_unitada.setVisibility(View.GONE);
+            ln_lokasipertemuan.setVisibility(View.VISIBLE);
+            ln_tgljanjibayar.setVisibility(View.GONE);
+            ln_alamatkunjungan.setVisibility(View.GONE);
         }
 
         cursor2 = db.rawQuery("SELECT * FROM TBimage WHERE CONTRACT_ID ='" + paramId +"'",null);

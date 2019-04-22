@@ -286,11 +286,14 @@ public class DraftDetailFragment extends Fragment {
         }
 
         //alamat baru
-        if(txtNewAddress.getText().equals("Pilih")){
+        if(txtAddress.getText().equals("Pilih")){
             ln_alamatbaru.setVisibility(View.GONE);
-        }else{
+        }else if(txtNewAddress.getText().equals("Ya")){
             ln_alamatbaru.setVisibility(View.VISIBLE);
+        }else if(txtNewAddress.getText().equals("Tidak")){
+            ln_alamatbaru.setVisibility(View.GONE);
         }
+
 
         //apakah unit ada
         if(txtUnit.getText().equals("Ya")){
@@ -302,12 +305,15 @@ public class DraftDetailFragment extends Fragment {
         //apakah Cust Membayar
         if(txtapakahCustMembayar.getText().toString().equals("Pilih")){
             ln_apakah_custMembayar.setVisibility(View.GONE);
+            ln_image.setVisibility(View.GONE);
         }else if (txtapakahCustMembayar.getText().toString().equals("Ya")){
             ln_apakah_custMembayar.setVisibility(View.VISIBLE);
+            ln_image.setVisibility(View.VISIBLE);
             ln_image_lokasi.setVisibility(View.GONE);
         }else if (txtapakahCustMembayar.getText().toString().equals("Tidak")){
             ln_apakah_custMembayar.setVisibility(View.VISIBLE);
             ln_image.setVisibility(View.GONE);
+            ln_image_lokasi.setVisibility(View.VISIBLE);
         }
 
         //if pembayaran diterima
@@ -348,18 +354,22 @@ public class DraftDetailFragment extends Fragment {
             ln_hasilKunjungan.setVisibility(View.VISIBLE);
         }
 
-
-
         cursor2 = db.rawQuery("SELECT * FROM TBimage WHERE CONTRACT_ID ='" + paramId +"'",null);
         cursor2.moveToFirst();
         if(cursor2.getCount()>0) {
             cursor2.moveToPosition(0);
-            if(txtapakahCustMembayar.getText().toString().equals("Ya")) {
+            if (txtapakahCustMembayar.getText().toString().equals("Ya")) {
                 byte[] IMAGE = cursor2.getBlob(2);
                 Bitmap bmp = BitmapFactory.decodeByteArray(IMAGE, 0, IMAGE.length);
                 imgPembayaran.setImageBitmap(bmp);
                 ln_image.setVisibility(View.VISIBLE);
-            }else if(txtapakahCustMembayar.getText().toString().equals("Tidak")) {
+            } else if (txtapakahCustMembayar.getText().toString().equals("Tidak")) {
+                byte[] IMAGE = cursor2.getBlob(2);
+                Bitmap bmp = BitmapFactory.decodeByteArray(IMAGE, 0, IMAGE.length);
+                imgPertemuan.setImageBitmap(bmp);
+                ln_image_lokasi.setVisibility(View.VISIBLE);
+                ln_image.setVisibility(View.GONE);
+            } else if (txtapakahCustMembayar.getText().toString().equals("Pilih")) {
                 byte[] IMAGE = cursor2.getBlob(2);
                 Bitmap bmp = BitmapFactory.decodeByteArray(IMAGE, 0, IMAGE.length);
                 imgPertemuan.setImageBitmap(bmp);

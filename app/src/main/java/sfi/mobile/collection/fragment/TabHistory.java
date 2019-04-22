@@ -108,7 +108,6 @@ public class TabHistory extends Fragment implements
         super.onActivityCreated(savedInstanceState);
         super.onCreate(savedInstanceState);
 
-
     }
 
     public void init(){

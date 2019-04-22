@@ -173,6 +173,29 @@
                             android:text="Print Struk" />
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:id="@+id/ln_printStruk_disable">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="10dp"
+                            android:src="@drawable/ic_print_disabled"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="8dp"
+                            android:textAlignment="center"
+                            android:textColor="#CCC"
+                            android:text="Print Struk" />
+                    </LinearLayout>
+
                     <View
                         android:layout_width="1dp"
                         android:layout_height="fill_parent"

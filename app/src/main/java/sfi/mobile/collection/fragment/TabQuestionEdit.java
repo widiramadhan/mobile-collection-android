@@ -849,26 +849,34 @@ public class TabQuestionEdit extends Fragment implements LocationListener {
         String Sql = "update DKH set IS_COLLECT=2 where NOMOR_KONTRAK = '"+ StrContractID +"'";
         //Exec DB update
         String updateCollectibility = "";
-
         Log.e(TAG,"spinner pembayaran-> "+spinner_custbayar.getSelectedItem().toString());
 
-        if(spinner_custbayar.getSelectedItem().toString().equals("Ya") ) {
+        if(spinner_name.getSelectedItem().toString().equals("Tidak bertemu siapapun")) {
+            if (imageView.getDrawable() != null) {
+                /*dbhelper.insertDataImage(StrContractID, imageViewToByte(imageView), getDate);*/
+                updateCollectibility = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + StrContractID;
+                Log.d(TAG, "Masuk ke Done karna foto lokasi tidak kosong");
+            } else {
+                updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + StrContractID;
+                Log.d(TAG, "Masuk ke Draft karna foto lokasi kosong");
+            }
+        }else if(spinner_custbayar.getSelectedItem().toString().equals("Ya") ) {
             if(pembayaran_diterima.getText().toString().equals("") || pembayaran_diterima.getText().toString().equals("0") ){
                 updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + StrContractID;
-                Log.d(TAG,"Masuk ke if Pembayaran diterima");
+                Log.d(TAG,"Masuk ke draf Pembayaran Tidak diterima");
             }else {
                 updateCollectibility = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + StrContractID;
-                Log.d(TAG,"Masuk ke if Pembayaran tidak diterima");
+                Log.d(TAG,"Masuk ke Done Pembayaran diterima");
             }
         }else if(spinner_custbayar.getSelectedItem().toString().equals("Tidak")){
             if(txttgljanjibayar.getText().toString().equals("")){
                 updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + StrContractID;
-                Log.d(TAG,"Masuk ke if tanggal janji bayar kosong");
+                Log.d(TAG,"Masuk ke draf tanggal janji bayar kosong");
             }else {
                 updateCollectibility = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + StrContractID;
-                Log.d(TAG,"Masuk ke if tanggal janji bayar tidak kosong");
+                Log.d(TAG,"Masuk ke Draf tanggal janji bayar tidak kosong");
             }
-        }else{
+        }else if(spinner_custbayar.getSelectedItem().toString().equals("Pilih")){
             updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + StrContractID;
             Log.d(TAG,"masuk draft");
         }
@@ -890,6 +898,7 @@ public class TabQuestionEdit extends Fragment implements LocationListener {
         dbUpdate.execSQL(Update15);
         dbUpdate.execSQL(Sql);
         dbUpdate.execSQL(updateCollectibility);
+        //dbUpdate.execSQL(updateCollectibility2);
 
         // Log.d(TAG,"Byte -> " + bitmapdata);
         //String contract_id =  ((TextView) getActivity().findViewById(R.id.nomor_kontrak2)).getText().toString();
