@@ -96,7 +96,7 @@ public class TabQuestion extends Fragment implements LocationListener {
     LinearLayout ln_pembayaran_ya, ln_pembayaran_tidak, ln_alamatbaru, ln_contactperson, ln_AlmtKunjungi, ln_unit, ln_customerbayar, ln_alamatberubah,ln_tanggaljanjibayar;
     Spinner spinner_name, spinner_alamatbaru, spinner_unit, spinner_custbayar, spinner_hubungan, spiner_alamat;
     CardView cardcontact, cardalamatbaru, cardunit, cardpembayaran_ya, cardpembayaran_tidak;
-    TextView txtcontract_id, txtcostumername, txttotaltagihan, txttgljanjibayar, txtlat_pembayaran, txtlng_pembayaran, txtlat_pertemuan, txtlng_pertemuan,txt_angsuran,txt_biayaadmin,txtDenda_tagihan,txt_totalTagihan2,txt_sisa,txtTotalTagihanAll;
+    TextView txtcontract_id, txtcostumername, txttotaltagihan, txttgljanjibayar, txtlat_pembayaran, txtlng_pembayaran, txtlat_pertemuan, txtlng_pertemuan,txt_angsuran,txt_biayaadmin,txtDenda_tagihan,txt_totalTagihan2,txt_sisa,txtTotalTagihanAll,txt_period;
     Button btnsetlokasi_pertemuan, btnsetlokasi_pembayaran, btnsetfotolokasipertemuan, btnsetfotolokasipembayaran, btnsave;
 
     private static final String TAG = TabQuestion.class.getSimpleName();
@@ -144,6 +144,7 @@ public class TabQuestion extends Fragment implements LocationListener {
         txtlng_pertemuan = (TextView) getActivity().findViewById(R.id.lng_pertemuan);
         txtlat_pembayaran = (TextView) getActivity().findViewById(R.id.lat_pembayaran);
         txtlng_pembayaran = (TextView) getActivity().findViewById(R.id.lng_pembayaran);
+        txt_period = (TextView) getActivity().findViewById(R.id.txt_period);
 
         contactperson = (EditText) getActivity().findViewById(R.id.contactperson);
         alamatbaru = (EditText) getActivity().findViewById(R.id.alamatbaru);
@@ -159,7 +160,6 @@ public class TabQuestion extends Fragment implements LocationListener {
         ln_customerbayar = (LinearLayout) getActivity().findViewById(R.id.ln_customerbayar);
         ln_alamatberubah = (LinearLayout) getActivity().findViewById(R.id.ln_alamatberubah);
         ln_tanggaljanjibayar = (LinearLayout) getActivity().findViewById(R.id.ln_tanggaljanjibayar);
-
 
         spinner_name = (Spinner) getActivity().findViewById(R.id.sp_name);
         spinner_alamatbaru = (Spinner) getActivity().findViewById(R.id.sp_pilihanalamat);
@@ -556,24 +556,24 @@ public class TabQuestion extends Fragment implements LocationListener {
         dbhelper = new DBHelper(getActivity());
 
         SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
-        String saved = "insert into RESULT (CONTRACT_ID, QUESTION, ANSWER, CREATE_DATE, USER, BRANCH_ID) values" +
-                "('"+ strContractID +"','MS_Q20190226172031880','"+ spinner_name.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                "('"+ strContractID +"','MS_Q20190226172302530','"+ contactperson.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                "('"+ strContractID +"','MS_Q20190226172325360','"+ spinner_hubungan.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                "('"+ strContractID +"','MS_Q20190226172343540','"+ spiner_alamat.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                "('"+ strContractID +"','MS_Q20190226172405297','"+ spinner_alamatbaru.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                "('"+ strContractID +"','MS_Q20190226172432320','"+ alamatbaru.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                "('"+ strContractID +"','MS_Q20190226172447930','"+ spinner_unit.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                "('"+ strContractID +"','MS_Q20190226172517357','"+ spinner_custbayar.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                "('"+ strContractID +"','MS_Q20190226172558067','"+ txtlat_pembayaran.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                "('"+ strContractID +"','MS_Q20190226172603397','"+ txtlng_pembayaran.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                "('"+ strContractID +"','MS_Q20190226172624710','"+ txtlat_pertemuan.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                "('"+ strContractID +"','MS_Q20190226172628683','"+ txtlng_pertemuan.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                "('"+ strContractID +"','MS_Q20190226172644783','"+ pembayaran_diterima.getText().toString().replaceAll(",","") +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                "('"+ strContractID +"','MS_Q20190226172753329','image in table TBImage','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                "('"+ strContractID +"','MS_Q20190226172753330','image in table TBImage','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                "('"+ strContractID +"','MS_Q20190226172810420','"+ txttgljanjibayar.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')," +
-                "('"+ strContractID +"','MS_Q20190226172818070','"+ hasilkunjungan.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"')";
+        String saved = "insert into RESULT (CONTRACT_ID, QUESTION, ANSWER, CREATE_DATE, USER, BRANCH_ID,PERIOD) values" +
+                "('"+ strContractID +"','MS_Q20190226172031880','"+ spinner_name.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"','"+txt_period.getText().toString()+"')," +
+                "('"+ strContractID +"','MS_Q20190226172302530','"+ contactperson.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"','"+txt_period.getText().toString()+"')," +
+                "('"+ strContractID +"','MS_Q20190226172325360','"+ spinner_hubungan.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"','"+txt_period.getText().toString()+"')," +
+                "('"+ strContractID +"','MS_Q20190226172343540','"+ spiner_alamat.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"','"+txt_period.getText().toString()+"')," +
+                "('"+ strContractID +"','MS_Q20190226172405297','"+ spinner_alamatbaru.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"','"+txt_period.getText().toString()+"')," +
+                "('"+ strContractID +"','MS_Q20190226172432320','"+ alamatbaru.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"','"+txt_period.getText().toString()+"')," +
+                "('"+ strContractID +"','MS_Q20190226172447930','"+ spinner_unit.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"','"+txt_period.getText().toString()+"')," +
+                "('"+ strContractID +"','MS_Q20190226172517357','"+ spinner_custbayar.getSelectedItem().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"','"+txt_period.getText().toString()+"')," +
+                "('"+ strContractID +"','MS_Q20190226172558067','"+ txtlat_pembayaran.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"','"+txt_period.getText().toString()+"')," +
+                "('"+ strContractID +"','MS_Q20190226172603397','"+ txtlng_pembayaran.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"','"+txt_period.getText().toString()+"')," +
+                "('"+ strContractID +"','MS_Q20190226172624710','"+ txtlat_pertemuan.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"','"+txt_period.getText().toString()+"')," +
+                "('"+ strContractID +"','MS_Q20190226172628683','"+ txtlng_pertemuan.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"','"+txt_period.getText().toString()+"')," +
+                "('"+ strContractID +"','MS_Q20190226172644783','"+ pembayaran_diterima.getText().toString().replaceAll(",","") +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"','"+txt_period.getText().toString()+"')," +
+                "('"+ strContractID +"','MS_Q20190226172753329','image in table TBImage','"+ getDate +"','"+ employeeID +"','"+ branchID +"','"+txt_period.getText().toString()+"')," +
+                "('"+ strContractID +"','MS_Q20190226172753330','image in table TBImage','"+ getDate +"','"+ employeeID +"','"+ branchID +"','"+txt_period.getText().toString()+"')," +
+                "('"+ strContractID +"','MS_Q20190226172810420','"+ txttgljanjibayar.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"','"+txt_period.getText().toString()+"')," +
+                "('"+ strContractID +"','MS_Q20190226172818070','"+ hasilkunjungan.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"','"+txt_period.getText().toString()+"')";
 
         String updateCollectibility = "";
         String updateCollectibility2 = "";
@@ -650,6 +650,7 @@ public class TabQuestion extends Fragment implements LocationListener {
             cursor.moveToPosition(0);
             txtcontract_id.setText(cursor.getString(4));
             txtcostumername.setText(cursor.getString(5));
+            txt_period.setText(cursor.getString(38));
             txttotaltagihan.setText(String.valueOf(formatRupiah.format(Double.parseDouble(cursor.getString(15)))).replaceAll("Rp", ""));
             txt_angsuran.setText(String.valueOf(formatRupiah.format(Double.parseDouble(cursor.getString(11)))).replaceAll( "Rp", "" ));
             txtDenda_tagihan.setText(String.valueOf(formatRupiah.format(Double.parseDouble(cursor.getString(13))).replaceAll("Rp","")));

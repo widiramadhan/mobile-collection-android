@@ -96,7 +96,7 @@ public class TabQuestionEdit extends Fragment implements LocationListener {
     LinearLayout ln_pembayaran_ya, ln_pembayaran_tidak, ln_alamatbaru, ln_contactperson, ln_AlmtKunjungi, ln_unit, ln_customerbayar, ln_alamatberubah,ln_tanggaljanjibayar;
     Spinner spinner_name, spinner_alamatbaru, spinner_unit, spinner_custbayar, spinner_hubungan, spiner_alamat;
     CardView cardcontact, cardalamatbaru, cardunit, cardpembayaran_ya, cardpembayaran_tidak;
-    TextView txtcontract_id, txtcostumername, txttotaltagihan, txttgljanjibayar, txtlat_pembayaran, txtlng_pembayaran, txtlat_pertemuan, txtlng_pertemuan,txt_angsuran,txt_biayaadmin,txtDenda_tagihan,txt_totalTagihan2,txt_sisa,txtTotalTagihanAll;
+    TextView txtcontract_id, txtcostumername, txttotaltagihan, txttgljanjibayar, txtlat_pembayaran, txtlng_pembayaran, txtlat_pertemuan, txtlng_pertemuan,txt_angsuran,txt_biayaadmin,txtDenda_tagihan,txt_totalTagihan2,txt_sisa,txtTotalTagihanAll,txt_period;
     Button btnsetlokasi_pertemuan, btnsetlokasi_pembayaran, btnsetfotolokasipertemuan, btnsetfotolokasipembayaran, btnupdate;
 
     private static final String TAG = TabQuestionEdit.class.getSimpleName();
@@ -145,6 +145,7 @@ public class TabQuestionEdit extends Fragment implements LocationListener {
         txtlng_pertemuan = (TextView) getActivity().findViewById(R.id.lng_pertemuan);
         txtlat_pembayaran = (TextView) getActivity().findViewById(R.id.lat_pembayaran);
         txtlng_pembayaran = (TextView) getActivity().findViewById(R.id.lng_pembayaran);
+        txt_period = (TextView) getActivity().findViewById(R.id.txt_period);
 
         contactperson = (EditText) getActivity().findViewById(R.id.contactperson);
         alamatbaru = (EditText) getActivity().findViewById(R.id.alamatbaru);
@@ -810,6 +811,7 @@ public class TabQuestionEdit extends Fragment implements LocationListener {
             cursor.moveToPosition(0);
             txtcontract_id.setText(cursor.getString(4));
             txtcostumername.setText(cursor.getString(5));
+            txt_period.setText(cursor.getString(38));
             txttotaltagihan.setText(String.valueOf(formatRupiah.format(Double.parseDouble(cursor.getString(15)))).replaceAll("Rp", ""));
             txt_angsuran.setText(String.valueOf(formatRupiah.format(Double.parseDouble(cursor.getString(11)))).replaceAll( "Rp", "" ));
             txtDenda_tagihan.setText(String.valueOf(formatRupiah.format(Double.parseDouble(cursor.getString(13))).replaceAll("Rp","")));

@@ -127,6 +127,12 @@
                 </LinearLayout>
 
             </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_period"
+                android:text="aaaa"
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

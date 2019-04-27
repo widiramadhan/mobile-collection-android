@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +36,10 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -66,7 +70,7 @@ public class ProgressDetailFragment extends Fragment {
 
     ProgressDialog progressDialog;
 
-    TextView txtContractID, txtCustomerName, txtResult, txtMeetup, txtContactName, txtHubungan, txtAddress, txtNewAddress, txtUnit, txtAmount, txtSisa, txtLokasiPembayaran, txtLokasiPertemuan, txtJanjiBayar, txtHasilKunjungan,txtTotalTagihanStatus,txtpembayaranStatus,txt_pic,txt_branch;
+    TextView txtContractID, txtCustomerName, txtResult, txtMeetup, txtContactName, txtHubungan, txtAddress, txtNewAddress, txtUnit, txtAmount, txtSisa, txtLokasiPembayaran, txtLokasiPertemuan, txtJanjiBayar, txtHasilKunjungan,txtTotalTagihanStatus,txtpembayaranStatus,txt_pic,txt_branch,txt_period,txt_status,txt_blob;
     double biaya_admin = 10000;
     double intSisa,intTotal;
     ImageView imgPembayaran, imgPertemuan;
@@ -103,6 +107,9 @@ public class ProgressDetailFragment extends Fragment {
         txtHasilKunjungan = (TextView) view.findViewById(R.id.answer_hasil_kunjungan);
         txt_pic = (TextView) view.findViewById(R.id.txt_PIC);
         txt_branch = (TextView) view.findViewById(R.id.txt_branch);
+        txt_period = (TextView) view.findViewById(R.id.txt_period);
+        txt_status = (TextView) view.findViewById(R.id.txt_status);
+        txt_blob = (TextView) view.findViewById(R.id.txt_blob);
 
         txtpembayaranStatus = (TextView) view.findViewById(R.id.pembayaran_status);
         txtTotalTagihanStatus = (TextView) view.findViewById(R.id.totaltagihan_status);
@@ -155,7 +162,7 @@ public class ProgressDetailFragment extends Fragment {
 
         dbhelper = new DBHelper(getActivity());
         SQLiteDatabase db = dbhelper.getReadableDatabase();
-        cursor = db.rawQuery("SELECT A.CONTRACT_ID, B.NAMA_KOSTUMER, A.QUESTION, A.ANSWER, A.CREATE_DATE,B.TOTAL_TAGIHAN FROM RESULT A LEFT JOIN DKH B ON A.CONTRACT_ID=B.NOMOR_KONTRAK WHERE A.CONTRACT_ID ='" + paramId +"'",null);
+        cursor = db.rawQuery("SELECT A.CONTRACT_ID, B.NAMA_KOSTUMER, A.QUESTION, A.ANSWER, A.CREATE_DATE,B.TOTAL_TAGIHAN,B.PERIOD FROM RESULT A LEFT JOIN DKH B ON A.CONTRACT_ID=B.NOMOR_KONTRAK WHERE A.CONTRACT_ID ='" + paramId +"'",null);
         cursor.moveToFirst();
         if(cursor.getCount()>0) {
             cursor.moveToPosition(0);
@@ -163,7 +170,7 @@ public class ProgressDetailFragment extends Fragment {
             txtCustomerName.setText(cursor.getString(1));
             strCreateDate = cursor.getString(4);
             txtTotalTagihanStatus.setText(String.valueOf(Double.parseDouble(cursor.getString(5))));
-
+            txt_period.setText(cursor.getString(6)) ;
             do {
                 String questionID = cursor.getString(2);
 
@@ -287,12 +294,14 @@ public class ProgressDetailFragment extends Fragment {
             ln_lokasiPembayaran.setVisibility(View.GONE);
             ln_print_disable.setVisibility(View.VISIBLE);
             ln_printStruk.setVisibility(View.GONE);
+            txt_status.setText("2");
         }else if (txtResult.getText().equals("Customer Membayar")){
             ln_sisa_tagihan.setVisibility(View.GONE);
             ln_lokasipertemuan.setVisibility(View.GONE);
             ln_tgljanjibayar.setVisibility(View.GONE);
             ln_printStruk.setVisibility(View.VISIBLE);
             ln_print_disable.setVisibility(View.GONE);
+            txt_status.setText("1");
         }else if (txtResult.getText().equals("Tidak bertemu")){
             /*
             ln_hasilKunjungan.setVisibility(View.VISIBLE);
@@ -306,6 +315,7 @@ public class ProgressDetailFragment extends Fragment {
             ln_lokasiPembayaran.setVisibility(View.GONE);
             ln_apakah_unitada.setVisibility(View.GONE);
             ln_lokasipertemuan.setVisibility(View.VISIBLE);*/
+            txt_status.setText("3");
             ln_print_disable.setVisibility(View.VISIBLE);
             ln_printStruk.setVisibility(View.GONE);
         }
@@ -338,10 +348,12 @@ public class ProgressDetailFragment extends Fragment {
                 byte[] IMAGE = cursor2.getBlob(2);
                 Bitmap bmp= BitmapFactory.decodeByteArray(IMAGE, 0 , IMAGE.length);
                 imgPertemuan.setImageBitmap(bmp);
+                String imageString = Base64.encodeToString(IMAGE, Base64.DEFAULT);
+               // Log.d(TAG,"IMG BLOB -> " + imageString);
                 //return BitmapFactory.decodeByteArray(IMAGE, 0, IMAGE.length);
                 //imgPembayaran.setImageResource(convertByteArrayToBitmap(IMAGE));
                 //imgPembayaran.setImageBitmap(BitmapFactory.decodeByteArray(IMAGE,0,IMAGE.length));
-                Log.d(TAG,"IMAGE -> "+imgPertemuan);
+                //Log.d(TAG,"IMAGE -> "+imgPertemuan);
             }else if (txtResult.getText().toString().equals("Customer Membayar")){
                 byte[] IMAGE = cursor2.getBlob(2);
                 Bitmap bmp= BitmapFactory.decodeByteArray(IMAGE, 0 , IMAGE.length);
@@ -349,7 +361,7 @@ public class ProgressDetailFragment extends Fragment {
                 //return BitmapFactory.decodeByteArray(IMAGE, 0, IMAGE.length);
                 //imgPembayaran.setImageResource(convertByteArrayToBitmap(IMAGE));
                 //imgPembayaran.setImageBitmap(BitmapFactory.decodeByteArray(IMAGE,0,IMAGE.length));
-                Log.d(TAG,"IMAGE -> "+imgPembayaran);
+                //Log.d(TAG,"IMAGE -> "+imgPembayaran);
             }
         }
 
@@ -487,7 +499,6 @@ public class ProgressDetailFragment extends Fragment {
                             }
 
                             uploadData(questionID, answer);
-
                             loop++;
                             Log.d(TAG, "Nilai i ->" + i);
                             Log.d(TAG, "Looping ke ->" + loop);
@@ -499,7 +510,7 @@ public class ProgressDetailFragment extends Fragment {
                             String Sql = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll non Harian' where NOMOR_KONTRAK=" + txtContractID.getText().toString();
                             dbInsert.execSQL(Sql);
                         }
-
+                        SaveResultHeader();
                         if(loop == 17){
                             Log.e(TAG, "Data berhasil dikirim ke server");
                         }
@@ -508,9 +519,7 @@ public class ProgressDetailFragment extends Fragment {
                         FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();
-
                     }
-
                 });
                 adb.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -529,8 +538,18 @@ public class ProgressDetailFragment extends Fragment {
         return bitMapImage;
     }
 
+    private void SaveResultHeader(){
+        String getDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String strContractID = txtContractID.getText().toString();
+        dbhelper = new DBHelper(getActivity());
+
+        SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
+        String Saved = "INSERT INTO RESULT_HEADER (CONTRACT_ID,STATUS,PIC,CREATE_DATE,UPLOAD_DATE,PERIOD) VALUES('"+ strContractID +"','"+txt_status.getText().toString()+"','"+txt_pic.getText().toString()+"','"+getDate+"','"+getDate+"','"+txt_period.getText().toString()+"')";
+        dbInsert.execSQL(Saved);
+    }
+
     private void uploadData(final String strQuestion, final String strAnswer) {
-        String urlUploadData = ConnectionHelper.URL+"saveResult.php";
+        String urlUploadData = ConnectionHelper.URL_local+"saveResult.php";
         String tag_json = "tag_json";
 
         progressDialog.setCancelable(false);
@@ -581,8 +600,9 @@ public class ProgressDetailFragment extends Fragment {
                 param.put("savedDate", strCreateDate);
                 param.put("pic", txt_pic.getText().toString());
                 param.put("branchID", txt_branch.getText().toString());
+                param.put("status",txt_status.getText().toString());
+                param.put("period",txt_period.getText().toString());
                 return param;
-
             }
         };
 

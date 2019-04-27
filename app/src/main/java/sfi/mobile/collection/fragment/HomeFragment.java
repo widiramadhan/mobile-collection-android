@@ -1,11 +1,14 @@
 package sfi.mobile.collection.fragment;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -66,6 +69,7 @@ public class HomeFragment extends Fragment implements
     SwipeRefreshLayout swipe;
     LinearLayout ln_task_new, ln_task_draft, ln_task_done;
     TextView txtName, txtTotalTask, txtTotalDone, txtTotalDraft;
+    LocationManager locationManager;
 
     DBHelper dbhelper;
     protected Cursor cursor, cursor2, cursor3;
@@ -105,6 +109,11 @@ public class HomeFragment extends Fragment implements
                 checkData();
             }
         });
+
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            buildAlertMessageNoGps();
+        }
 
         ln_task_new.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,6 +160,27 @@ public class HomeFragment extends Fragment implements
         super.onCreate(savedInstanceState);
 
         sharedpreferences = getActivity().getSharedPreferences(my_shared_preferences, Context.MODE_PRIVATE);
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Pemberitahuan");
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        builder.setMessage("Gps pada handphone harus diaktifkan?")
+                .setCancelable(false)
+                .setPositiveButton("Aktifkan", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().finish();
+                        System.exit(0);
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void checkData() {
