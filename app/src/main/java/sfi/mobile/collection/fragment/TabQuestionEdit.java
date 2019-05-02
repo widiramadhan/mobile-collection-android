@@ -807,7 +807,7 @@ public class TabQuestionEdit extends Fragment implements LocationListener {
         dbhelper = new DBHelper(getActivity());
 
         SQLiteDatabase db = dbhelper.getReadableDatabase();
-        cursor = db.rawQuery("SELECT * FROM DKH WHERE NOMOR_KONTRAK='" + ContractID + "'", null);
+        cursor = db.rawQuery("SELECT * FROM DKH WHERE NOMOR_KONTRAK='" + ContractID + "' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"'", null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
             cursor.moveToPosition(0);

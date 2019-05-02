@@ -320,19 +320,19 @@ public class HomeFragment extends Fragment implements
     private void CountData(){
         SQLiteDatabase db = dbhelper.getReadableDatabase();
         //cek jumlah task yang ada
-        cursor = db.rawQuery("SELECT * FROM DKH WHERE IS_COLLECT = 0 AND DailyCollectibility = 'Coll Harian' AND PIC = '"+employeeID+"'" ,null);
+        cursor = db.rawQuery("SELECT * FROM DKH WHERE IS_COLLECT = 0 AND DailyCollectibility = 'Coll Harian' AND PIC = '"+employeeID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"'" ,null);
         cursor.moveToFirst();
         int count = cursor.getCount();
         txtTotalTask.setText(String.valueOf(count));
 
         //cek jumlah task yang sudah di upload ke server
-        cursor2 = db.rawQuery("SELECT * FROM DKH WHERE IS_COLLECT = 1 AND DailyCollectibility = 'Coll Harian' AND PIC = '"+employeeID+"'",null);
+        cursor2 = db.rawQuery("SELECT * FROM DKH WHERE IS_COLLECT = 1 AND DailyCollectibility = 'Coll Harian' AND PIC = '"+employeeID+"'AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"'",null);
         cursor2.moveToFirst();
         int count2 = cursor2.getCount();
         txtTotalDone.setText(String.valueOf(count2));
 
         //cek jumlah task yang ada di draft
-        cursor3 = db.rawQuery("SELECT * FROM DKH WHERE IS_COLLECT = 2 AND DailyCollectibility = 'Coll Harian' AND PIC = '"+employeeID+"'",null);
+        cursor3 = db.rawQuery("SELECT * FROM DKH WHERE IS_COLLECT = 2 AND DailyCollectibility = 'Coll Harian' AND PIC = '"+employeeID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"'",null);
         cursor3.moveToFirst();
         int count3 = cursor3.getCount();
         txtTotalDraft.setText(String.valueOf(count3));
