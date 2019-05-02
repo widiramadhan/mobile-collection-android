@@ -10,6 +10,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +24,11 @@ import android.widget.Toast;
 
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
@@ -40,11 +44,11 @@ import sfi.mobile.collection.util.Printer;
 public class PrintFragment extends Fragment {
 
     TextView txtcontractid;
-    Button btnPrint, btnConnect;
+    Button btnPrint, btnConnect, btnImage;
     Spinner mDeviceSp;
     protected Cursor cursor;
     DBHelper dbhelper;
-    String strContractId,strCostumername,strtgljatuhtempo,strAngsuranKe,strDevice,strTotaltagihan;
+    String strContractId,strCostumername,strtgljatuhtempo,strAngsuranKe,strDevice,strTotaltagihan,StrTransaksiID;
     int strtotal,strDenda,strAngsuran;
     double biaya_admin=10000;
     Double strHasil,strAmount;
@@ -145,6 +149,9 @@ public class PrintFragment extends Fragment {
             txt_jatuhtempo.setText(strtgljatuhtempo);
             txt_amount.setText(String.valueOf(strAmount));
             txt_total.setText(String.valueOf(strtotal));*/
+            DateFormat df = new SimpleDateFormat("ddMMyyHHmmss");
+            String strDate = df.format(Calendar.getInstance().getTime());
+            StrTransaksiID =  "SFI" + strDate;
         }
 
         Log.d("Data","contract_ID ->" + strContractId);
@@ -159,6 +166,7 @@ public class PrintFragment extends Fragment {
 
 
         btnPrint = (Button) getActivity().findViewById(R.id.btn_print);
+        btnImage = (Button) getActivity().findViewById(R.id.btn_image);
         btnConnect = (Button) getActivity().findViewById(R.id.btn_connect);
         mDeviceSp = (Spinner) getActivity().findViewById(R.id.sp_device);
 
@@ -175,8 +183,6 @@ public class PrintFragment extends Fragment {
                 btnConnect.setText("CONNECT");
             }
         }*/
-
-
         mConnectingDlg 	= new ProgressDialog(getActivity());
         mConnectingDlg.setMessage("Connecting...");
         mConnectingDlg.setCancelable(false);
@@ -244,6 +250,7 @@ public class PrintFragment extends Fragment {
             }
         });
 
+
         btnPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -254,6 +261,22 @@ public class PrintFragment extends Fragment {
                 fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
                 fragmentTransaction.addToBackStack("A_B_TAG");
                 fragmentTransaction.commit();*/
+            }
+        });
+
+        btnImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PrintImage fragment = new PrintImage();
+                Bundle arguments = new Bundle();
+                arguments.putString( "paramId" , strContractId);
+                fragment.setArguments(arguments);
+                Log.d(TAG,"ContractID -> " + strContractId);
+                FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
+                fragmentTransaction.addToBackStack("A_B_TAG");
+                fragmentTransaction.commit();
             }
         });
     }
@@ -353,8 +376,8 @@ public class PrintFragment extends Fragment {
 
         StringBuilder contentSb = new StringBuilder();
 
-        contentSb.append("Terminal ID   : 78099962" + "\n");
-        contentSb.append("No Transaksi  : 1001021900001" + "\n");
+        contentSb.append("Terminal ID   : "+ mDeviceSp.getSelectedItem().toString() + "\n");
+        contentSb.append("No Transaksi  : "+ StrTransaksiID + "\n");
         contentSb.append("Tgl Transaksi : "+new SimpleDateFormat("dd MMM yyyy").format(new Date()) + "\n");
         contentSb.append("\n\n");
         contentSb.append("No Kontrak    : "+ strContractId + "\n");

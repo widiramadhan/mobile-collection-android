@@ -701,6 +701,8 @@ public class TabQuestionEdit extends Fragment implements LocationListener {
                     contactperson.setText("");
                     spinner_unit.setSelection(0);
                     spinner_custbayar.setSelection(0);
+                    txtlat_pembayaran.setText("Lat  : " );
+                    txtlng_pembayaran.setText("Long : " );
                     btnupdate.setEnabled(true);
                 }
 

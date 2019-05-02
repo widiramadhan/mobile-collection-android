@@ -134,7 +134,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                     //fragment = new TabDraftWithDelete();
                     fragment = new TabHistory();
                 } else if (id == R.id.nav_logout){
-
                     SharedPreferences preferences = getSharedPreferences(my_shared_preferences, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.clear();
@@ -151,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
 
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.main_container_wrapper, fragment);
+                fragmentTransaction.addToBackStack("A_B_TAG");
                 transaction.commit();
 
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

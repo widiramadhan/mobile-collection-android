@@ -26,17 +26,27 @@ public class DBHelper extends SQLiteOpenHelper {
         //create table DKHC
         String sql = "create table DKH (ID integer primary key autoincrement, BRANCH_ID text null, BRANCH_NAME text null, PIC text null, NOMOR_KONTRAK text null, NAMA_KOSTUMER text null, TANGGAL_JATUH_TEMPO text null, OVERDUE_DAYS int null, ANGSURAN_KE int null, JUMLAH_ANGSURAN_OVERDUE double null, TENOR int null, ANGSURAN_BERJALAN double null, ANGSURAN_TERTUNGGAK double null, DENDA double null, TITIPAN double null, TOTAL_TAGIHAN double null, OUTSTANDING_AR double null, ALAMAT_KTP text null, NOMOR_TELEPON_RUMAH text null, NOMOR_HANDPHONE text null, ALAMAT_KANTOR text null, NOMOR_TELEPON_KANTOR text null, ALAMAT_SURAT text null, NOMOR_TELEPON_SURAT text null, PIC_TERAKHIR text null, PENANGANAN_TERAKHIR text null, TANGGAL_JANJI_BAYAR text null, DailyCollectibility text null,OvdDaysHarian int null,TglJatuhTempoHarian text null,ARIN double null,FlowUp int null,TglTarikHarian text null,TglTerimaKlaim text null,LATITUDE text null,LONGITUDE text null,APPROVAL int null, IS_COLLECT int null, PERIOD text null, M_AREA_COLL_ID double null, CREATE_USER text null, CREATE_DATE text null, VOID int null);";
         Log.d( "Data","onCreate: "+sql);
-        //create table KUNJUNGAN
+        //create table KUNJUNGAN/resultdetail
         String sql2 = "create table RESULT (ID integer primary key autoincrement, CONTRACT_ID text null, QUESTION text null, ANSWER text null, CREATE_DATE text null, USER text null, BRANCH_ID text null,PERIOD text null);";
         Log.d( "Data","onCreate: "+sql2);
+        //create table Image
         String sql3 = "create table TBimage( ID integer primary key autoincrement, CONTRACT_ID text null, IMAGE BLOB, CREATE_DATE text null)";
         Log.d( "Data","onCreate: "+sql3);
+        //create table Result
         String sql4 = "create table RESULT_HEADER( ID integer primary key autoincrement, CONTRACT_ID text null, STATUS text null,PIC text null,CREATE_DATE text null,UPLOAD_DATE text null, PERIOD text null)";
         Log.d( "Data","onCreate: "+sql4);
+        //create table route
+        String sql5 = "create table ROUTE( ID integer primary key autoincrement, PIC text null, LAT text null,LNG text null,CREATE_DATE text null)";
+        Log.d( "Data","onCreate: "+sql5);
+        //create table priority 4w
+        String sql6 = "create table PRIORITY_4W( ID integer primary key autoincrement, CONTRACT_ID text null ,CREATE_DATE text null,HARI text null)";
+        Log.d( "Data","onCreate: "+sql6);
         db.execSQL(sql);
         db.execSQL(sql2);
         db.execSQL(sql3);
         db.execSQL(sql4);
+        db.execSQL(sql5);
+        db.execSQL(sql6);
     }
 
     @Override
@@ -45,6 +55,8 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS RESULT");
         db.execSQL("DROP TABLE IF EXISTS TBimage");
         db.execSQL("DROP TABLE IF EXISTS RESULT_HEADER");
+        db.execSQL("DROP TABLE IF EXISTS ROUTE");
+        db.execSQL("DROP TABLE IF EXISTS PRIORITY_4W");
         // create new tables
         onCreate(db);
     }

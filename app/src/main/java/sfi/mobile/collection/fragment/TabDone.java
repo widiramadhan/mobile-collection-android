@@ -100,7 +100,9 @@ public class TabDone extends Fragment implements
                 fragment.setArguments(arguments);
                 FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();
+                fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
+                fragmentTransaction.addToBackStack("A_B_TAG");
+                fragmentTransaction.commit();
             }
         });
 

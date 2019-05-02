@@ -109,7 +109,6 @@ public class ProgressDetailFragment extends Fragment {
         txt_branch = (TextView) view.findViewById(R.id.txt_branch);
         txt_period = (TextView) view.findViewById(R.id.txt_period);
         txt_status = (TextView) view.findViewById(R.id.txt_status);
-        txt_blob = (TextView) view.findViewById(R.id.txt_blob);
 
         txtpembayaranStatus = (TextView) view.findViewById(R.id.pembayaran_status);
         txtTotalTagihanStatus = (TextView) view.findViewById(R.id.totaltagihan_status);
@@ -315,6 +314,7 @@ public class ProgressDetailFragment extends Fragment {
             ln_lokasiPembayaran.setVisibility(View.GONE);
             ln_apakah_unitada.setVisibility(View.GONE);
             ln_lokasipertemuan.setVisibility(View.VISIBLE);*/
+
             txt_status.setText("3");
             ln_print_disable.setVisibility(View.VISIBLE);
             ln_printStruk.setVisibility(View.GONE);
@@ -338,7 +338,25 @@ public class ProgressDetailFragment extends Fragment {
             ln_lokasipertemuan.setVisibility(View.VISIBLE);
             ln_tgljanjibayar.setVisibility(View.GONE);
             ln_alamatkunjungan.setVisibility(View.GONE);
+
         }
+        if(strLatPembayaran.equals("Lat  : ") && strLngPembayaran.equals("Long : ")){
+            Log.d(TAG, "lokasi pembayaran Kosong");
+        }else if (!strLatPembayaran.equals("Lat  : ") && !strLngPembayaran.equals("Long : ")){
+            //uploadRoute(strLatPembayaran,strLngPembayaran);
+            Log.d(TAG, "lokasi pembayaran Ada");
+        }
+
+        if(strLatPertemuan.equals("Lat  : ") && strLngPertemuan.equals("Long : ")){
+            Log.d(TAG, "lokasi Pertemuan Kosong");
+        }else if(!strLatPertemuan.equals("Lat  : ") && !strLngPertemuan.equals("Long : ")){
+            //uploadRoute(strLatPertemuan,strLngPertemuan);
+            Log.d(TAG, "lokasi pertemuan Ada");
+        }
+        Log.d(TAG,"lokasi Pembayaran ->" + strLatPembayaran.replaceAll("Lat : ",""));
+        Log.d(TAG,"lokasi Pembayaran ->" + strLngPembayaran.replaceAll("Long : ",""));
+        Log.d(TAG,"lokasi Pertemuan ->" + strLatPertemuan.replaceAll("Lat : ",""));
+        Log.d(TAG,"lokasi Pertemuan ->" + strLngPertemuan.replaceAll("Long : ",""));
 
         cursor2 = db.rawQuery("SELECT * FROM TBimage WHERE CONTRACT_ID ='" + txtContractID.getText().toString() +"'",null);
         cursor2.moveToFirst();
@@ -348,8 +366,8 @@ public class ProgressDetailFragment extends Fragment {
                 byte[] IMAGE = cursor2.getBlob(2);
                 Bitmap bmp= BitmapFactory.decodeByteArray(IMAGE, 0 , IMAGE.length);
                 imgPertemuan.setImageBitmap(bmp);
-                String imageString = Base64.encodeToString(IMAGE, Base64.DEFAULT);
-               // Log.d(TAG,"IMG BLOB -> " + imageString);
+                /*String imageString = Base64.encodeToString(IMAGE, Base64.DEFAULT);
+                Log.d(TAG,"IMG BLOB -> " + imageString);*/
                 //return BitmapFactory.decodeByteArray(IMAGE, 0, IMAGE.length);
                 //imgPembayaran.setImageResource(convertByteArrayToBitmap(IMAGE));
                 //imgPembayaran.setImageBitmap(BitmapFactory.decodeByteArray(IMAGE,0,IMAGE.length));
@@ -364,9 +382,6 @@ public class ProgressDetailFragment extends Fragment {
                 //Log.d(TAG,"IMAGE -> "+imgPembayaran);
             }
         }
-
-
-
     /*  //--------------------------------------------------------//
         btnPrint.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -408,7 +423,9 @@ public class ProgressDetailFragment extends Fragment {
                 fragment.setArguments(arguments);
                 FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.main_container_wrapper,fragment).commit();
+                fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
+                fragmentTransaction.addToBackStack("A_B_TAG");
+                fragmentTransaction.commit();
             }
         });
 
@@ -422,11 +439,10 @@ public class ProgressDetailFragment extends Fragment {
                 adb.setIcon(android.R.drawable.ic_dialog_alert);
                 adb.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-
+                        uploadResultHeader();
                         String questionID = "";
                         String answer = "";
                         int loop = 0;
-
                         for (int i = 1; i <= 17; i++) {
                             if (i == 1) {
                                 //Apakah Bertemu dengan Kostumer
@@ -497,8 +513,7 @@ public class ProgressDetailFragment extends Fragment {
                                 questionID = "MS_Q20190226172818070";
                                 answer = strHasilKunjungan;
                             }
-
-                            uploadData(questionID, answer);
+                            uploadResult(questionID, answer);
                             loop++;
                             Log.d(TAG, "Nilai i ->" + i);
                             Log.d(TAG, "Looping ke ->" + loop);
@@ -510,9 +525,26 @@ public class ProgressDetailFragment extends Fragment {
                             String Sql = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll non Harian' where NOMOR_KONTRAK=" + txtContractID.getText().toString();
                             dbInsert.execSQL(Sql);
                         }
+
                         SaveResultHeader();
                         if(loop == 17){
                             Log.e(TAG, "Data berhasil dikirim ke server");
+                        }
+
+                        if(strLatPembayaran.equals("Lat  : ") && strLngPembayaran.equals("Long : ")){
+                            Log.d(TAG, "lokasi pembayaran Kosong");
+                        }else if (!strLatPembayaran.equals("Lat  : ") && !strLngPembayaran.equals("Long : ")){
+                            uploadRoute(strLatPembayaran,strLngPembayaran);
+                            SaveRoute(strLatPembayaran,strLngPembayaran);
+                            Log.d(TAG, "lokasi pembayaran Ada");
+                        }
+
+                        if(strLatPertemuan.equals("Lat  : ") && strLngPertemuan.equals("Long : ")){
+                            Log.d(TAG, "lokasi Pertemuan Kosong");
+                        }else if(!strLatPertemuan.equals("Lat  : ") && !strLngPertemuan.equals("Long : ")){
+                            uploadRoute(strLatPertemuan,strLngPertemuan);
+                            SaveRoute(strLatPertemuan,strLngPertemuan);
+                            Log.d(TAG, "lokasi pertemuan Ada");
                         }
 
                         UploadFragment fragment = new UploadFragment();
@@ -548,7 +580,17 @@ public class ProgressDetailFragment extends Fragment {
         dbInsert.execSQL(Saved);
     }
 
-    private void uploadData(final String strQuestion, final String strAnswer) {
+    private void SaveRoute(final String strLat,final String strLng){
+        String getDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String strPIC = txt_pic.getText().toString();
+        dbhelper = new DBHelper(getActivity());
+
+        SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
+        String Saved = "INSERT INTO ROUTE (PIC,LAT,LNG,CREATE_DATE) VALUES('"+ strPIC +"','"+strLat+"','"+strLng+"','"+getDate+"')";
+        dbInsert.execSQL(Saved);
+    }
+
+    private void uploadResult(final String strQuestion, final String strAnswer) {
         String urlUploadData = ConnectionHelper.URL_local+"saveResult.php";
         String tag_json = "tag_json";
 
@@ -557,6 +599,120 @@ public class ProgressDetailFragment extends Fragment {
         showDialog();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUploadData, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //Log.d("response", response.toString());
+                hideDialog();
+                try {
+                    JSONObject jObject = new JSONObject(response);
+                    String pesan = jObject.getString("pesan");
+                    String hasil = jObject.getString("result");
+                    if (hasil.equalsIgnoreCase("true")) {
+                        //Toast.makeText(getActivity(), pesan, Toast.LENGTH_SHORT).show();
+                        Log.d(TAG,pesan);
+                    } else {
+                        //Toast.makeText(getActivity(), pesan, Toast.LENGTH_SHORT).show();
+                        Log.d(TAG,pesan);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getActivity(), "Error JSON", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("ERROR", error.getMessage());
+                Toast.makeText(getActivity(),"Error", Toast.LENGTH_SHORT).show();
+                hideDialog();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> param = new HashMap<String, String>();
+
+                //*//**//**//**//*** set session to variable ***//**//**//**//*
+                //*//**//**//**//*** end set session to variable ***//**//**//**//*
+                Log.d(TAG,"Masuk Upload result detail");
+
+                param.put("contractID",txtContractID.getText().toString());
+                param.put("questionID",strQuestion);
+                param.put("answer",strAnswer);
+                param.put("savedDate",strCreateDate);
+                param.put("period",txt_period.getText().toString());
+                return param;
+            }
+        };
+        AppController.getInstance().addToRequestQueue(stringRequest, tag_json);
+    }
+
+    private void uploadResultHeader() {
+        String urlUploadResultHeader = ConnectionHelper.URL_local+"SaveResulHeader.php";
+        String tag_json = "tag_json";
+
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Sedang upload Data...");
+        showDialog();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUploadResultHeader, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //Log.d("response", response.toString());
+                hideDialog();
+
+                try {
+                    JSONObject jObject = new JSONObject(response);
+                    String pesan = jObject.getString("pesan");
+                    String hasil = jObject.getString("result");
+                    if (hasil.equalsIgnoreCase("true")) {
+                        //Toast.makeText(getActivity(), pesan, Toast.LENGTH_SHORT).show();
+                        Log.d(TAG,pesan);
+                    } else {
+                        //Toast.makeText(getActivity(), pesan, Toast.LENGTH_SHORT).show();
+                        Log.d(TAG,pesan);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getActivity(), "Error JSON", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("ERROR", error.getMessage());
+                Toast.makeText(getActivity(),"Error", Toast.LENGTH_SHORT).show();
+                hideDialog();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> param = new HashMap<String, String>();
+
+                //*//**//**//**//*** set session to variable ***//**//**//**//*
+                //*//**//**//**//*** end set session to variable ***//**//**//**//*
+                Log.d(TAG,"Masuk Upload header");
+
+                param.put("contractID", txtContractID.getText().toString());
+                param.put("status",txt_status.getText().toString());
+                param.put("pic", txt_pic.getText().toString());
+                param.put("savedDate", strCreateDate);
+                param.put("period",txt_period.getText().toString());
+                param.put("branchID", txt_branch.getText().toString());
+                return param;
+            }
+        };
+        AppController.getInstance().addToRequestQueue(stringRequest, tag_json);
+    }
+
+    private void uploadAddress() {
+        String urlUploadAdress = ConnectionHelper.URL_local+"";
+        String tag_json = "tag_json";
+
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Sedang upload Data...");
+        showDialog();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUploadAdress, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 //Log.d("response", response.toString());
@@ -592,20 +748,71 @@ public class ProgressDetailFragment extends Fragment {
 
                 //*//**//**//**//*** set session to variable ***//**//**//**//*
                 //*//**//**//**//*** end set session to variable ***//**//**//**//*
-                Log.d(TAG,"Masuk SIni Loh");
+                Log.d(TAG,"Masuk Sini adress");
 
                 param.put("contractID", txtContractID.getText().toString());
-                param.put("questionID", strQuestion);
-                param.put("answer", strAnswer);
-                param.put("savedDate", strCreateDate);
+                param.put("addressType", strCreateDate);
+                param.put("addressNew",txt_status.getText().toString());
                 param.put("pic", txt_pic.getText().toString());
                 param.put("branchID", txt_branch.getText().toString());
-                param.put("status",txt_status.getText().toString());
-                param.put("period",txt_period.getText().toString());
                 return param;
             }
         };
+        AppController.getInstance().addToRequestQueue(stringRequest, tag_json);
+    }
 
+    private void uploadRoute(final String strLat, final String strLng) {
+        String urlUploadRoute = ConnectionHelper.URL_local+"saveRoute.php";
+        String tag_json = "tag_json";
+
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Sedang upload Data...");
+        showDialog();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUploadRoute, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //Log.d("response", response.toString());
+                hideDialog();
+
+                try {
+                    JSONObject jObject = new JSONObject(response);
+                    String pesan = jObject.getString("pesan");
+                    String hasil = jObject.getString("result");
+                    if (hasil.equalsIgnoreCase("true")) {
+                        //Toast.makeText(getActivity(), pesan, Toast.LENGTH_SHORT).show();
+                        Log.d(TAG,pesan);
+                    } else {
+                        //Toast.makeText(getActivity(), pesan, Toast.LENGTH_SHORT).show();
+                        Log.d(TAG,pesan);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getActivity(), "Error JSON", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("ERROR", error.getMessage());
+                Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                hideDialog();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> param = new HashMap<String, String>();
+
+                //*//**//**//**//*** set session to variable ***//**//**//**//*
+                //*//**//**//**//*** end set session to variable ***//**//**//**//*
+                Log.d(TAG,"Masuk sini Route");
+
+                param.put("pic", txt_pic.getText().toString());
+                param.put("lat", strLat.replaceAll("Lat : ",""));
+                param.put("lng", strLng.replaceAll("Long : ",""));
+                return param;
+            }
+        };
         AppController.getInstance().addToRequestQueue(stringRequest, tag_json);
     }
 //------------------------

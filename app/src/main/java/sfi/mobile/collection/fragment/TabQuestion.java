@@ -363,6 +363,8 @@ public class TabQuestion extends Fragment implements LocationListener {
                     contactperson.setText("");
                     spinner_unit.setSelection(0);
                     spinner_custbayar.setSelection(0);
+                    txtlat_pembayaran.setText("Lat  : " );
+                    txtlng_pembayaran.setText("Long : " );
                     btnsave.setEnabled(true);
                 }
 
@@ -663,9 +665,7 @@ public class TabQuestion extends Fragment implements LocationListener {
     }
 
     public Uri getOutputMediaFileUri() {
-        return FileProvider.getUriForFile(getActivity(),
-                BuildConfig.APPLICATION_ID + ".provider",
-                getOutputMediaFile());
+        return FileProvider.getUriForFile(getActivity(),BuildConfig.APPLICATION_ID + ".provider",getOutputMediaFile());
     }
 
     private static File getOutputMediaFile() {

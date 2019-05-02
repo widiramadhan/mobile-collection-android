@@ -97,10 +97,11 @@ public class TabDraft extends Fragment implements
                 Bundle arguments = new Bundle();
                 arguments.putString("paramId", contract_id);
                 Log.e(TAG, "Kontrak Id->" + contract_id);
-                fragment.setArguments(arguments);
                 FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.main_container_wrapper, fragment).commit();
+                fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
+                fragmentTransaction.addToBackStack("A_B_TAG");
+                fragmentTransaction.commit();
             }
         });
         return view;
