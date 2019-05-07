@@ -851,37 +851,47 @@ public class TabQuestionEdit extends Fragment implements LocationListener {
         String Update15 = "UPDATE RESULT Set ANSWER ='"+ hasilkunjungan.getText().toString() +"',CREATE_DATE = '"+ getDate +"' WHERE QUESTION = 'MS_Q20190226172818070' and CONTRACT_ID ='"+ StrContractID +"'";
 
         String Sql = "update DKH set IS_COLLECT=2 where NOMOR_KONTRAK = '"+ StrContractID +"'";
+        String Sql2 = "update COLLECTED set IS_COLLECT=2 where CONTRACT_ID = '"+ StrContractID +"'";
         //Exec DB update
         String updateCollectibility = "";
+        String updateCollectibility2 = "";
+
         Log.e(TAG,"spinner pembayaran-> "+spinner_custbayar.getSelectedItem().toString());
 
         if(spinner_name.getSelectedItem().toString().equals("Tidak bertemu siapapun")) {
             if (imageView.getDrawable() != null) {
                 /*dbhelper.insertDataImage(StrContractID, imageViewToByte(imageView), getDate);*/
                 updateCollectibility = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + StrContractID;
+                updateCollectibility2 = "update COLLECTED set IS_COLLECT=1, DailyCollectibility='Coll Harian' where CONTRACT_ID = " + StrContractID;
                 Log.d(TAG, "Masuk ke Done karna foto lokasi tidak kosong");
             } else {
                 updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + StrContractID;
+                updateCollectibility2 = "update COLLECTED set IS_COLLECT=2, DailyCollectibility='Coll Harian' where CONTRACT_ID = " + StrContractID;
                 Log.d(TAG, "Masuk ke Draft karna foto lokasi kosong");
             }
         }else if(spinner_custbayar.getSelectedItem().toString().equals("Ya") ) {
             if(pembayaran_diterima.getText().toString().equals("") || pembayaran_diterima.getText().toString().equals("0") ){
                 updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + StrContractID;
+                updateCollectibility2 = "update COLLECTED set IS_COLLECT=2, DailyCollectibility='Coll Harian' where CONTRACT_ID = " + StrContractID;
                 Log.d(TAG,"Masuk ke draf Pembayaran Tidak diterima");
             }else {
                 updateCollectibility = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + StrContractID;
+                updateCollectibility2 = "update COLLECTED set IS_COLLECT=1, DailyCollectibility='Coll Harian' where CONTRACT_ID = " + StrContractID;
                 Log.d(TAG,"Masuk ke Done Pembayaran diterima");
             }
         }else if(spinner_custbayar.getSelectedItem().toString().equals("Tidak")){
             if(txttgljanjibayar.getText().toString().equals("")){
                 updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + StrContractID;
+                updateCollectibility2 = "update COLLECTED set IS_COLLECT=2, DailyCollectibility='Coll Harian' where CONTRACT_ID = " + StrContractID;
                 Log.d(TAG,"Masuk ke draf tanggal janji bayar kosong");
             }else {
                 updateCollectibility = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + StrContractID;
+                updateCollectibility2 = "update COLLECTED set IS_COLLECT=1, DailyCollectibility='Coll Harian' where CONTRACT_ID = " + StrContractID;
                 Log.d(TAG,"Masuk ke Draf tanggal janji bayar tidak kosong");
             }
         }else if(spinner_custbayar.getSelectedItem().toString().equals("Pilih")){
             updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + StrContractID;
+            updateCollectibility2 = "update COLLECTED set IS_COLLECT=2, DailyCollectibility='Coll Harian' where CONTRACT_ID = " + StrContractID;
             Log.d(TAG,"masuk draft");
         }
 
@@ -901,6 +911,7 @@ public class TabQuestionEdit extends Fragment implements LocationListener {
         dbUpdate.execSQL(Update14);
         dbUpdate.execSQL(Update15);
         dbUpdate.execSQL(Sql);
+        //dbUpdate.execSQL(Sql2);
         dbUpdate.execSQL(updateCollectibility);
         //dbUpdate.execSQL(updateCollectibility2);
 

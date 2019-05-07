@@ -9,37 +9,60 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/hello_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hello,\nWidi Ramadhan"
-                android:layout_marginTop="30dp"
-                android:layout_marginLeft="30dp"
-                android:textColor="@color/colorPrimary"
-                android:textSize="26dp"/>
-
-            <android.support.v7.widget.CardView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/hello_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="30dp"
+                    android:text="Hello,\nWidi Ramadhan"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="26dp" />
+
+                <LinearLayout
+                    android:id="@+id/ln_refresh"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="0dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="100dp"
+                        android:src="@drawable/ic_autorenew_primary" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
                 card_view:cardBackgroundColor="@android:color/transparent"
                 card_view:cardCornerRadius="0dp"
-                card_view:cardElevation="0dp" >
+                card_view:cardElevation="0dp">
 
-                <android.support.v7.widget.CardView
-                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/card_view_inner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -47,7 +70,7 @@
                     android:layout_marginTop="3dp"
                     card_view:cardBackgroundColor="#FFF"
                     card_view:cardCornerRadius="15dp"
-                    card_view:cardElevation="0dp" >
+                    card_view:cardElevation="0dp">
 
                     <LinearLayout
                         android:id="@+id/new_task"
@@ -59,9 +82,9 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="30dp"
                             android:layout_marginBottom="30dp"
                             android:layout_marginLeft="30dp"
+                            android:layout_marginTop="30dp"
                             android:layout_weight="0.1"
                             android:orientation="vertical">
 
@@ -70,30 +93,30 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="46"
-                                android:textSize="30dp"
-                                android:textColor="#999999"/>
+                                android:textColor="#999999"
+                                android:textSize="30dp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Tugas Baru"
-                                android:textSize="12dp"
-                                android:textColor="#999999"/>
+                                android:textColor="#999999"
+                                android:textSize="12dp" />
 
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="0.3"
-                            android:layout_marginTop="30dp"
+                            android:layout_marginBottom="30dp"
                             android:layout_marginRight="30dp"
-                            android:layout_marginBottom="30dp">
+                            android:layout_marginTop="30dp"
+                            android:layout_weight="0.3">
 
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:src="@drawable/tasklist_new"/>
+                                android:src="@drawable/tasklist_new" />
 
                         </LinearLayout>
                     </LinearLayout>
@@ -102,26 +125,24 @@
 
             </android.support.v7.widget.CardView>
 
-            <android.support.v7.widget.CardView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
                 android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 card_view:cardBackgroundColor="@android:color/transparent"
                 card_view:cardCornerRadius="0dp"
-                card_view:cardElevation="0dp" >
+                card_view:cardElevation="0dp">
 
-                <android.support.v7.widget.CardView
-                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="3dp"
                     card_view:cardBackgroundColor="#FFF"
                     card_view:cardCornerRadius="15dp"
-                    card_view:cardElevation="0dp" >
+                    card_view:cardElevation="0dp">
 
                     <LinearLayout
                         android:id="@+id/task_draft"
@@ -133,9 +154,9 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="30dp"
                             android:layout_marginBottom="30dp"
                             android:layout_marginLeft="30dp"
+                            android:layout_marginTop="30dp"
                             android:layout_weight="0.1"
                             android:orientation="vertical">
 
@@ -144,30 +165,30 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="3"
-                                android:textSize="30dp"
-                                android:textColor="#999999"/>
+                                android:textColor="#999999"
+                                android:textSize="30dp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Tugas Belum Selesai"
-                                android:textSize="12dp"
-                                android:textColor="#999999"/>
+                                android:textColor="#999999"
+                                android:textSize="12dp" />
 
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="0.3"
-                            android:layout_marginTop="30dp"
+                            android:layout_marginBottom="30dp"
                             android:layout_marginRight="30dp"
-                            android:layout_marginBottom="30dp">
+                            android:layout_marginTop="30dp"
+                            android:layout_weight="0.3">
 
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:src="@drawable/tasklist_draft"/>
+                                android:src="@drawable/tasklist_draft" />
 
                         </LinearLayout>
 
@@ -177,26 +198,24 @@
 
             </android.support.v7.widget.CardView>
 
-            <android.support.v7.widget.CardView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
                 android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 card_view:cardBackgroundColor="@android:color/transparent"
                 card_view:cardCornerRadius="0dp"
-                card_view:cardElevation="0dp" >
+                card_view:cardElevation="0dp">
 
-                <android.support.v7.widget.CardView
-                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="3dp"
                     card_view:cardBackgroundColor="#FFF"
                     card_view:cardCornerRadius="15dp"
-                    card_view:cardElevation="0dp" >
+                    card_view:cardElevation="0dp">
 
                     <LinearLayout
                         android:id="@+id/task_done"
@@ -208,9 +227,9 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="30dp"
                             android:layout_marginBottom="30dp"
                             android:layout_marginLeft="30dp"
+                            android:layout_marginTop="30dp"
                             android:layout_weight="0.1"
                             android:orientation="vertical">
 
@@ -219,30 +238,30 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="5"
-                                android:textSize="30dp"
-                                android:textColor="#999999"/>
+                                android:textColor="#999999"
+                                android:textSize="30dp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Tugas Selesai"
-                                android:textSize="12dp"
-                                android:textColor="#999999"/>
+                                android:textColor="#999999"
+                                android:textSize="12dp" />
 
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="0.3"
-                            android:layout_marginTop="30dp"
+                            android:layout_marginBottom="30dp"
                             android:layout_marginRight="30dp"
-                            android:layout_marginBottom="30dp">
+                            android:layout_marginTop="30dp"
+                            android:layout_weight="0.3">
 
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:src="@drawable/tasklist_done"/>
+                                android:src="@drawable/tasklist_done" />
 
                         </LinearLayout>
 

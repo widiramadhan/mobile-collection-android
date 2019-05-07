@@ -577,40 +577,53 @@ public class TabQuestion extends Fragment implements LocationListener {
                 "('"+ strContractID +"','MS_Q20190226172810420','"+ txttgljanjibayar.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"','"+txt_period.getText().toString()+"')," +
                 "('"+ strContractID +"','MS_Q20190226172818070','"+ hasilkunjungan.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"','"+txt_period.getText().toString()+"')";
 
+        String SavedCollected = "INSERT INTO COLLECTED (CONTRACT_ID,DailyCollectibility,IS_COLLECT,PERIOD,EMP_ID,CREATE_DATE) values('"+strContractID+"','',0,'"+ txt_period.getText().toString() +"','"+ employeeID +"','"+getDate+"')";
+
         String updateCollectibility = "";
         String updateCollectibility2 = "";
+
         Log.e(TAG,"spinner -> "+spinner_custbayar.getSelectedItem().toString());
+
         if(spinner_name.getSelectedItem().toString().equals("Tidak bertemu siapapun")) {
             if (imageView.getDrawable() != null) {
                 dbhelper.insertDataImage(strContractID, imageViewToByte(imageView), getDate);
                 updateCollectibility = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
+                updateCollectibility2 = "update COLLECTED set IS_COLLECT=1, DailyCollectibility='Coll Harian' where CONTRACT_ID = " + strContractID;
                 Log.d(TAG, "Masuk ke Done karna foto lokasi tidak kosong");
             } else {
                 updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
+                updateCollectibility2 = "update COLLECTED set IS_COLLECT=2, DailyCollectibility='Coll Harian' where CONTRACT_ID = " + strContractID;
                 Log.d(TAG, "Masuk ke Draft karna foto lokasi kosong");
             }
         }else if (spinner_custbayar.getSelectedItem().toString().equals("Ya") ) {
             if(pembayaran_diterima.getText().toString().equals("") || pembayaran_diterima.getText().toString().equals("0") ){
                 updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
+                updateCollectibility2 = "update COLLECTED set IS_COLLECT=2, DailyCollectibility='Coll Harian' where CONTRACT_ID = " + strContractID;
                 Log.d(TAG,"Masuk ke Draf Pembayaran tidak diterima");
             }else {
                 updateCollectibility = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
+                updateCollectibility2 = "update COLLECTED set IS_COLLECT=1, DailyCollectibility='Coll Harian' where CONTRACT_ID = " + strContractID;
                 Log.d(TAG,"Masuk ke Done Pembayaran diterima");
             }
         }else if(spinner_custbayar.getSelectedItem().toString().equals("Tidak")){
             if(txttgljanjibayar.getText().toString().equals("")){
                 updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
+                updateCollectibility2 = "update COLLECTED set IS_COLLECT=2, DailyCollectibility='Coll Harian' where CONTRACT_ID = " + strContractID;
                 Log.d(TAG,"Masuk ke Done tanggal janji bayar kosong");
             }else {
                 updateCollectibility = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
+                updateCollectibility2 = "update COLLECTED set IS_COLLECT=1, DailyCollectibility='Coll Harian' where CONTRACT_ID = " + strContractID;
                 Log.d(TAG,"Masuk ke Done tanggal janji bayar tidak kosong");
             }
         }else if(spinner_custbayar.getSelectedItem().toString().equals("Pilih")) {
             updateCollectibility = "update DKH set IS_COLLECT=2, DailyCollectibility='Coll Harian' where NOMOR_KONTRAK = " + strContractID;
+            updateCollectibility2 = "update COLLECTED set IS_COLLECT=2, DailyCollectibility='Coll Harian' where CONTRACT_ID = " + strContractID;
             Log.d(TAG,"masuk draft");
         }
 
         dbInsert.execSQL(saved);
+        //dbInsert.execSQL(SavedCollected);
+        //dbInsert.execSQL(updateCollectibility2);
         dbInsert.execSQL(updateCollectibility);
 
         if(imageViewPembayaran.getDrawable() != null){

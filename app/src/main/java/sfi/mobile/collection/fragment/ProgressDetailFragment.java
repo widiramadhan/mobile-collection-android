@@ -161,7 +161,7 @@ public class ProgressDetailFragment extends Fragment {
 
         dbhelper = new DBHelper(getActivity());
         SQLiteDatabase db = dbhelper.getReadableDatabase();
-        cursor = db.rawQuery("SELECT A.CONTRACT_ID, B.NAMA_KOSTUMER, A.QUESTION, A.ANSWER, A.CREATE_DATE,B.TOTAL_TAGIHAN,B.PERIOD FROM RESULT A LEFT JOIN DKH B ON A.CONTRACT_ID=B.NOMOR_KONTRAK WHERE A.CONTRACT_ID ='" + paramId +"'",null);
+        cursor = db.rawQuery("SELECT A.CONTRACT_ID, B.NAMA_KOSTUMER, A.QUESTION, A.ANSWER, A.CREATE_DATE,B.TOTAL_TAGIHAN,B.PERIOD FROM RESULT A LEFT JOIN DKH B ON A.CONTRACT_ID=B.NOMOR_KONTRAK WHERE A.CONTRACT_ID ='" + paramId +"' AND B.PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"'" ,null);
         cursor.moveToFirst();
         if(cursor.getCount()>0) {
             cursor.moveToPosition(0);
@@ -523,10 +523,12 @@ public class ProgressDetailFragment extends Fragment {
                             dbhelper = new DBHelper(getActivity());
                             SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
                             String Sql = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll non Harian' where NOMOR_KONTRAK=" + txtContractID.getText().toString();
+                            String Sql2 = "update COLLECTED set IS_COLLECT=1, DailyCollectibility='Coll non Harian' where CONTRACT_ID=" + txtContractID.getText().toString();
                             dbInsert.execSQL(Sql);
+                            //dbInsert.execSQL(Sql2);
                         }
 
-                        SaveResultHeader();
+                        //SaveResultHeader();
                         if(loop == 17){
                             Log.e(TAG, "Data berhasil dikirim ke server");
                         }
@@ -535,7 +537,7 @@ public class ProgressDetailFragment extends Fragment {
                             Log.d(TAG, "lokasi pembayaran Kosong");
                         }else if (!strLatPembayaran.equals("Lat  : ") && !strLngPembayaran.equals("Long : ")){
                             uploadRoute(strLatPembayaran,strLngPembayaran);
-                            SaveRoute(strLatPembayaran,strLngPembayaran);
+                            //SaveRoute(strLatPembayaran,strLngPembayaran);
                             Log.d(TAG, "lokasi pembayaran Ada");
                         }
 
@@ -543,7 +545,7 @@ public class ProgressDetailFragment extends Fragment {
                             Log.d(TAG, "lokasi Pertemuan Kosong");
                         }else if(!strLatPertemuan.equals("Lat  : ") && !strLngPertemuan.equals("Long : ")){
                             uploadRoute(strLatPertemuan,strLngPertemuan);
-                            SaveRoute(strLatPertemuan,strLngPertemuan);
+                            //SaveRoute(strLatPertemuan,strLngPertemuan);
                             Log.d(TAG, "lokasi pertemuan Ada");
                         }
 
@@ -591,7 +593,7 @@ public class ProgressDetailFragment extends Fragment {
     }
 
     private void uploadResult(final String strQuestion, final String strAnswer) {
-        String urlUploadData = ConnectionHelper.URL_local+"saveResult.php";
+        String urlUploadData = ConnectionHelper.URL+"saveResult.php";
         String tag_json = "tag_json";
 
         progressDialog.setCancelable(false);
@@ -647,7 +649,7 @@ public class ProgressDetailFragment extends Fragment {
     }
 
     private void uploadResultHeader() {
-        String urlUploadResultHeader = ConnectionHelper.URL_local+"SaveResulHeader.php";
+        String urlUploadResultHeader = ConnectionHelper.URL+"SaveResulHeader.php";
         String tag_json = "tag_json";
 
         progressDialog.setCancelable(false);
@@ -705,7 +707,7 @@ public class ProgressDetailFragment extends Fragment {
     }
 
     private void uploadAddress() {
-        String urlUploadAdress = ConnectionHelper.URL_local+"";
+        String urlUploadAdress = ConnectionHelper.URL+"";
         String tag_json = "tag_json";
 
         progressDialog.setCancelable(false);
@@ -762,7 +764,7 @@ public class ProgressDetailFragment extends Fragment {
     }
 
     private void uploadRoute(final String strLat, final String strLng) {
-        String urlUploadRoute = ConnectionHelper.URL_local+"saveRoute.php";
+        String urlUploadRoute = ConnectionHelper.URL+"saveRouteNew.php";
         String tag_json = "tag_json";
 
         progressDialog.setCancelable(false);
@@ -810,6 +812,8 @@ public class ProgressDetailFragment extends Fragment {
                 param.put("pic", txt_pic.getText().toString());
                 param.put("lat", strLat.replaceAll("Lat : ",""));
                 param.put("lng", strLng.replaceAll("Long : ",""));
+                param.put("contract_id", txtContractID.getText().toString());
+                param.put("period", txt_period.getText().toString());
                 return param;
             }
         };

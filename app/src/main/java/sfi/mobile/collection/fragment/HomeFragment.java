@@ -67,7 +67,7 @@ public class HomeFragment extends Fragment implements
     public static final String my_shared_preferences = "my_shared_preferences";
 
     SwipeRefreshLayout swipe;
-    LinearLayout ln_task_new, ln_task_draft, ln_task_done;
+    LinearLayout ln_task_new, ln_task_draft, ln_task_done,ln_refresh;
     TextView txtName, txtTotalTask, txtTotalDone, txtTotalDraft;
     LocationManager locationManager;
 
@@ -84,6 +84,7 @@ public class HomeFragment extends Fragment implements
         ln_task_new = (LinearLayout) view.findViewById(R.id.new_task);
         ln_task_draft = (LinearLayout) view.findViewById(R.id.task_draft);
         ln_task_done = (LinearLayout) view.findViewById(R.id.task_done);
+        ln_refresh = (LinearLayout) view.findViewById(R.id.ln_refresh);
         txtName = (TextView) view.findViewById(R.id.hello_name);
         txtTotalTask = (TextView) view.findViewById(R.id.total_task);
         txtTotalDone = (TextView) view.findViewById(R.id.total_done);
@@ -157,6 +158,14 @@ public class HomeFragment extends Fragment implements
             }
         });
 
+        ln_refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RefreshData();
+                saveDataSQLite2(employeeID, branchID);
+            }
+        });
+
         return view;
     }
 
@@ -189,6 +198,12 @@ public class HomeFragment extends Fragment implements
         alert.show();
     }
 
+    private void RefreshData(){
+        dbhelper = new DBHelper(getActivity());
+        SQLiteDatabase db = dbhelper.getWritableDatabase();
+        db.execSQL("delete from SYNC_DATA_AGING ");
+        Log.d(TAG,"Data Aging Di hapus");
+    }
     private void checkData() {
         //cek koneksi
         ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -289,7 +304,103 @@ public class HomeFragment extends Fragment implements
                                         j.getAlamatKantor(), j.getNomorTlpKantor(), j.getAlamatSurat(), j.getNomorTlpSurat(), j.getPicTerakhir(), j.getPenangananTerakhir(),
                                         j.getTanggalJanjiBayar(), j.getDailyCollectibility(), j.getOdHarian(), j.getTanggalJatuhTempoHarian(), j.getARin(), j.getFlowUp(),
                                         j.getTanggalTarikHarian(), j.getTanggalTerimaKlaim(), j.getLat(), j.getLng(), j.getApproval(), j.getIsCollect(), j.getPeriod(),  j.getColAreaID(),
-                                        j.getCreateUser(), j.getCreateDate(), j.getStatusVoid() );
+                                        j.getCreateUser(), j.getCreateDate(), j.getStatusVoid());
+                                //dbhelper.insertDataCollected(j.getNomorKontrak(),j.getDailyCollectibility(),j.getIsCollect(),j.getCreateDate());
+                                dbhelper.insertDataSync_data(j.getBranchID(),j.getNomorKontrak(),j.getPic(),j.getDailyCollectibility(),j.getIsCollect(),j.getPeriod(),j.getTotalTagihan(),j.getCreateDate());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Log.e(TAG, "Masuk catch");
+                            }
+                        }
+                        progressDialog.hide();
+                        swipe.setRefreshing(false);
+                        CountData();
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e(TAG, "Error: " + error.getMessage());
+                Toast.makeText(getActivity().getApplicationContext(), "Terjadi kesalahan, mohon hubungi administrator", Toast.LENGTH_LONG).show();
+                progressDialog.hide();
+                swipe.setRefreshing(false);
+            }
+        });
+        AppController.getInstance().addToRequestQueue(jArr);
+    }
+
+    public void saveDataSQLite2(final String employeeID, final String branchID){
+        String urlGetDKHC = ConnectionHelper.URL + "getTasklist.php"+"?employeeID="+employeeID+"&branchID="+branchID;
+
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Loading...");
+            progressDialog.show();
+        }
+
+        JsonArrayRequest jArr = new JsonArrayRequest(urlGetDKHC+"?employeeID="+employeeID+"&branchID="+branchID,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.e(TAG, response.toString());
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                JSONObject obj = response.getJSONObject(i);
+                                DKHC j = new DKHC();
+                                j.setBranchID(obj.getString("BRANCH_ID"));
+                                j.setBranchName(obj.getString("BRANCH_NAME"));
+                                j.setPic(obj.getString("EMP_ID"));
+                                j.setNomorKontrak(obj.getString("NOMOR_KONTRAK"));
+                                j.setNamaKostumer(obj.getString("NAMA_KOSTUMER"));
+                                j.setTanggalJatuhTempo(obj.getString("TANGGAL_JATUH_TEMPO"));
+                                j.setOverDueDays(obj.getInt("OVERDUE_DAYS"));
+                                j.setAngsuranKe(obj.getInt("ANGSURAN_KE"));
+                                j.setJumlahAngsuranOverDue(obj.getInt("JUMLAH_ANGSURAN_OVERDUE"));
+                                j.setTenor(obj.getInt("TENOR"));
+                                j.setAngsuranBerjalan(obj.getInt("ANGSURAN_BERJALAN"));
+                                j.setAngsuranTertunggak(obj.getInt("ANGSURAN_TERTUNGGAK"));
+                                j.setDenda(obj.getInt("DENDA"));
+                                j.setTitipan(obj.getInt("TITIPAN"));
+                                j.setTotalTagihan(obj.getInt("TOTAL_TAGIHAN"));
+                                j.setOutstandingAR(obj.getInt("OUTSTANDING_AR"));
+                                j.setAlamatKTP(obj.getString("ALAMAT_KTP"));
+                                j.setNomorTlpRumah(obj.getString("NOMOR_TELEPON_RUMAH"));
+                                j.setNomorHanphone(obj.getString("NOMOR_HANDPHONE"));
+                                j.setAlamatKantor(obj.getString("ALAMAT_KANTOR"));
+                                j.setNomorTlpKantor(obj.getString("NOMOR_TELEPON_KANTOR"));
+                                j.setAlamatSurat(obj.getString("ALAMAT_SURAT"));
+                                j.setNomorTlpSurat(obj.getString("NOMOR_TELEPON_SURAT"));
+                                j.setPicTerakhir(obj.getString("PIC_TERAKHIR"));
+                                j.setPenangananTerakhir(obj.getString("PENANGANAN_TERAKHIR"));
+                                j.setTanggalJanjiBayar(obj.getString("TANGGAL_JANJI_BAYAR"));
+                                j.setDailyCollectibility(obj.getString("DailyCollectibility"));
+                                j.setOdHarian(obj.getInt("OvdDaysHarian"));
+                                j.setTanggalJatuhTempoHarian(obj.getString("TglJatuhTempoHarian"));
+                                j.setARin(obj.getInt("ARIN"));
+                                j.setFlowUp(obj.getInt("FlowUp"));
+                                j.setTanggalTarikHarian(obj.getString("TglTarikHarian"));
+                                j.setTanggalTerimaKlaim(obj.getString("TglTerimaKlaim"));
+                                j.setLat(obj.getString("LATITUDE"));
+                                j.setLng(obj.getString("LONGITUDE"));
+                                j.setApproval(obj.getInt("APPROVAL"));
+                                j.setIsCollect(obj.getInt("IS_COLLECT"));
+                                j.setPeriod(obj.getString("PERIOD"));
+                                j.setColAreaID(obj.getDouble("M_AREA_COLL_ID"));
+                                j.setCreateUser(obj.getString("CREATE_USER"));
+                                j.setCreateDate(obj.getString("CREATE_DATE"));
+                                j.setStatusVoid(obj.getInt("VOID"));
+
+                                dbhelper = new DBHelper(getActivity().getApplicationContext());
+                                /*dbhelper.insertDataDKH(j.getBranchID(), j.getBranchName(), j.getPic(), j.getNomorKontrak(), j.getNamaKostumer(), j.getTanggalJatuhTempo(),
+                                        j.getOverDueDays(), j.getAngsuranKe(), j.getJumlahAngsuranOverDue(), j.getTenor(), j.getAngsuranBerjalan(), j.getAngsuranTertunggak(),
+                                        j.getDenda(), j.getTitipan(), j.getTotalTagihan(), j.getOutstandingAR(), j.getAlamatKTP(), j.getNomorTlpRumah(), j.getNomorHanphone(),
+                                        j.getAlamatKantor(), j.getNomorTlpKantor(), j.getAlamatSurat(), j.getNomorTlpSurat(), j.getPicTerakhir(), j.getPenangananTerakhir(),
+                                        j.getTanggalJanjiBayar(), j.getDailyCollectibility(), j.getOdHarian(), j.getTanggalJatuhTempoHarian(), j.getARin(), j.getFlowUp(),
+                                        j.getTanggalTarikHarian(), j.getTanggalTerimaKlaim(), j.getLat(), j.getLng(), j.getApproval(), j.getIsCollect(), j.getPeriod(),  j.getColAreaID(),
+                                        j.getCreateUser(), j.getCreateDate(), j.getStatusVoid());*/
+                                //dbhelper.insertDataCollected(j.getNomorKontrak(),j.getDailyCollectibility(),j.getIsCollect(),j.getCreateDate());
+                                dbhelper.insertDataSync_data(j.getBranchID(),j.getNomorKontrak(),j.getPic(),j.getDailyCollectibility(),j.getIsCollect(),j.getPeriod(),j.getTotalTagihan(),j.getCreateDate());
                             } catch (JSONException e) {
                                 e.printStackTrace();
                                 Log.e(TAG, "Masuk catch");
@@ -320,6 +431,7 @@ public class HomeFragment extends Fragment implements
     private void CountData(){
         SQLiteDatabase db = dbhelper.getReadableDatabase();
         //cek jumlah task yang ada
+        //cursor = db.rawQuery("SELECT * FROM DKH WHERE IS_COLLECT = 0 AND DailyCollectibility = 'Coll Harian' AND PIC = '"+employeeID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"'" ,null);
         cursor = db.rawQuery("SELECT * FROM DKH WHERE IS_COLLECT = 0 AND DailyCollectibility = 'Coll Harian' AND PIC = '"+employeeID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"'" ,null);
         cursor.moveToFirst();
         int count = cursor.getCount();

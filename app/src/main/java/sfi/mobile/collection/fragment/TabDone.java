@@ -60,9 +60,9 @@ public class TabDone extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.tab_draft, container, false);
+        View view = inflater.inflate(R.layout.tab_done, container, false);
 
-        list = (ListView) view.findViewById(R.id.listStatus);
+        list = (ListView) view.findViewById(R.id.listTaskList);
         swipe = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
         txtcontractid = (TextView) view.findViewById(R.id.contract_id);
         txtcusrtomername = (TextView) view.findViewById(R.id.customer_name);
@@ -147,7 +147,9 @@ public class TabDone extends Fragment implements
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();
 
-        String selectQuery = "SELECT DISTINCT A.CONTRACT_ID, B.NAMA_KOSTUMER, A.CREATE_DATE AS DATE FROM RESULT A LEFT JOIN DKH B ON A.CONTRACT_ID = B.NOMOR_KONTRAK WHERE B.IS_COLLECT=1 AND B.DailyCollectibility='Coll Harian' AND B.PIC='"+employeeID+"'";
+        //String selectQuery = "SELECT DISTINCT A.CONTRACT_ID, B.NAMA_KOSTUMER, A.CREATE_DATE AS DATE FROM COLLECTED A LEFT JOIN DKH B ON A.CONTRACT_ID = B.NOMOR_KONTRAK WHERE A.IS_COLLECT=1 AND A.DailyCollectibility='Coll Harian' AND A.EMP_ID='"+employeeID+"'";
+        String selectQuery = "SELECT DISTINCT A.CONTRACT_ID, B.NAMA_KOSTUMER, A.CREATE_DATE AS DATE FROM RESULT A LEFT JOIN DKH B ON A.CONTRACT_ID = B.NOMOR_KONTRAK WHERE A.IS_COLLECT=1 AND A.DailyCollectibility='Coll Harian' AND A.PIC='"+employeeID+"'";
+
         SQLiteDatabase database = dbhelper.getWritableDatabase();
         Cursor cursor = database.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {

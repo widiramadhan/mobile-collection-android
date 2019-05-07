@@ -41,12 +41,21 @@ public class DBHelper extends SQLiteOpenHelper {
         //create table priority 4w
         String sql6 = "create table PRIORITY_4W( ID integer primary key autoincrement, CONTRACT_ID text null ,CREATE_DATE text null,HARI text null)";
         Log.d( "Data","onCreate: "+sql6);
+        //create table COLLECTED
+        String sql7 = "create table COLLECTED( ID integer primary key autoincrement, CONTRACT_ID text null , DailyCollectibility text null,IS_COLLECT int null, PERIOD text null, EMP_ID text null, CREATE_DATE text null )";
+        Log.d( "Data","onCreate: "+sql7);
+        //create table SYNC_DATA_AGING
+        String sql8 = "create table SYNC_DATA_AGING( ID integer primary key autoincrement, BRANCH_ID text null ,CONTRACT_ID text null , PIC text null, DailyCollectibility text null, IS_COLLECT int null, PERIOD text null, TOTAL_TAGIHAN double null, CREATE_DATE text null)";
+        Log.d( "Data","onCreate: "+sql8);
+
         db.execSQL(sql);
         db.execSQL(sql2);
         db.execSQL(sql3);
-        db.execSQL(sql4);
-        db.execSQL(sql5);
-        db.execSQL(sql6);
+        //db.execSQL(sql4);
+        //db.execSQL(sql5);
+        //db.execSQL(sql6);
+        db.execSQL(sql7);
+        db.execSQL(sql8);
     }
 
     @Override
@@ -57,6 +66,8 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS RESULT_HEADER");
         db.execSQL("DROP TABLE IF EXISTS ROUTE");
         db.execSQL("DROP TABLE IF EXISTS PRIORITY_4W");
+        db.execSQL("DROP TABLE IF EXISTS COLLECTED");
+        db.execSQL("DROP TABLE IF EXISTS SYNC_DATA_AGING");
         // create new tables
         onCreate(db);
     }
@@ -360,4 +371,40 @@ public class DBHelper extends SQLiteOpenHelper {
 
         statement.executeInsert();
     }
+
+    public void insertDataCollected(String ContractID, String DailyCollectibility, int Is_Collect, String Create_date){
+        SQLiteDatabase database = getWritableDatabase();
+        String sql = "INSERT INTO COLLECTED VALUES (NULL,?,?,?,?)";
+
+        SQLiteStatement statement = database.compileStatement(sql);
+        statement.clearBindings();
+
+        statement.bindString(1, ContractID);
+        statement.bindString(2, DailyCollectibility);
+        statement.bindDouble(3, Is_Collect);
+        statement.bindString(4, Create_date);
+
+        statement.executeInsert();
+    }
+
+    public void insertDataSync_data(String branch_id,String contract_id, String pic, String DailyCollectibility, int Is_Collect, String period, double total_tagihan,String Create_date){
+        SQLiteDatabase database = getWritableDatabase();
+        String sql = "INSERT INTO SYNC_DATA_AGING VALUES (NULL,?,?,?,?,?,?,?,?)";
+
+        SQLiteStatement statement = database.compileStatement(sql);
+        statement.clearBindings();
+
+        statement.bindString(1, branch_id);
+        statement.bindString(2, contract_id);
+        statement.bindString(3, pic);
+        statement.bindString(4, DailyCollectibility);
+        statement.bindDouble(5, Is_Collect);
+        statement.bindString(6, period);
+        statement.bindDouble(7, total_tagihan);
+        statement.bindString(8, Create_date );
+
+        statement.executeInsert();
+    }
+
+
 }
