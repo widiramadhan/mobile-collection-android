@@ -271,12 +271,16 @@ public class ProgressDetailFragmentHistory extends Fragment {
             ln_lokasiPembayaran.setVisibility(View.GONE);
             ln_print_disable.setVisibility(View.VISIBLE);
             ln_printStruk.setVisibility(View.GONE);
+            ln_saveStruk.setVisibility(View.GONE);
+            ln_saveStrukDisable.setVisibility(View.VISIBLE);
         }else if (txtResult.getText().equals("Customer Membayar")){
             ln_sisa_tagihan.setVisibility(View.GONE);
             ln_lokasipertemuan.setVisibility(View.GONE);
             ln_tgljanjibayar.setVisibility(View.GONE);
             ln_printStruk.setVisibility(View.VISIBLE);
             ln_print_disable.setVisibility(View.GONE);
+            ln_saveStruk.setVisibility(View.VISIBLE);
+            ln_saveStrukDisable.setVisibility(View.GONE);
         }else if (txtResult.getText().equals("Tidak bertemu")){
             /*
             ln_hasilKunjungan.setVisibility(View.VISIBLE);
