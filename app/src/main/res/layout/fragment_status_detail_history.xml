@@ -116,34 +116,34 @@
                     android:layout_height="0.5dp"
                     android:layout_marginTop="10dp"
                     android:background="#EEE" />
-
+                <!--TOMBOL PRINT-->
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:weightSum="3" >
+                    android:weightSum="3">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:id="@+id/ln_editdata"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:id="@+id/ln_editdata">
+                        android:layout_weight="0"
+                        android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
                             android:layout_gravity="center"
                             android:layout_marginTop="10dp"
-                            android:src="@drawable/ic_edit_disabled"/>
+                            android:src="@drawable/ic_edit_disabled" />
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="8dp"
+                            android:padding="14dp"
+                            android:text="Edit Data"
                             android:textAlignment="center"
-                            android:textColor="#CCC"
-                            android:text="Edit Data" />
+                            android:textColor="#CCC" />
                     </LinearLayout>
 
                     <View
@@ -152,48 +152,80 @@
                         android:background="#EEE" />
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="0"
                         android:orientation="vertical"
                         android:id="@+id/ln_printStruk">
 
                         <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
                             android:layout_gravity="center"
                             android:layout_marginTop="10dp"
                             android:src="@drawable/ic_print_primary"/>
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="8dp"
+                            android:padding="12dp"
                             android:textAlignment="center"
-                            android:text="Print Struk" />
+                            android:text="Print Struk"/>
                     </LinearLayout>
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="fill_parent"
+                        android:background="#EEE" />
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="0"
                         android:orientation="vertical"
                         android:id="@+id/ln_printStruk_disable">
 
                         <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
                             android:layout_gravity="center"
                             android:layout_marginTop="10dp"
                             android:src="@drawable/ic_print_disabled"/>
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="8dp"
+                            android:padding="14dp"
                             android:textAlignment="center"
                             android:textColor="#CCC"
                             android:text="Print Struk" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="#EEE" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:orientation="vertical"
+                        android:id="@+id/ln_sendemail">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="10dp"
+                            android:src="@drawable/ic_envelope_disabled"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="14dp"
+                            android:textColor="#CCC"
+                            android:textAlignment="center"
+                            android:text="Send Email" />
                     </LinearLayout>
 
                     <View
@@ -202,31 +234,51 @@
                         android:background="#EEE" />
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="0"
                         android:orientation="vertical"
-                        android:id="@+id/ln_sendemail">
+                        android:id="@+id/ln_saveStruk">
 
                         <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
                             android:layout_gravity="center"
                             android:layout_marginTop="10dp"
-                            android:src="@drawable/ic_envelope_disabled"/>
+                            android:src="@drawable/ic_image_primary"/>
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="8dp"
+                            android:padding="14dp"
+                            android:textColor="#0d306b"
+                            android:textAlignment="center"
+                            android:text="Save Struk" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:orientation="vertical"
+                        android:id="@+id/ln_saveStrukDisable">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="10dp"
+                            android:src="@drawable/ic_image_disabled"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="13dp"
                             android:textColor="#CCC"
                             android:textAlignment="center"
-                            android:text="Send Email" />
+                            android:text="Save Struk" />
                     </LinearLayout>
                 </LinearLayout>
-
-
-
             </LinearLayout>
 
             <LinearLayout

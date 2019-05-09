@@ -245,10 +245,24 @@ public class TabNormal extends Fragment implements
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location != null) {
-            double lat = location.getLatitude();
-            double lng = location.getLongitude();
-            txtLatitude.setText(String.valueOf(lat));
-            txtLongitude.setText(String.valueOf(lng));
+            if(!location.equals("")) {
+                try {
+                    double lat = location.getLatitude();
+                    double lng = location.getLongitude();
+                    txtLatitude.setText(String.valueOf(lat));
+                    txtLongitude.setText(String.valueOf(lng));
+                    Log.d(TAG, "Lat -> " + lat);
+                    Log.d(TAG, "Lng -> " + lng);
+                } catch (Exception e) {
+                    Log.d(TAG, String.valueOf(e));
+                }
+            }else{
+                txtLatitude.setText("0.000000");
+                txtLongitude.setText("0.000000");
+            }
+        }else{
+            txtLatitude.setText("0.000000");
+            txtLongitude.setText("0.000000");
         }
         //getLocation();
         getAllDKHC();

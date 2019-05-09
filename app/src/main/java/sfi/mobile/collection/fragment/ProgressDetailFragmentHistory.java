@@ -59,7 +59,7 @@ public class ProgressDetailFragmentHistory extends Fragment {
 
     String strMeetup, strContactName, strHubungan, strAddress, strQAddress, strNewAddress, strUnit, strQbayar, strAmount, strSisa, strLatPembayaran, strLngPembayaran, strLatPertemuan, strLngPertemuan, strJanjiBayar, strHasilKunjungan, strCreateDate;
 
-    LinearLayout ln_ketemudengankosumen,ln_contactpersonname,ln_hubungancostumer,ln_alamatkunjungan,ln_alamatbaru,ln_apakah_unitada,ln_pembayaranditerima,ln_sisa_tagihan,ln_lokasiPembayaran,ln_lokasipertemuan,ln_tgljanjibayar,ln_hasilKunjungan,ln_bertemukonsumen,ln_editData,ln_printStruk,ln_sendEmail,ln_btnUpload,ln_print_disable;
+    LinearLayout ln_ketemudengankosumen,ln_contactpersonname,ln_hubungancostumer,ln_alamatkunjungan,ln_alamatbaru,ln_apakah_unitada,ln_pembayaranditerima,ln_sisa_tagihan,ln_lokasiPembayaran,ln_lokasipertemuan,ln_tgljanjibayar,ln_hasilKunjungan,ln_bertemukonsumen,ln_editData,ln_saveStrukDisable,ln_saveStruk,ln_printStruk,ln_sendEmail,ln_btnUpload,ln_print_disable;
 
     protected Cursor cursor, cursor2;
     DBHelper dbhelper;
@@ -114,6 +114,8 @@ public class ProgressDetailFragmentHistory extends Fragment {
         ln_printStruk = (LinearLayout) view.findViewById(R.id.ln_printStruk);
         ln_sendEmail = (LinearLayout) view.findViewById(R.id.ln_sendemail);
         ln_btnUpload = (LinearLayout) view.findViewById(R.id.buttons);
+        ln_saveStruk = (LinearLayout) view.findViewById(R.id.ln_saveStruk);
+        ln_saveStrukDisable = (LinearLayout) view.findViewById(R.id.ln_saveStrukDisable);
         ln_print_disable = (LinearLayout) view.findViewById(R.id.ln_printStruk_disable);
 
     return view;
@@ -345,6 +347,22 @@ public class ProgressDetailFragmentHistory extends Fragment {
                 arguments.putString( "paramId" , contract_id);
                 Log.d(TAG,"Contract ID -> " + contract_id);
                 fragment.setArguments(arguments);
+                FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
+                fragmentTransaction.addToBackStack("A_B_TAG");
+                fragmentTransaction.commit();
+            }
+        });
+
+        ln_saveStruk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PrintImage fragment = new PrintImage();
+                Bundle arguments = new Bundle();
+                arguments.putString( "paramId" , txtContractID.getText().toString());
+                fragment.setArguments(arguments);
+                Log.d(TAG,"ContractID -> " + txtContractID.getText().toString());
                 FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.main_container_wrapper, fragment);

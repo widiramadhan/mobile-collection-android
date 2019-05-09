@@ -18,7 +18,7 @@
             android:id="@+id/btnsave"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Capture"
+            android:text="DOWNLOAD"
             android:textColor="#FFF"
             android:background="@color/colorPrimary"/>
 

@@ -183,7 +183,7 @@ public class TabPriority4w extends Fragment implements SwipeRefreshLayout.OnRefr
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String contract_id = ((TextView) view.findViewById(R.id.contract_id)).getText().toString();
-                ProgressDetailFragmentHistory fragment = new ProgressDetailFragmentHistory();
+                TaskDetailFragment fragment = new TaskDetailFragment();
                 Bundle arguments = new Bundle();
                 arguments.putString("paramId", contract_id);
                 fragment.setArguments(arguments);

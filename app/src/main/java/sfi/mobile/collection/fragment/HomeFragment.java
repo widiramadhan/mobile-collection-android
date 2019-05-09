@@ -186,10 +186,40 @@ public class HomeFragment extends Fragment implements
         btnrefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RefreshData();
-                //saveDataSQLite(employeeID, branchID);
-                init();
-                uploadRoutePIC();
+                /*final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                alertDialog.setTitle("Synchronize?");
+                alertDialog.setMessage("Anda akan synchronize data");
+                //alertDialog.setIcon(R.drawable.);
+                alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        RefreshData();
+                    }
+                });
+                alertDialog.setButton("CANCEL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        alertDialog.hide();
+                    }
+                });
+                alertDialog.show();
+
+*/
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Synchronize?");
+                builder.setIcon(android.R.drawable.ic_dialog_alert);
+                builder.setMessage("Anda akan synchronize data")
+                        .setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                                RefreshData();
+                            }
+                        })
+                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                final AlertDialog alert = builder.create();
+                alert.show();
             }
         });
 
@@ -227,11 +257,24 @@ public class HomeFragment extends Fragment implements
     }
 
     private void RefreshData(){
-        dbhelper = new DBHelper(getActivity());
-        SQLiteDatabase db = dbhelper.getWritableDatabase();
-        db.execSQL("delete from DKH");
-        db.execSQL("delete from PRIORITY_4W");
-        Log.d(TAG,"Data DKH Di hapus");
+        try {
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Loading...");
+            progressDialog.show();
+
+            dbhelper = new DBHelper(getActivity());
+            SQLiteDatabase db = dbhelper.getWritableDatabase();
+            db.execSQL("delete from DKH");
+            db.execSQL("delete from PRIORITY_4W");
+            Log.d(TAG, "Data DKH Di hapus");
+            //init();
+            checkData();
+            uploadRoutePIC();
+        }catch(Exception e){
+            Log.e(TAG, "Masuk Catch");
+        }
+        progressDialog.hide();
     }
     private void checkData() {
         //cek koneksi
@@ -276,19 +319,24 @@ public class HomeFragment extends Fragment implements
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5,this);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location != null) {
-            try{
-                double lat = location.getLatitude();
-                double lng = location.getLongitude();
-                txtLatitude.setText(String.valueOf(lat));
-                txtLongitude.setText(String.valueOf(lng));
-                Log.d(TAG,"Lat -> " + lat);
-                Log.d(TAG,"Lng -> " + lng);
-            }catch(Exception e){
-                Log.d(TAG, String.valueOf(e));
+            if(!location.equals("")) {
+                try {
+                    double lat = location.getLatitude();
+                    double lng = location.getLongitude();
+                    txtLatitude.setText(String.valueOf(lat));
+                    txtLongitude.setText(String.valueOf(lng));
+                    Log.d(TAG, "Lat -> " + lat);
+                    Log.d(TAG, "Lng -> " + lng);
+                } catch (Exception e) {
+                    Log.d(TAG, String.valueOf(e));
+                }
+            }else{
+                txtLatitude.setText("0.000000");
+                txtLongitude.setText("0.000000");
             }
         }else{
-            txtLatitude.setText("0");
-            txtLongitude.setText("0");
+            txtLatitude.setText("0.000000");
+            txtLongitude.setText("0.000000");
         }
         checkData();
     }
