@@ -478,7 +478,8 @@ public class TabNormal extends Fragment implements
     public ArrayList<HashMap<String, String>> getData30Days() {
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();
-        String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS FROM DKH WHERE IS_COLLECT=0 AND DailyCollectibility='Coll Harian' AND PIC='"+employeeID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"'" ;
+        //String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS FROM DKH WHERE IS_COLLECT=0 AND DailyCollectibility='Coll Harian' AND PIC='"+employeeID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"'" ;
+        String selectQuery = "SELECT A.NOMOR_KONTRAK,A.NAMA_KOSTUMER, A.TOTAL_TAGIHAN, A.TANGGAL_JATUH_TEMPO, A.LATITUDE, A.LONGITUDE, A.OVERDUE_DAYS,A.TANGGAL_JANJI_BAYAR from DKH A LEFT JOIN COLLECTED B ON A.NOMOR_KONTRAK=B.CONTRACT_ID AND A.PERIOD=B.PERIOD where B.CONTRACT_ID IS NULL AND A.PIC = '"+employeeID+"' AND A.DailyCollectibility = 'Coll Harian' AND A.PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"'";
         SQLiteDatabase database = dbhelper.getWritableDatabase();
         Cursor cursor = database.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -495,30 +496,6 @@ public class TabNormal extends Fragment implements
             } while (cursor.moveToNext());
         }
 
-        database.close();
-        return wordList;
-    }
-
-    public ArrayList<HashMap<String, String>> getPriority() {
-        ArrayList<HashMap<String, String>> wordList;
-        wordList = new ArrayList<HashMap<String, String>>();
-        String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS,TANGGAL_JANJI_BAYAR FROM DKH WHERE IS_COLLECT = 0 AND DailyCollectibility = 'Coll Harian' AND PIC='"+employeeID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"' order by OVERDUE_DAYS desc limit 5";
-        SQLiteDatabase database = dbhelper.getWritableDatabase();
-        Cursor cursor = database.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
-            do {
-                HashMap<String, String> map = new HashMap<String, String>();
-                map.put("NOMOR_KONTRAK", cursor.getString(0));
-                map.put("NAMA_KOSTUMER", cursor.getString(1));
-                map.put("TOTAL_TAGIHAN", String.valueOf(cursor.getInt(2)));
-                map.put("TANGGAL_JATUH_TEMPO", cursor.getString(3));
-                map.put("LAT", cursor.getString(4));
-                map.put("LNG", cursor.getString(5));
-                map.put("OVERDUE_DAYS", cursor.getString(6));
-                map.put("TANGGAL_JANJI_BAYAR", cursor.getString(7));
-                wordList.add(map);
-            } while (cursor.moveToNext());
-        }
         database.close();
         return wordList;
     }
@@ -526,7 +503,8 @@ public class TabNormal extends Fragment implements
     public ArrayList<HashMap<String, String>> getDKHtagihanTerbesar() {
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();
-        String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS,TANGGAL_JANJI_BAYAR FROM DKH WHERE IS_COLLECT = 0 AND PIC='"+employeeID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"' order by TOTAL_TAGIHAN desc limit 5";
+        //String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS,TANGGAL_JANJI_BAYAR FROM DKH WHERE IS_COLLECT = 0 AND PIC='"+employeeID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"' order by TOTAL_TAGIHAN desc limit 5";
+        String selectQuery = "SELECT A.NOMOR_KONTRAK,A.NAMA_KOSTUMER, A.TOTAL_TAGIHAN, A.TANGGAL_JATUH_TEMPO, A.LATITUDE, A.LONGITUDE, A.OVERDUE_DAYS,A.TANGGAL_JANJI_BAYAR from DKH A LEFT JOIN COLLECTED B ON A.NOMOR_KONTRAK=B.CONTRACT_ID AND A.PERIOD=B.PERIOD where B.CONTRACT_ID IS NULL AND A.PIC = '"+employeeID+"' AND A.DailyCollectibility = 'Coll Harian' AND A.PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"' order by A.TOTAL_TAGIHAN desc limit 5";
         SQLiteDatabase database = dbhelper.getWritableDatabase();
         Cursor cursor = database.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -553,7 +531,8 @@ public class TabNormal extends Fragment implements
     public ArrayList<HashMap<String, String>> getDKHtagihanTerendah() {
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();
-        String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS,TANGGAL_JANJI_BAYAR FROM DKH WHERE IS_COLLECT = 0 AND PIC='"+employeeID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"'order by TOTAL_TAGIHAN asc limit 5";
+        //String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS,TANGGAL_JANJI_BAYAR FROM DKH LEFT JOIN  WHERE IS_COLLECT = 0 AND PIC='"+employeeID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"' order by TOTAL_TAGIHAN asc limit 5";
+        String selectQuery = "SELECT A.NOMOR_KONTRAK,A.NAMA_KOSTUMER, A.TOTAL_TAGIHAN, A.TANGGAL_JATUH_TEMPO, A.LATITUDE, A.LONGITUDE, A.OVERDUE_DAYS,A.TANGGAL_JANJI_BAYAR from DKH A LEFT JOIN COLLECTED B ON A.NOMOR_KONTRAK=B.CONTRACT_ID AND A.PERIOD=B.PERIOD where B.CONTRACT_ID IS NULL AND A.PIC = '"+employeeID+"' AND A.DailyCollectibility = 'Coll Harian' AND A.PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"' order by A.TOTAL_TAGIHAN asc limit 5";
         SQLiteDatabase database = dbhelper.getWritableDatabase();
         Cursor cursor = database.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -580,7 +559,8 @@ public class TabNormal extends Fragment implements
     public ArrayList<HashMap<String, String>> getDKHODTerendah() {
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();
-        String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS,TANGGAL_JANJI_BAYAR FROM DKH WHERE IS_COLLECT = 0 AND PIC='"+employeeID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"' order by OVERDUE_DAYS asc limit 5";
+        //String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS,TANGGAL_JANJI_BAYAR FROM DKH WHERE IS_COLLECT = 0 AND PIC='"+employeeID+"' order by OVERDUE_DAYS asc limit 5";
+        String selectQuery = "SELECT A.NOMOR_KONTRAK,A.NAMA_KOSTUMER, A.TOTAL_TAGIHAN, A.TANGGAL_JATUH_TEMPO, A.LATITUDE, A.LONGITUDE, A.OVERDUE_DAYS,A.TANGGAL_JANJI_BAYAR from DKH A LEFT JOIN COLLECTED B ON A.NOMOR_KONTRAK=B.CONTRACT_ID AND A.PERIOD=B.PERIOD where B.CONTRACT_ID IS NULL AND A.PIC = '"+employeeID+"' AND A.DailyCollectibility = 'Coll Harian' AND A.PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"' order by A.OVERDUE_DAYS asc limit 5";
         SQLiteDatabase database = dbhelper.getWritableDatabase();
         Cursor cursor = database.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -607,7 +587,8 @@ public class TabNormal extends Fragment implements
     public ArrayList<HashMap<String, String>> getDKHODTertinggi() {
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();
-        String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS,TANGGAL_JANJI_BAYAR FROM DKH WHERE IS_COLLECT = 0 AND PIC='"+employeeID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"' order by OVERDUE_DAYS desc limit 5";
+        //String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS,TANGGAL_JANJI_BAYAR FROM DKH WHERE IS_COLLECT = 0 AND PIC='"+employeeID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"' order by OVERDUE_DAYS desc limit 5";
+        String selectQuery = "SELECT A.NOMOR_KONTRAK,A.NAMA_KOSTUMER, A.TOTAL_TAGIHAN, A.TANGGAL_JATUH_TEMPO, A.LATITUDE, A.LONGITUDE, A.OVERDUE_DAYS,A.TANGGAL_JANJI_BAYAR from DKH A LEFT JOIN COLLECTED B ON A.NOMOR_KONTRAK=B.CONTRACT_ID AND A.PERIOD=B.PERIOD where B.CONTRACT_ID IS NULL AND A.PIC = '"+employeeID+"' AND A.DailyCollectibility = 'Coll Harian' AND A.PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"' order by A.OVERDUE_DAYS desc limit 5";
         SQLiteDatabase database = dbhelper.getWritableDatabase();
         Cursor cursor = database.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {

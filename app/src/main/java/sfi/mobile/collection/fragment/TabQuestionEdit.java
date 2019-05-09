@@ -910,10 +910,10 @@ public class TabQuestionEdit extends Fragment implements LocationListener {
         dbUpdate.execSQL(Update13);
         dbUpdate.execSQL(Update14);
         dbUpdate.execSQL(Update15);
-        dbUpdate.execSQL(Sql);
-        //dbUpdate.execSQL(Sql2);
-        dbUpdate.execSQL(updateCollectibility);
-        //dbUpdate.execSQL(updateCollectibility2);
+        //dbUpdate.execSQL(Sql);
+        dbUpdate.execSQL(Sql2);
+        //dbUpdate.execSQL(updateCollectibility);
+        dbUpdate.execSQL(updateCollectibility2);
 
         // Log.d(TAG,"Byte -> " + bitmapdata);
         //String contract_id =  ((TextView) getActivity().findViewById(R.id.nomor_kontrak2)).getText().toString();

@@ -69,6 +69,7 @@ public class ProfileFragment extends Fragment {
         txtusername.setText(username);
         txtnik.setText(employeeID);
         txtjabatan .setText(job);
+        //employeeID.substring(0,2)
 
         btnChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override

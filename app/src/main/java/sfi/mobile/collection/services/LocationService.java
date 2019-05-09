@@ -88,7 +88,6 @@ public class LocationService extends Service {
         return false;
     }
 
-
     /**
      * Checks whether two providers are the same
      */
@@ -98,7 +97,6 @@ public class LocationService extends Service {
         }
         return provider1.equals(provider2);
     }
-
 
     @Override
     public void onDestroy() {
@@ -134,7 +132,6 @@ public class LocationService extends Service {
                 intent.putExtra("Longitude", loc.getLongitude());
                 intent.putExtra("Provider", loc.getProvider());
                 sendBroadcast(intent);
-
             }
         }
 

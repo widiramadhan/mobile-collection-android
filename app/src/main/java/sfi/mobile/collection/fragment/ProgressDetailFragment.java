@@ -79,7 +79,7 @@ public class ProgressDetailFragment extends Fragment {
 
     String strMeetup, strContactName, strHubungan, strAddress, strQAddress, strNewAddress, strUnit, strQbayar, strAmount, strSisa, strLatPembayaran, strLngPembayaran, strLatPertemuan, strLngPertemuan, strJanjiBayar, strHasilKunjungan, strCreateDate;
 
-    LinearLayout ln_ketemudengankosumen,ln_contactpersonname,ln_hubungancostumer,ln_alamatkunjungan,ln_alamatbaru,ln_apakah_unitada,ln_pembayaranditerima,ln_sisa_tagihan,ln_lokasiPembayaran,ln_lokasipertemuan,ln_tgljanjibayar,ln_hasilKunjungan,ln_bertemukonsumen,ln_editData,ln_printStruk,ln_sendEmail,ln_print_disable;
+    LinearLayout ln_ketemudengankosumen,ln_contactpersonname,ln_hubungancostumer,ln_alamatkunjungan,ln_alamatbaru,ln_apakah_unitada,ln_pembayaranditerima,ln_sisa_tagihan,ln_lokasiPembayaran,ln_lokasipertemuan,ln_tgljanjibayar,ln_hasilKunjungan,ln_bertemukonsumen,ln_editData,ln_printStruk,ln_sendEmail,ln_print_disable,ln_saveStruk,ln_saveStrukDisable;
 
     protected Cursor cursor, cursor2;
     DBHelper dbhelper;
@@ -136,7 +136,8 @@ public class ProgressDetailFragment extends Fragment {
         ln_printStruk = (LinearLayout) view.findViewById(R.id.ln_printStruk);
         ln_sendEmail = (LinearLayout) view.findViewById(R.id.ln_sendemail);
         ln_print_disable = (LinearLayout) view.findViewById(R.id.ln_printStruk_disable);
-
+        ln_saveStruk = (LinearLayout) view.findViewById(R.id.ln_saveStruk);
+        ln_saveStrukDisable = (LinearLayout) view.findViewById(R.id.ln_saveStrukDisable);
         return view;
     }
 
@@ -293,6 +294,8 @@ public class ProgressDetailFragment extends Fragment {
             ln_lokasiPembayaran.setVisibility(View.GONE);
             ln_print_disable.setVisibility(View.VISIBLE);
             ln_printStruk.setVisibility(View.GONE);
+            ln_saveStruk.setVisibility(View.GONE);
+            ln_saveStrukDisable.setVisibility(View.VISIBLE);
             txt_status.setText("2");
         }else if (txtResult.getText().equals("Customer Membayar")){
             ln_sisa_tagihan.setVisibility(View.GONE);
@@ -300,6 +303,8 @@ public class ProgressDetailFragment extends Fragment {
             ln_tgljanjibayar.setVisibility(View.GONE);
             ln_printStruk.setVisibility(View.VISIBLE);
             ln_print_disable.setVisibility(View.GONE);
+            ln_saveStruk.setVisibility(View.VISIBLE);
+            ln_saveStrukDisable.setVisibility(View.GONE);
             txt_status.setText("1");
         }else if (txtResult.getText().equals("Tidak bertemu")){
             /*
@@ -429,6 +434,22 @@ public class ProgressDetailFragment extends Fragment {
             }
         });
 
+        ln_saveStruk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PrintImage fragment = new PrintImage();
+                Bundle arguments = new Bundle();
+                arguments.putString( "paramId" , txtContractID.getText().toString());
+                fragment.setArguments(arguments);
+                Log.d(TAG,"ContractID -> " + txtContractID.getText().toString());
+                FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
+                fragmentTransaction.addToBackStack("A_B_TAG");
+                fragmentTransaction.commit();
+            }
+        });
+
         btnUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -524,8 +545,8 @@ public class ProgressDetailFragment extends Fragment {
                             SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
                             String Sql = "update DKH set IS_COLLECT=1, DailyCollectibility='Coll non Harian' where NOMOR_KONTRAK=" + txtContractID.getText().toString();
                             String Sql2 = "update COLLECTED set IS_COLLECT=1, DailyCollectibility='Coll non Harian' where CONTRACT_ID=" + txtContractID.getText().toString();
-                            dbInsert.execSQL(Sql);
-                            //dbInsert.execSQL(Sql2);
+                            //dbInsert.execSQL(Sql);
+                            dbInsert.execSQL(Sql2);
                         }
 
                         //SaveResultHeader();
@@ -572,7 +593,7 @@ public class ProgressDetailFragment extends Fragment {
         return bitMapImage;
     }
 
-    private void SaveResultHeader(){
+   /* private void SaveResultHeader(){
         String getDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         String strContractID = txtContractID.getText().toString();
         dbhelper = new DBHelper(getActivity());
@@ -590,7 +611,7 @@ public class ProgressDetailFragment extends Fragment {
         SQLiteDatabase dbInsert = dbhelper.getWritableDatabase();
         String Saved = "INSERT INTO ROUTE (PIC,LAT,LNG,CREATE_DATE) VALUES('"+ strPIC +"','"+strLat+"','"+strLng+"','"+getDate+"')";
         dbInsert.execSQL(Saved);
-    }
+    }*/
 
     private void uploadResult(final String strQuestion, final String strAnswer) {
         String urlUploadData = ConnectionHelper.URL+"saveResult.php";

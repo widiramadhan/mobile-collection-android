@@ -577,7 +577,7 @@ public class TabQuestion extends Fragment implements LocationListener {
                 "('"+ strContractID +"','MS_Q20190226172810420','"+ txttgljanjibayar.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"','"+txt_period.getText().toString()+"')," +
                 "('"+ strContractID +"','MS_Q20190226172818070','"+ hasilkunjungan.getText().toString() +"','"+ getDate +"','"+ employeeID +"','"+ branchID +"','"+txt_period.getText().toString()+"')";
 
-       // String SavedCollected = "INSERT INTO COLLECTED (CONTRACT_ID,DailyCollectibility,IS_COLLECT,PERIOD,EMP_ID,CREATE_DATE) values('"+strContractID+"','',0,'"+ txt_period.getText().toString() +"','"+ employeeID +"','"+getDate+"')";
+       String SavedCollected = "INSERT INTO COLLECTED (CONTRACT_ID,DailyCollectibility,IS_COLLECT,PERIOD,EMP_ID,CREATE_DATE) values('"+strContractID+"','',0,'"+ txt_period.getText().toString() +"','"+ employeeID +"','"+getDate+"')";
 
         String updateCollectibility = "";
         String updateCollectibility2 = "";
@@ -622,9 +622,9 @@ public class TabQuestion extends Fragment implements LocationListener {
         }
 
         dbInsert.execSQL(saved);
-        //dbInsert.execSQL(SavedCollected);
-        //dbInsert.execSQL(updateCollectibility2);
-        dbInsert.execSQL(updateCollectibility);
+        dbInsert.execSQL(SavedCollected);
+        dbInsert.execSQL(updateCollectibility2);
+        //dbInsert.execSQL(updateCollectibility);
 
         if(imageViewPembayaran.getDrawable() != null){
             dbhelper.insertDataImage(strContractID, imageViewToByte(imageViewPembayaran), getDate);

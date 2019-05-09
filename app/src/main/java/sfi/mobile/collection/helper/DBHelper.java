@@ -39,7 +39,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String sql5 = "create table ROUTE( ID integer primary key autoincrement, PIC text null, LAT text null,LNG text null,CREATE_DATE text null)";
         Log.d( "Data","onCreate: "+sql5);
         //create table priority 4w
-        String sql6 = "create table PRIORITY_4W( ID integer primary key autoincrement, CONTRACT_ID text null ,CREATE_DATE text null,HARI text null)";
+        String sql6 = "create table PRIORITY_4W( ID integer primary key autoincrement, CONTRACT_ID text null ,HARI text null,PERIOD text null)";
         Log.d( "Data","onCreate: "+sql6);
         //create table COLLECTED
         String sql7 = "create table COLLECTED( ID integer primary key autoincrement, CONTRACT_ID text null , DailyCollectibility text null,IS_COLLECT int null, PERIOD text null, EMP_ID text null, CREATE_DATE text null )";
@@ -53,9 +53,9 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(sql3);
         //db.execSQL(sql4);
         //db.execSQL(sql5);
-        //db.execSQL(sql6);
+        db.execSQL(sql6);
         db.execSQL(sql7);
-        db.execSQL(sql8);
+        //db.execSQL(sql8);
     }
 
     @Override
@@ -63,11 +63,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS DKH");
         db.execSQL("DROP TABLE IF EXISTS RESULT");
         db.execSQL("DROP TABLE IF EXISTS TBimage");
-        db.execSQL("DROP TABLE IF EXISTS RESULT_HEADER");
-        db.execSQL("DROP TABLE IF EXISTS ROUTE");
+        //db.execSQL("DROP TABLE IF EXISTS RESULT_HEADER");
+        //db.execSQL("DROP TABLE IF EXISTS ROUTE");
         db.execSQL("DROP TABLE IF EXISTS PRIORITY_4W");
         db.execSQL("DROP TABLE IF EXISTS COLLECTED");
-        db.execSQL("DROP TABLE IF EXISTS SYNC_DATA_AGING");
+        //db.execSQL("DROP TABLE IF EXISTS SYNC_DATA_AGING");
         // create new tables
         onCreate(db);
     }
@@ -402,6 +402,20 @@ public class DBHelper extends SQLiteOpenHelper {
         statement.bindString(6, period);
         statement.bindDouble(7, total_tagihan);
         statement.bindString(8, Create_date );
+
+        statement.executeInsert();
+    }
+
+    public void insertDataPriority4w(String CONTRACT_ID, String HARI, String PERIOD){
+        SQLiteDatabase database = getWritableDatabase();
+        String sql = "INSERT INTO PRIORITY_4W VALUES (NULL,?,?,?)";
+
+        SQLiteStatement statement = database.compileStatement(sql);
+        statement.clearBindings();
+
+        statement.bindString(1, CONTRACT_ID);
+        statement.bindString(2, HARI);
+        statement.bindString(3, PERIOD);
 
         statement.executeInsert();
     }

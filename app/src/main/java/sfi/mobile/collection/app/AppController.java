@@ -1,12 +1,15 @@
 package sfi.mobile.collection.app;
 
 import android.app.Application;
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+
+import sfi.mobile.collection.services.MyApplication;
 import sfi.mobile.collection.util.LruBitmapCache;
 
 /**
@@ -15,6 +18,7 @@ import sfi.mobile.collection.util.LruBitmapCache;
 public class AppController extends Application {
 
     public static final String TAG = AppController.class.getSimpleName();
+    private static Context context;
 
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
@@ -24,7 +28,12 @@ public class AppController extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        AppController.context = getApplicationContext();
         mInstance = this;
+    }
+
+    public static Context getAppContext() {
+        return AppController.context;
     }
 
     public static synchronized AppController getInstance() {

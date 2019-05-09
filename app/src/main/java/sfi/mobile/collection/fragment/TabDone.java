@@ -147,7 +147,8 @@ public class TabDone extends Fragment implements
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();
 
-        String selectQuery = "SELECT DISTINCT A.CONTRACT_ID, B.NAMA_KOSTUMER, A.CREATE_DATE AS DATE FROM RESULT A LEFT JOIN DKH B ON A.CONTRACT_ID = B.NOMOR_KONTRAK WHERE B.IS_COLLECT=1 AND B.DailyCollectibility='Coll Harian' AND B.PIC='"+employeeID+"'";
+        //String selectQuery = "SELECT DISTINCT A.CONTRACT_ID, B.NAMA_KOSTUMER, A.CREATE_DATE AS DATE FROM RESULT A LEFT JOIN DKH B ON A.CONTRACT_ID = B.NOMOR_KONTRAK WHERE B.IS_COLLECT=1 AND B.DailyCollectibility='Coll Harian' AND B.PIC='"+employeeID+"'";
+        String selectQuery = "SELECT DISTINCT A.CONTRACT_ID, B.NAMA_KOSTUMER, A.CREATE_DATE AS DATE FROM COLLECTED A LEFT JOIN DKH B ON A.CONTRACT_ID = B.NOMOR_KONTRAK WHERE A.IS_COLLECT=1 AND A.DailyCollectibility='Coll Harian' AND A.EMP_ID='"+employeeID+"'";
         SQLiteDatabase database = dbhelper.getWritableDatabase();
         Cursor cursor = database.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {

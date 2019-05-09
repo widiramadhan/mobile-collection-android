@@ -1,6 +1,5 @@
 package sfi.mobile.collection.fragment;
 
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -55,31 +54,28 @@ import java.util.Map;
 
 import sfi.mobile.collection.R;
 import sfi.mobile.collection.adapter.DKHCAdapter;
+import sfi.mobile.collection.adapter.HistoryAdapter;
+import sfi.mobile.collection.adapter.Priority4wAdapter;
 import sfi.mobile.collection.app.AppController;
 import sfi.mobile.collection.helper.ConnectionHelper;
 import sfi.mobile.collection.helper.DBHelper;
 import sfi.mobile.collection.model.DKHC;
 
-public class TabPriority extends Fragment implements
-        SwipeRefreshLayout.OnRefreshListener, LocationListener {
-
-    public TabPriority() {
-    }
+public class TabPriority4w extends Fragment implements SwipeRefreshLayout.OnRefreshListener,LocationListener {
 
     SwipeRefreshLayout swipe;
     ListView list;
-    DKHCAdapter dkhcAdapter;
+    Priority4wAdapter priority4wAdapter;
     List<DKHC> itemList = new ArrayList<>();
-    TextView txtcontractid, txtcusrtomername, txtLatitude, txtLongitude;
-
     protected Cursor cursor;
     DBHelper dbhelper;
+    TextView txtLatitude, txtLongitude;
+
     ProgressDialog progressDialog;
     LocationManager locationManager;
 
     private FragmentManager fragmentManager;
     private Fragment fragment = null;
-
     /*** memanggil session yang terdaftar ***/
     SharedPreferences sharedpreferences;
     private static final String TAG = TabPriority.class.getSimpleName();
@@ -94,30 +90,31 @@ public class TabPriority extends Fragment implements
     public static final String my_shared_preferences = "my_shared_preferences";
     String branchID, employeeID, employeeJobID;
 
-    /*** end memanggil session yang terdaftar ***/
+    public TabPriority4w(){
 
-    @Override
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.tab_task_priority, container, false);
+        View view = inflater.inflate(R.layout.tab_task_priority4w, container, false);
 
         list = (ListView) view.findViewById(R.id.listTaskList);
         swipe = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
-        txtcontractid = (TextView) view.findViewById(R.id.contract_id);
-        txtcusrtomername = (TextView) view.findViewById(R.id.customer_name);
+        txtLatitude = (TextView) view.findViewById(R.id.latitude);
+        txtLongitude = (TextView) view.findViewById(R.id.longitude);
 
-        // mengisi data dari adapter ke listview
-        dkhcAdapter = new DKHCAdapter(getActivity(), itemList);
-        list.setAdapter(dkhcAdapter);
-
-        /*** set session to variable ***/
-        sharedpreferences = this.getActivity().getSharedPreferences(my_shared_preferences, Context.MODE_PRIVATE);
+        sharedpreferences = getActivity().getSharedPreferences(my_shared_preferences, Context.MODE_PRIVATE);
+        String fullName = sharedpreferences.getString(TAG_FULL_NAME, null);
+        //txtName.setText("Hello,\n"+fullName);
         branchID = sharedpreferences.getString(TAG_BRANCH_ID, null);
         employeeID = sharedpreferences.getString(TAG_EMP_ID, null);
         employeeJobID = sharedpreferences.getString(TAG_EMP_JOB_ID, null);
-        /*** end set session to variable ***/
 
-        txtLatitude = (TextView) view.findViewById(R.id.latitude);
-        txtLongitude = (TextView) view.findViewById(R.id.longitude);
+        dbhelper = new DBHelper(getActivity());
+        //mengisi data dari adapter ke listview
+        //historytAdapter = new HistoryAdapter(getActivity(), itemList);
+        //list.setAdapter(historytAdapter);
+        priority4wAdapter = new Priority4wAdapter(getActivity(), itemList);
+        list.setAdapter(priority4wAdapter);
 
         swipe.setOnRefreshListener(this);
 
@@ -162,19 +159,19 @@ public class TabPriority extends Fragment implements
                         } else if (strSort == "Tagihan Terbesar") {
                             Log.e(TAG, "Anda memilih Tagihan Terbesar");
                             dialog.dismiss();
-                            getDKHTagihanTerbesar();
+                            //getDKHTagihanTerbesar();
                         } else if (strSort == "Tagihan Terendah") {
                             Log.e(TAG, "Anda memilih Tagihan Terendah");
                             dialog.dismiss();
-                            getDKHTagihanTerendah();
+                            //getDKHTagihanTerendah();
                         } else if (strSort == "Overdue Tertinggi") {
                             Log.e(TAG, "Anda memilih Overdue Tertinggi");
                             dialog.dismiss();
-                            getDKHODtertinggi();
+                            //getDKHODtertinggi();
                         } else if (strSort == "Overdue Terendah") {
                             Log.e(TAG, "Anda memilih Overdue Terendah");
                             dialog.dismiss();
-                            getDKHODterendah();
+                            //getDKHODterendah();
                         }
                     }
                 });
@@ -186,32 +183,25 @@ public class TabPriority extends Fragment implements
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String contract_id = ((TextView) view.findViewById(R.id.contract_id)).getText().toString();
-
-                ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo info = cm.getActiveNetworkInfo();
-                if(info == null) {
-                    TaskDetailFragment fragment = new TaskDetailFragment();
-                    Bundle arguments = new Bundle();
-                    arguments.putString("paramId", contract_id);
-                    fragment.setArguments(arguments);
-                    FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
-                    fragmentTransaction.addToBackStack("A_B_TAG");
-                    fragmentTransaction.commit();
-                }else{
-                    checkCollectibility(contract_id);
-                }
+                ProgressDetailFragmentHistory fragment = new ProgressDetailFragmentHistory();
+                Bundle arguments = new Bundle();
+                arguments.putString("paramId", contract_id);
+                fragment.setArguments(arguments);
+                FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
+                fragmentTransaction.addToBackStack("A_B_TAG");
+                fragmentTransaction.commit();
             }
         });
 
         return view;
     }
 
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         super.onCreate(savedInstanceState);
+
     }
 
     private void init() {
@@ -385,7 +375,6 @@ public class TabPriority extends Fragment implements
         });
         AppController.getInstance().addToRequestQueue(jArr);
     }
-
     private void getAllDKHC(){
         dbhelper = new DBHelper(getActivity());
         ArrayList<HashMap<String, String>> row = getPriority();
@@ -427,188 +416,13 @@ public class TabPriority extends Fragment implements
         }
 
         swipe.setRefreshing(false);
-        dkhcAdapter.notifyDataSetChanged();
+        priority4wAdapter.notifyDataSetChanged();
     }
-
-    private void getDKHTagihanTerbesar(){
-        dbhelper = new DBHelper(getActivity());
-        ArrayList<HashMap<String, String>> row = getDKHtagihanTerbesar();
-        swipe.setRefreshing(true);
-
-        itemList.clear();
-        for (int i = 0; i < row.size(); i++) {
-            String strcontractid = row.get(i).get("NOMOR_KONTRAK");
-            String strtcustomername = row.get(i).get("NAMA_KOSTUMER");
-            String strtotaltagihan = row.get(i).get("TOTAL_TAGIHAN");
-            String strtgljatuhtempo = row.get(i).get("TANGGAL_JATUH_TEMPO");
-            String strlat = row.get(i).get("LAT");
-            String strlng = row.get(i).get("LNG");
-            String stroverduedays = row.get(i).get("OVERDUE_DAYS");
-            String strjanjibayar = row.get(i).get("TANGGAL_JANJI_BAYAR");
-
-            double currentLat = Double.parseDouble(txtLatitude.getText().toString());
-            double currentLng = Double.parseDouble(txtLongitude.getText().toString());
-            double latFromDB = Double.parseDouble(strlat);
-            double lngFromDB = Double.parseDouble(strlng);
-
-            double earthRadius = 6371;
-
-            double distance = (earthRadius * Math.acos(Math.sin(Math.toRadians(latFromDB)) * Math.sin(Math.toRadians(currentLat)) + Math.cos(Math.toRadians(lngFromDB - currentLng)) * Math.cos(Math.toRadians(latFromDB)) * Math.cos(Math.toRadians(currentLat))));
-            DecimalFormat df = new DecimalFormat("#.##");
-            //Log.e(TAG,"distance -> "+df.format(distance));
-
-            DKHC data = new DKHC();
-
-            data.setNomorKontrak(strcontractid);
-            data.setNamaKostumer(strtcustomername);
-            data.setTotalTagihan(Integer.valueOf(strtotaltagihan));
-            data.setTanggalJatuhTempo(strtgljatuhtempo);
-            data.setJarak(distance);
-            data.setOverDueDays(Integer.valueOf(stroverduedays));
-            //data.setTanggalJanjiBayar(strjanjibayar);
-
-            itemList.add(data);
-        }
-
-        swipe.setRefreshing(false);
-        dkhcAdapter.notifyDataSetChanged();
-    }
-
-    private void getDKHTagihanTerendah(){
-        dbhelper = new DBHelper(getActivity());
-        ArrayList<HashMap<String, String>> row = getDKHtagihanTerendah();
-        swipe.setRefreshing(true);
-
-        itemList.clear();
-        for (int i = 0; i < row.size(); i++) {
-            String strcontractid = row.get(i).get("NOMOR_KONTRAK");
-            String strtcustomername = row.get(i).get("NAMA_KOSTUMER");
-            String strtotaltagihan = row.get(i).get("TOTAL_TAGIHAN");
-            String strtgljatuhtempo = row.get(i).get("TANGGAL_JATUH_TEMPO");
-            String strlat = row.get(i).get("LAT");
-            String strlng = row.get(i).get("LNG");
-            String stroverduedays = row.get(i).get("OVERDUE_DAYS");
-            String strjanjibayar = row.get(i).get("TANGGAL_JANJI_BAYAR");
-
-            double currentLat = Double.parseDouble(txtLatitude.getText().toString());
-            double currentLng = Double.parseDouble(txtLongitude.getText().toString());
-            double latFromDB = Double.parseDouble(strlat);
-            double lngFromDB = Double.parseDouble(strlng);
-
-            double earthRadius = 6371;
-
-            double distance = (earthRadius * Math.acos(Math.sin(Math.toRadians(latFromDB)) * Math.sin(Math.toRadians(currentLat)) + Math.cos(Math.toRadians(lngFromDB - currentLng)) * Math.cos(Math.toRadians(latFromDB)) * Math.cos(Math.toRadians(currentLat))));
-            DecimalFormat df = new DecimalFormat("#.##");
-            //Log.e(TAG,"distance -> "+df.format(distance));
-
-            DKHC data = new DKHC();
-
-            data.setNomorKontrak(strcontractid);
-            data.setNamaKostumer(strtcustomername);
-            data.setTotalTagihan(Integer.valueOf(strtotaltagihan));
-            data.setTanggalJatuhTempo(strtgljatuhtempo);
-            data.setJarak(distance);
-            data.setOverDueDays(Integer.valueOf(stroverduedays));
-            //data.setTanggalJanjiBayar(strjanjibayar);
-
-            itemList.add(data);
-        }
-
-        swipe.setRefreshing(false);
-        dkhcAdapter.notifyDataSetChanged();
-    }
-    private void getDKHODtertinggi(){
-        dbhelper = new DBHelper(getActivity());
-        ArrayList<HashMap<String, String>> row = getDKHODTertinggi();
-        swipe.setRefreshing(true);
-
-        itemList.clear();
-        for (int i = 0; i < row.size(); i++) {
-            String strcontractid = row.get(i).get("NOMOR_KONTRAK");
-            String strtcustomername = row.get(i).get("NAMA_KOSTUMER");
-            String strtotaltagihan = row.get(i).get("TOTAL_TAGIHAN");
-            String strtgljatuhtempo = row.get(i).get("TANGGAL_JATUH_TEMPO");
-            String strlat = row.get(i).get("LAT");
-            String strlng = row.get(i).get("LNG");
-            String stroverduedays = row.get(i).get("OVERDUE_DAYS");
-            String strjanjibayar = row.get(i).get("TANGGAL_JANJI_BAYAR");
-
-            double currentLat = Double.parseDouble(txtLatitude.getText().toString());
-            double currentLng = Double.parseDouble(txtLongitude.getText().toString());
-            double latFromDB = Double.parseDouble(strlat);
-            double lngFromDB = Double.parseDouble(strlng);
-
-            double earthRadius = 6371;
-
-            double distance = (earthRadius * Math.acos(Math.sin(Math.toRadians(latFromDB)) * Math.sin(Math.toRadians(currentLat)) + Math.cos(Math.toRadians(lngFromDB - currentLng)) * Math.cos(Math.toRadians(latFromDB)) * Math.cos(Math.toRadians(currentLat))));
-            DecimalFormat df = new DecimalFormat("#.##");
-            //Log.e(TAG,"distance -> "+df.format(distance));
-
-            DKHC data = new DKHC();
-
-            data.setNomorKontrak(strcontractid);
-            data.setNamaKostumer(strtcustomername);
-            data.setTotalTagihan(Integer.valueOf(strtotaltagihan));
-            data.setTanggalJatuhTempo(strtgljatuhtempo);
-            data.setJarak(distance);
-            data.setOverDueDays(Integer.valueOf(stroverduedays));
-            //data.setTanggalJanjiBayar(strjanjibayar);
-
-            itemList.add(data);
-        }
-
-        swipe.setRefreshing(false);
-        dkhcAdapter.notifyDataSetChanged();
-    }
-
-    private void getDKHODterendah(){
-        dbhelper = new DBHelper(getActivity());
-        ArrayList<HashMap<String, String>> row = getDKHODTerendah();
-        swipe.setRefreshing(true);
-
-        itemList.clear();
-        for (int i = 0; i < row.size(); i++) {
-            String strcontractid = row.get(i).get("NOMOR_KONTRAK");
-            String strtcustomername = row.get(i).get("NAMA_KOSTUMER");
-            String strtotaltagihan = row.get(i).get("TOTAL_TAGIHAN");
-            String strtgljatuhtempo = row.get(i).get("TANGGAL_JATUH_TEMPO");
-            String strlat = row.get(i).get("LAT");
-            String strlng = row.get(i).get("LNG");
-            String stroverduedays = row.get(i).get("OVERDUE_DAYS");
-            String strjanjibayar = row.get(i).get("TANGGAL_JANJI_BAYAR");
-
-            double currentLat = Double.parseDouble(txtLatitude.getText().toString());
-            double currentLng = Double.parseDouble(txtLongitude.getText().toString());
-            double latFromDB = Double.parseDouble(strlat);
-            double lngFromDB = Double.parseDouble(strlng);
-
-            double earthRadius = 6371;
-
-            double distance = (earthRadius * Math.acos(Math.sin(Math.toRadians(latFromDB)) * Math.sin(Math.toRadians(currentLat)) + Math.cos(Math.toRadians(lngFromDB - currentLng)) * Math.cos(Math.toRadians(latFromDB)) * Math.cos(Math.toRadians(currentLat))));
-            DecimalFormat df = new DecimalFormat("#.##");
-            //Log.e(TAG,"distance -> "+df.format(distance));
-
-            DKHC data = new DKHC();
-
-            data.setNomorKontrak(strcontractid);
-            data.setNamaKostumer(strtcustomername);
-            data.setTotalTagihan(Integer.valueOf(strtotaltagihan));
-            data.setTanggalJatuhTempo(strtgljatuhtempo);
-            data.setJarak(distance);
-            data.setOverDueDays(Integer.valueOf(stroverduedays));
-            //data.setTanggalJanjiBayar(strjanjibayar);
-
-            itemList.add(data);
-        }
-
-        swipe.setRefreshing(false);
-        dkhcAdapter.notifyDataSetChanged();
-    }
-//-----------------------------------------HELPER------------------------------------------
+    //-----------------------------------------HELPER------------------------------------------
     public ArrayList<HashMap<String, String>> getPriority() {
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();
-       // String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS,TANGGAL_JANJI_BAYAR FROM DKH WHERE IS_COLLECT = 0 AND DailyCollectibility = 'Coll Harian' AND PIC='"+employeeID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"' order by OVERDUE_DAYS desc limit 5";
+        // String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS,TANGGAL_JANJI_BAYAR FROM DKH WHERE IS_COLLECT = 0 AND DailyCollectibility = 'Coll Harian' AND PIC='"+employeeID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"' order by OVERDUE_DAYS desc limit 5";
         String selectQuery = "SELECT A.NOMOR_KONTRAK,A.NAMA_KOSTUMER, A.TOTAL_TAGIHAN, A.TANGGAL_JATUH_TEMPO, A.LATITUDE, A.LONGITUDE, A.OVERDUE_DAYS,A.TANGGAL_JANJI_BAYAR from DKH A LEFT JOIN COLLECTED B ON A.NOMOR_KONTRAK=B.CONTRACT_ID AND A.PERIOD=B.PERIOD where B.CONTRACT_ID IS NULL AND A.PIC = '"+employeeID+"' AND A.DailyCollectibility = 'Coll Harian' AND A.PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"' order by A.OVERDUE_DAYS desc limit 5";
         SQLiteDatabase database = dbhelper.getWritableDatabase();
         Cursor cursor = database.rawQuery(selectQuery, null);
@@ -629,119 +443,6 @@ public class TabPriority extends Fragment implements
         database.close();
         return wordList;
     }
-
-    public ArrayList<HashMap<String, String>> getDKHtagihanTerbesar() {
-        ArrayList<HashMap<String, String>> wordList;
-        wordList = new ArrayList<HashMap<String, String>>();
-        //String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS,TANGGAL_JANJI_BAYAR FROM DKH WHERE IS_COLLECT = 0 AND PIC='"+employeeID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"' order by TOTAL_TAGIHAN desc limit 5";
-        String selectQuery = "SELECT A.NOMOR_KONTRAK,A.NAMA_KOSTUMER, A.TOTAL_TAGIHAN, A.TANGGAL_JATUH_TEMPO, A.LATITUDE, A.LONGITUDE, A.OVERDUE_DAYS,A.TANGGAL_JANJI_BAYAR from DKH A LEFT JOIN COLLECTED B ON A.NOMOR_KONTRAK=B.CONTRACT_ID AND A.PERIOD=B.PERIOD where B.CONTRACT_ID IS NULL AND A.PIC = '"+employeeID+"' AND A.DailyCollectibility = 'Coll Harian' AND A.PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"' order by A.TOTAL_TAGIHAN desc limit 5";
-        SQLiteDatabase database = dbhelper.getWritableDatabase();
-        Cursor cursor = database.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
-            do {
-                HashMap<String, String> map = new HashMap<String, String>();
-                map.put("NOMOR_KONTRAK", cursor.getString(0));
-                map.put("NAMA_KOSTUMER", cursor.getString(1));
-                map.put("TOTAL_TAGIHAN", String.valueOf(cursor.getInt(2)));
-                map.put("TANGGAL_JATUH_TEMPO", cursor.getString(3));
-                map.put("LAT", cursor.getString(4));
-                map.put("LNG", cursor.getString(5));
-                map.put("OVERDUE_DAYS", cursor.getString(6));
-                map.put("TANGGAL_JANJI_BAYAR", cursor.getString(7));
-                wordList.add(map);
-            } while (cursor.moveToNext());
-        }
-
-        //Log.e("select sqlite ", "" + wordList);
-
-        database.close();
-        return wordList;
-    }
-
-    public ArrayList<HashMap<String, String>> getDKHtagihanTerendah() {
-        ArrayList<HashMap<String, String>> wordList;
-        wordList = new ArrayList<HashMap<String, String>>();
-        //String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS,TANGGAL_JANJI_BAYAR FROM DKH LEFT JOIN  WHERE IS_COLLECT = 0 AND PIC='"+employeeID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"' order by TOTAL_TAGIHAN asc limit 5";
-        String selectQuery = "SELECT A.NOMOR_KONTRAK,A.NAMA_KOSTUMER, A.TOTAL_TAGIHAN, A.TANGGAL_JATUH_TEMPO, A.LATITUDE, A.LONGITUDE, A.OVERDUE_DAYS,A.TANGGAL_JANJI_BAYAR from DKH A LEFT JOIN COLLECTED B ON A.NOMOR_KONTRAK=B.CONTRACT_ID AND A.PERIOD=B.PERIOD where B.CONTRACT_ID IS NULL AND A.PIC = '"+employeeID+"' AND A.DailyCollectibility = 'Coll Harian' AND A.PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"' order by A.TOTAL_TAGIHAN asc limit 5";
-        SQLiteDatabase database = dbhelper.getWritableDatabase();
-        Cursor cursor = database.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
-            do {
-                HashMap<String, String> map = new HashMap<String, String>();
-                map.put("NOMOR_KONTRAK", cursor.getString(0));
-                map.put("NAMA_KOSTUMER", cursor.getString(1));
-                map.put("TOTAL_TAGIHAN", String.valueOf(cursor.getInt(2)));
-                map.put("TANGGAL_JATUH_TEMPO", cursor.getString(3));
-                map.put("LAT", cursor.getString(4));
-                map.put("LNG", cursor.getString(5));
-                map.put("OVERDUE_DAYS", cursor.getString(6));
-                map.put("TANGGAL_JANJI_BAYAR", cursor.getString(7));
-                wordList.add(map);
-            } while (cursor.moveToNext());
-        }
-
-        //Log.e("select sqlite ", "" + wordList);
-
-        database.close();
-        return wordList;
-    }
-
-    public ArrayList<HashMap<String, String>> getDKHODTerendah() {
-        ArrayList<HashMap<String, String>> wordList;
-        wordList = new ArrayList<HashMap<String, String>>();
-        //String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS,TANGGAL_JANJI_BAYAR FROM DKH WHERE IS_COLLECT = 0 AND PIC='"+employeeID+"' order by OVERDUE_DAYS asc limit 5";
-        String selectQuery = "SELECT A.NOMOR_KONTRAK,A.NAMA_KOSTUMER, A.TOTAL_TAGIHAN, A.TANGGAL_JATUH_TEMPO, A.LATITUDE, A.LONGITUDE, A.OVERDUE_DAYS,A.TANGGAL_JANJI_BAYAR from DKH A LEFT JOIN COLLECTED B ON A.NOMOR_KONTRAK=B.CONTRACT_ID AND A.PERIOD=B.PERIOD where B.CONTRACT_ID IS NULL AND A.PIC = '"+employeeID+"' AND A.DailyCollectibility = 'Coll Harian' AND A.PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"' order by A.OVERDUE_DAYS asc limit 5";
-        SQLiteDatabase database = dbhelper.getWritableDatabase();
-        Cursor cursor = database.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
-            do {
-                HashMap<String, String> map = new HashMap<String, String>();
-                map.put("NOMOR_KONTRAK", cursor.getString(0));
-                map.put("NAMA_KOSTUMER", cursor.getString(1));
-                map.put("TOTAL_TAGIHAN", String.valueOf(cursor.getInt(2)));
-                map.put("TANGGAL_JATUH_TEMPO", cursor.getString(3));
-                map.put("LAT", cursor.getString(4));
-                map.put("LNG", cursor.getString(5));
-                map.put("OVERDUE_DAYS", cursor.getString(6));
-                map.put("TANGGAL_JANJI_BAYAR", cursor.getString(7));
-                wordList.add(map);
-            } while (cursor.moveToNext());
-        }
-
-        //Log.e("select sqlite ", "" + wordList);
-
-        database.close();
-        return wordList;
-    }
-
-    public ArrayList<HashMap<String, String>> getDKHODTertinggi() {
-        ArrayList<HashMap<String, String>> wordList;
-        wordList = new ArrayList<HashMap<String, String>>();
-        //String selectQuery = "SELECT NOMOR_KONTRAK, NAMA_KOSTUMER, TOTAL_TAGIHAN, TANGGAL_JATUH_TEMPO, LATITUDE, LONGITUDE, OVERDUE_DAYS,TANGGAL_JANJI_BAYAR FROM DKH WHERE IS_COLLECT = 0 AND PIC='"+employeeID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"' order by OVERDUE_DAYS desc limit 5";
-        String selectQuery = "SELECT A.NOMOR_KONTRAK,A.NAMA_KOSTUMER, A.TOTAL_TAGIHAN, A.TANGGAL_JATUH_TEMPO, A.LATITUDE, A.LONGITUDE, A.OVERDUE_DAYS,A.TANGGAL_JANJI_BAYAR from DKH A LEFT JOIN COLLECTED B ON A.NOMOR_KONTRAK=B.CONTRACT_ID AND A.PERIOD=B.PERIOD where B.CONTRACT_ID IS NULL AND A.PIC = '"+employeeID+"' AND A.DailyCollectibility = 'Coll Harian' AND A.PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"' order by A.OVERDUE_DAYS desc limit 5";
-        SQLiteDatabase database = dbhelper.getWritableDatabase();
-        Cursor cursor = database.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
-            do {
-                HashMap<String, String> map = new HashMap<String, String>();
-                map.put("NOMOR_KONTRAK", cursor.getString(0));
-                map.put("NAMA_KOSTUMER", cursor.getString(1));
-                map.put("TOTAL_TAGIHAN", String.valueOf(cursor.getInt(2)));
-                map.put("TANGGAL_JATUH_TEMPO", cursor.getString(3));
-                map.put("LAT", cursor.getString(4));
-                map.put("LNG", cursor.getString(5));
-                map.put("OVERDUE_DAYS", cursor.getString(6));
-                map.put("TANGGAL_JANJI_BAYAR", cursor.getString(7));
-                wordList.add(map);
-            } while (cursor.moveToNext());
-        }
-
-        //Log.e("select sqlite ", "" + wordList);
-
-        database.close();
-        return wordList;
-    }
-//----------------------------------------------------
 
     private void checkCollectibility(final String strContractID){
         String urlCheck = ConnectionHelper.URL + "checkCollectibility.php";
@@ -807,11 +508,6 @@ public class TabPriority extends Fragment implements
     }
 
     @Override
-    public void onRefresh() {
-        init();
-    }
-
-    @Override
     public void onLocationChanged(Location location) {
     }
 
@@ -825,5 +521,9 @@ public class TabPriority extends Fragment implements
 
     @Override
     public void onProviderDisabled(String provider) {
+    }
+
+    public void onRefresh() {
+        init();
     }
 }
