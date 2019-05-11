@@ -1,77 +1,51 @@
 package sfi.mobile.collection;
 
 import android.app.ProgressDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ProgressBar;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import sfi.mobile.collection.app.AppController;
-import sfi.mobile.collection.helper.ConnectionHelper;
-import sfi.mobile.collection.model.DetailTasklist;
-import sfi.mobile.collection.util.HttpsTrustManager;
-
-public class Test extends AppCompatActivity {
+public class Test extends AppCompatActivity implements LocationListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener  {
 
     ProgressDialog progressDialog;
     private static final String TAG = Test.class.getSimpleName();
+
+    private static final long INTERVAL = 1000 * 10;
+    private static final long FASTEST_INTERVAL = 1000 * 5;
+    Button btnFusedLocation;
+    TextView tvLocation;
+    LocationRequest mLocationRequest;
+    GoogleApiClient mGoogleApiClient;
+    Location mCurrentLocation;
+    String mLastUpdateTime;
+
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(INTERVAL);
+        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        getData();
-    }
-
-    private void getData() {
-        HttpsTrustManager.allowAllSSL();
-        String urlGetDKHC = ConnectionHelper.URL + "getTasklist.php";
-        if (progressDialog == null) {
-            // in standard case YourActivity.this
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage("Loading...");
-            progressDialog.show();
-        }
-
-        JsonArrayRequest jArr = new JsonArrayRequest(urlGetDKHC,
-                new Response.Listener<JSONArray>() {
-
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.e(TAG, "Hasil response -> "+response.toString());
-                        for (int i = 0; i < response.length(); i++) {
-                            try {
-                                JSONObject obj = response.getJSONObject(i);
-                                Log.e(TAG,"Masuk sini akhirnya Ya Allah");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        progressDialog.dismiss();
-                        progressDialog = null;
-                    }
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
-                progressDialog.dismiss();
-                progressDialog = null;            }
-        });
-        AppController.getInstance().addToRequestQueue(jArr);
 
     }
+
 }
