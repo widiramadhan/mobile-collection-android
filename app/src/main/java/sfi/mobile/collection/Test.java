@@ -1,6 +1,6 @@
 package sfi.mobile.collection;
 
-import android.app.ProgressDialog;
+/* import android.app.ProgressDialog;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +18,7 @@ import com.google.android.gms.location.LocationServices;
 
 
 public class Test extends AppCompatActivity implements LocationListener,
-        GoogleApiClient.ConnectionCallbacks,
+       GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener  {
 
     ProgressDialog progressDialog;
@@ -48,4 +48,4 @@ public class Test extends AppCompatActivity implements LocationListener,
 
     }
 
-}
+}*/

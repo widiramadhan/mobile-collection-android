@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -82,7 +83,10 @@ public class HomeFragment extends Fragment implements
     LinearLayout ln_task_new, ln_task_draft, ln_task_done,ln_refresh;
     Button btnrefresh;
     TextView txtName, txtTotalTask, txtTotalDone, txtTotalDraft,txtLatitude,txtLongitude,txt_period;
+    Location location;
+    Criteria criteria;
     LocationManager locationManager;
+    String provider;
     DBHelper dbhelper;
     protected Cursor cursor, cursor2, cursor3;
     ProgressDialog progressDialog;
@@ -309,7 +313,7 @@ public class HomeFragment extends Fragment implements
     }
 
     private void init() {
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        /*locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
             buildAlertMessageNoGps();
         }
@@ -337,8 +341,35 @@ public class HomeFragment extends Fragment implements
         }else{
             txtLatitude.setText("0.000000");
             txtLongitude.setText("0.000000");
-        }
+        }*/
         checkData();
+    }
+
+    // fungsi ngecek lokasi GPS device pengguna
+    private void lokasi() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        location = locationManager.getLastKnownLocation(provider);
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        // permintaan update lokasi device dalam waktu per detik
+        locationManager.requestLocationUpdates(provider, 1000, 1, this);
+
+        if (location != null) {
+            onLocationChanged(location);
+        } else {
+            double lat = 0.000000;
+            double lng = 0.000000;
+            txtLatitude.setText(String.valueOf(lat));
+            txtLongitude.setText(String.valueOf(lng));
+        }
     }
 
     private void uploadRoutePIC() {
@@ -659,6 +690,10 @@ public class HomeFragment extends Fragment implements
     //------------------------
 
     public void onLocationChanged(Location location) {
+        double lat = location.getLatitude();
+        double lng = location.getLongitude();
+        txtLatitude.setText(String.valueOf(lat));
+        txtLongitude.setText(String.valueOf(lng));
     }
 
     public void onStatusChanged(String provider, int status, Bundle extras) {
