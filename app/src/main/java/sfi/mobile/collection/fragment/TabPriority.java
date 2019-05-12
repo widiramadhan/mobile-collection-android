@@ -40,6 +40,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -215,15 +216,20 @@ public class TabPriority extends Fragment implements
     }
 
     private void init() {
+        getLocation();
+        checkData();
+    }
+
+    public void getLocation() {
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+        if ( !locationManager.isProviderEnabled( LocationManager.NETWORK_PROVIDER ) ) {
             buildAlertMessageNoGps();
         }
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 5,this);
+        Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         if (location != null) {
             if(!location.equals("")) {
                 try {
@@ -244,7 +250,6 @@ public class TabPriority extends Fragment implements
             txtLatitude.setText("0.000000");
             txtLongitude.setText("0.000000");
         }
-        checkData();
     }
 
     private void buildAlertMessageNoGps() {
@@ -279,7 +284,7 @@ public class TabPriority extends Fragment implements
             cursor = db.rawQuery("SELECT * FROM DKH WHERE PIC = '"+employeeID+"' AND BRANCH_ID = '"+branchID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"'",null);
             cursor.moveToFirst();
             if(cursor.getCount() == 0){
-                Toast.makeText(getActivity(), "Membutuhkan koneksi internet untuk synchonize data", Toast.LENGTH_LONG).show();
+                FancyToast.makeText(getActivity(), "Membutuhkan koneksi internet untuk synchonize data", FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
             }else {
                 getAllDKHC();
             }
@@ -294,6 +299,14 @@ public class TabPriority extends Fragment implements
                 Log.e(TAG, "Data di sqlite belum ada, insert data....");
                 saveDataSQLite(employeeID, branchID);
             }else {
+                //hapus data dulu di sqlite
+                db.execSQL("DELETE FROM DKH");
+                //db.execSQL("DELETE FROM PRIORITY_4W");
+
+                //isi data yang baru
+                saveDataSQLite(employeeID, branchID);
+                //saveDataPriority4W(branchID, employeeID, period);
+
                 Log.e(TAG, "Data di sqlite sudah ada, load data....");
                 getAllDKHC();
             }
@@ -609,7 +622,7 @@ public class TabPriority extends Fragment implements
         swipe.setRefreshing(false);
         dkhcAdapter.notifyDataSetChanged();
     }
-//-----------------------------------------HELPER------------------------------------------
+    //-----------------------------------------HELPER------------------------------------------
     public ArrayList<HashMap<String, String>> getPriority() {
         ArrayList<HashMap<String, String>> wordList;
         wordList = new ArrayList<HashMap<String, String>>();

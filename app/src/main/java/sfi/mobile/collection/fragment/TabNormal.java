@@ -235,15 +235,20 @@ public class TabNormal extends Fragment implements
     }
 
     private void init() {
+        getLocation();
+        getAllDKHC();
+    }
+
+    public void getLocation() {
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+        if ( !locationManager.isProviderEnabled( LocationManager.NETWORK_PROVIDER ) ) {
             buildAlertMessageNoGps();
         }
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 5,this);
+        Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         if (location != null) {
             if(!location.equals("")) {
                 try {
@@ -264,8 +269,6 @@ public class TabNormal extends Fragment implements
             txtLatitude.setText("0.000000");
             txtLongitude.setText("0.000000");
         }
-        //getLocation();
-        getAllDKHC();
     }
 
     private void getAllDKHC(){

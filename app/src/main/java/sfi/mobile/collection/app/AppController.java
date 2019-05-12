@@ -9,7 +9,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
-import sfi.mobile.collection.services.MyApplication;
 import sfi.mobile.collection.util.LruBitmapCache;
 
 /**

@@ -43,7 +43,7 @@ public class PageTaskAdapter extends FragmentPagerAdapter{
             case 0:
                 return "Priority";
             case 1:
-                return "Normal";
+                return "All Data";
             /*case 2:
                 return "Status";*/
         }

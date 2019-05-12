@@ -247,8 +247,8 @@ public class TabQuestion extends Fragment implements LocationListener {
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, TabQuestion.this);
-                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 5, TabQuestion.this);
+                Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                 if (location != null) {
                     double lat = location.getLatitude();
                     double lng = location.getLongitude();
@@ -272,8 +272,8 @@ public class TabQuestion extends Fragment implements LocationListener {
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, TabQuestion.this);
-                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 5, TabQuestion.this);
+                Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                 if (location != null) {
                     double lat = location.getLatitude();
                     double lng = location.getLongitude();

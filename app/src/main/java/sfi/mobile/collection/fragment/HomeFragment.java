@@ -16,7 +16,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -39,14 +38,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,8 +55,6 @@ import sfi.mobile.collection.helper.ConnectionHelper;
 import sfi.mobile.collection.helper.DBHelper;
 import sfi.mobile.collection.model.DKHC;
 import sfi.mobile.collection.model.Priority4W;
-import sfi.mobile.collection.services.LocationService;
-import sfi.mobile.collection.services.ServiceLoc;
 
 public class HomeFragment extends Fragment implements
         SwipeRefreshLayout.OnRefreshListener,LocationListener {
@@ -130,100 +126,81 @@ public class HomeFragment extends Fragment implements
             @Override
             public void run() {
                 init();
-                saveDataPriority4W(branchID,employeeID,period);
-               // getActivity().startService(new Intent(getActivity(),ServiceLoc.class));
             }
         });
 
         ln_task_new.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Emp_id.equals("15"))
-                {
-                    TabPriority4w fragment = new TabPriority4w();
-                    FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
-                    fragmentTransaction.addToBackStack("A_B_TAG");
-                    fragmentTransaction.commit();
-                }else if(Emp_id.equals("10") ){
-                    TaskFragment fragment = new TaskFragment();
-                    FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
-                    fragmentTransaction.addToBackStack("A_B_TAG");
-                    fragmentTransaction.commit();
-                }
+            if(Emp_id.equals("15")){
+                TabPriority4w fragment = new TabPriority4w();
+                FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
+                fragmentTransaction.addToBackStack("A_B_TAG");
+                fragmentTransaction.commit();
+            }else if(Emp_id.equals("10") ){
+                TaskFragment fragment = new TaskFragment();
+                FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
+                fragmentTransaction.addToBackStack("A_B_TAG");
+                fragmentTransaction.commit();
+            }
             }
         });
 
         ln_task_draft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProgressFragment fragment = new ProgressFragment();
-                Bundle arguments = new Bundle();
-                arguments.putString( "flag" , "0");
-                fragment.setArguments(arguments);
-                FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
-                fragmentTransaction.addToBackStack("A_B_TAG");
-                fragmentTransaction.commit();
+            ProgressFragment fragment = new ProgressFragment();
+            Bundle arguments = new Bundle();
+            arguments.putString( "flag" , "0");
+            fragment.setArguments(arguments);
+            FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
+            fragmentTransaction.addToBackStack("A_B_TAG");
+            fragmentTransaction.commit();
             }
         });
 
         ln_task_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProgressFragment fragment = new ProgressFragment();
-                Bundle arguments = new Bundle();
-                arguments.putString( "flag" , "1");
-                fragment.setArguments(arguments);
-                FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
-                fragmentTransaction.addToBackStack("A_B_TAG");
-                fragmentTransaction.commit();
+            ProgressFragment fragment = new ProgressFragment();
+            Bundle arguments = new Bundle();
+            arguments.putString( "flag" , "1");
+            fragment.setArguments(arguments);
+            FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
+            fragmentTransaction.addToBackStack("A_B_TAG");
+            fragmentTransaction.commit();
             }
         });
 
         btnrefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-                alertDialog.setTitle("Synchronize?");
-                alertDialog.setMessage("Anda akan synchronize data");
-                //alertDialog.setIcon(R.drawable.);
-                alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        RefreshData();
-                    }
-                });
-                alertDialog.setButton("CANCEL", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        alertDialog.hide();
-                    }
-                });
-                alertDialog.show();
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Synchronize?");
+            builder.setIcon(android.R.drawable.ic_dialog_alert);
+            builder.setMessage("Anda akan synchronize data")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                            //RefreshData();
+                            init();
+                        }
+                    })
+                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
 
-*/
-                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Synchronize?");
-                builder.setIcon(android.R.drawable.ic_dialog_alert);
-                builder.setMessage("Anda akan synchronize data")
-                        .setCancelable(false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                                RefreshData();
-                            }
-                        })
-                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        });
-                final AlertDialog alert = builder.create();
-                alert.show();
+                        }
+                    });
+            final AlertDialog alert = builder.create();
+            alert.show();
             }
         });
 
@@ -235,8 +212,6 @@ public class HomeFragment extends Fragment implements
         super.onActivityCreated(savedInstanceState);
         super.onCreate(savedInstanceState);
         sharedpreferences = getActivity().getSharedPreferences(my_shared_preferences, Context.MODE_PRIVATE);
-
-
     }
 
     private void buildAlertMessageNoGps() {
@@ -260,68 +235,58 @@ public class HomeFragment extends Fragment implements
         alert.show();
     }
 
-    private void RefreshData(){
-        try {
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setCancelable(false);
-            progressDialog.setMessage("Loading...");
-            progressDialog.show();
-
-            dbhelper = new DBHelper(getActivity());
-            SQLiteDatabase db = dbhelper.getWritableDatabase();
-            db.execSQL("delete from DKH");
-            db.execSQL("delete from PRIORITY_4W");
-            Log.d(TAG, "Data DKH Di hapus");
-            //init();
-            checkData();
-            uploadRoutePIC();
-        }catch(Exception e){
-            Log.e(TAG, "Masuk Catch");
-        }
-        progressDialog.hide();
-    }
     private void checkData() {
         //cek koneksi
         ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
+
         if(info == null){ //jika tidak ada koneksi
-            Log.e(TAG, "Tidak ada koneksi");
+            /*Log.e(TAG, "Tidak ada koneksi");
             dbhelper = new DBHelper(getActivity());
             SQLiteDatabase db = dbhelper.getReadableDatabase();
             cursor = db.rawQuery("SELECT * FROM DKH WHERE PIC = '"+employeeID+"' AND BRANCH_ID = '"+branchID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"'",null);
             cursor.moveToFirst();
-            if(cursor.getCount() == 0){
-                Toast.makeText(getActivity(), "Membutuhkan koneksi internet untuk synchonize data", Toast.LENGTH_LONG).show();
-            }
-        }else { //jika ada koneksi
-            Log.e(TAG, "Ada koneksi");
-            //cek data ada atau tidak
-            dbhelper = new DBHelper(getActivity());
-            SQLiteDatabase db = dbhelper.getReadableDatabase();
-            cursor = db.rawQuery("SELECT * FROM DKH WHERE PIC = '"+employeeID+"' AND BRANCH_ID = '"+branchID+"' AND PERIOD = '"+new SimpleDateFormat("yyyyMM").format(new Date())+"01"+"'",null);
-            cursor.moveToFirst();
-            if(cursor.getCount() == 0){ //jika data tidak ada
-                Log.e(TAG, "Data di sqlite belum ada, insert data....");
-                saveDataSQLite(employeeID, branchID);
-                saveDataPriority4W(branchID,employeeID,period);
-            }else {
-                Log.e(TAG, "Data di sqlite sudah ada, load data....");
+            if(cursor.getCount() == 0){*/
+                FancyToast.makeText(getActivity(), "Membutuhkan koneksi internet untuk synchonize data", FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
                 swipe.setRefreshing(false);
+            //}
+        }else { //jika ada koneksi
+            try {
+                //hapus data dulu di sqlite
+                dbhelper = new DBHelper(getActivity());
+                SQLiteDatabase db = dbhelper.getWritableDatabase();
+                db.execSQL("DELETE FROM DKH");
+                db.execSQL("DELETE FROM PRIORITY_4W");
+
+                //isi data yang baru
+                saveDataSQLite(employeeID, branchID);
+                saveDataPriority4W(branchID, employeeID, period);
                 CountData();
+                sendLocationUser();
+            }catch (Exception e){
+                FancyToast.makeText(getActivity(), e.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
             }
+
+            FancyToast.makeText(getActivity(), "Synchonize data berhasil", FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
+            swipe.setRefreshing(false);
         }
     }
 
     private void init() {
-        /*locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+        getLocation();
+        checkData();
+    }
+
+    public void getLocation() {
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if ( !locationManager.isProviderEnabled( LocationManager.NETWORK_PROVIDER ) ) {
             buildAlertMessageNoGps();
         }
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5,this);
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 5,this);
+        Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         if (location != null) {
             if(!location.equals("")) {
                 try {
@@ -341,51 +306,16 @@ public class HomeFragment extends Fragment implements
         }else{
             txtLatitude.setText("0.000000");
             txtLongitude.setText("0.000000");
-        }*/
-        checkData();
-    }
-
-    // fungsi ngecek lokasi GPS device pengguna
-    private void lokasi() {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        location = locationManager.getLastKnownLocation(provider);
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
-        // permintaan update lokasi device dalam waktu per detik
-        locationManager.requestLocationUpdates(provider, 1000, 1, this);
-
-        if (location != null) {
-            onLocationChanged(location);
-        } else {
-            double lat = 0.000000;
-            double lng = 0.000000;
-            txtLatitude.setText(String.valueOf(lat));
-            txtLongitude.setText(String.valueOf(lng));
         }
     }
 
-    private void uploadRoutePIC() {
+    private void sendLocationUser() {
         String urlUploadRoute = ConnectionHelper.URL+"saveGetRoutePic.php";
         String tag_json = "tag_json";
-
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage("Sedang upload Data...");
-        showDialog();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUploadRoute, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                //Log.d("response", response.toString());
-                hideDialog();
-
                 try {
                     JSONObject jObject = new JSONObject(response);
                     String pesan = jObject.getString("pesan");
@@ -413,10 +343,6 @@ public class HomeFragment extends Fragment implements
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> param = new HashMap<String, String>();
-
-                //*//**//**//**//*** set session to variable ***//**//**//**//*
-                //*//**//**//**//*** end set session to variable ***//**//**//**//*
-                Log.d(TAG,"Masuk sini Route");
 
                 param.put("pic", employeeID);
                 param.put("lat", txtLatitude.getText().toString());
@@ -522,13 +448,7 @@ public class HomeFragment extends Fragment implements
     }
 
     public void saveDataPriority4W(final String branchID, final String employeeID, final String period){
-        String urlGetPriority4w = ConnectionHelper.URL + "getPriority4W.php"+"?branch_id="+branchID+"&pic="+employeeID+"&period="+period;
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setCancelable(false);
-            progressDialog.setMessage("Loading...");
-            progressDialog.show();
-        }
+        String urlGetPriority4w = ConnectionHelper.URL + "getPriority4W.php?branch_id="+branchID+"&pic="+employeeID+"&period="+period;
 
         JsonArrayRequest jArr = new JsonArrayRequest(urlGetPriority4w+"?branch_id="+branchID+"&pic="+employeeID+"&period="+period,
                 new Response.Listener<JSONArray>() {
@@ -550,7 +470,6 @@ public class HomeFragment extends Fragment implements
                                 Log.e(TAG, "Masuk catch");
                             }
                         }
-                        progressDialog.hide();
                         swipe.setRefreshing(false);
                         //CountData();
                     }
@@ -560,106 +479,12 @@ public class HomeFragment extends Fragment implements
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.e(TAG, "Error: " + error.getMessage());
                 Toast.makeText(getActivity().getApplicationContext(), "Terjadi kesalahan, mohon hubungi administrator", Toast.LENGTH_LONG).show();
-                progressDialog.hide();
                 swipe.setRefreshing(false);
             }
         });
         AppController.getInstance().addToRequestQueue(jArr);
     }
 
-//   /* public void saveDataSQLite2(final String employeeID, final String branchID){
-//        String urlGetDKHC = ConnectionHelper.URL + "getTasklist.php"+"?employeeID="+employeeID+"&branchID="+branchID;
-//
-//        if (progressDialog == null) {
-//            progressDialog = new ProgressDialog(getActivity());
-//            progressDialog.setCancelable(false);
-//            progressDialog.setMessage("Loading...");
-//            progressDialog.show();
-//        }
-//
-//        JsonArrayRequest jArr = new JsonArrayRequest(urlGetDKHC+"?employeeID="+employeeID+"&branchID="+branchID,
-//                new Response.Listener<JSONArray>() {
-//                    @Override
-//                    public void onResponse(JSONArray response) {
-//                        Log.e(TAG, response.toString());
-//                        for (int i = 0; i < response.length(); i++) {
-//                            try {
-//                                JSONObject obj = response.getJSONObject(i);
-//                                DKHC j = new DKHC();
-//                                j.setBranchID(obj.getString("BRANCH_ID"));
-//                                j.setBranchName(obj.getString("BRANCH_NAME"));
-//                                j.setPic(obj.getString("EMP_ID"));
-//                                j.setNomorKontrak(obj.getString("NOMOR_KONTRAK"));
-//                                j.setNamaKostumer(obj.getString("NAMA_KOSTUMER"));
-//                                j.setTanggalJatuhTempo(obj.getString("TANGGAL_JATUH_TEMPO"));
-//                                j.setOverDueDays(obj.getInt("OVERDUE_DAYS"));
-//                                j.setAngsuranKe(obj.getInt("ANGSURAN_KE"));
-//                                j.setJumlahAngsuranOverDue(obj.getInt("JUMLAH_ANGSURAN_OVERDUE"));
-//                                j.setTenor(obj.getInt("TENOR"));
-//                                j.setAngsuranBerjalan(obj.getInt("ANGSURAN_BERJALAN"));
-//                                j.setAngsuranTertunggak(obj.getInt("ANGSURAN_TERTUNGGAK"));
-//                                j.setDenda(obj.getInt("DENDA"));
-//                                j.setTitipan(obj.getInt("TITIPAN"));
-//                                j.setTotalTagihan(obj.getInt("TOTAL_TAGIHAN"));
-//                                j.setOutstandingAR(obj.getInt("OUTSTANDING_AR"));
-//                                j.setAlamatKTP(obj.getString("ALAMAT_KTP"));
-//                                j.setNomorTlpRumah(obj.getString("NOMOR_TELEPON_RUMAH"));
-//                                j.setNomorHanphone(obj.getString("NOMOR_HANDPHONE"));
-//                                j.setAlamatKantor(obj.getString("ALAMAT_KANTOR"));
-//                                j.setNomorTlpKantor(obj.getString("NOMOR_TELEPON_KANTOR"));
-//                                j.setAlamatSurat(obj.getString("ALAMAT_SURAT"));
-//                                j.setNomorTlpSurat(obj.getString("NOMOR_TELEPON_SURAT"));
-//                                j.setPicTerakhir(obj.getString("PIC_TERAKHIR"));
-//                                j.setPenangananTerakhir(obj.getString("PENANGANAN_TERAKHIR"));
-//                                j.setTanggalJanjiBayar(obj.getString("TANGGAL_JANJI_BAYAR"));
-//                                j.setDailyCollectibility(obj.getString("DailyCollectibility"));
-//                                j.setOdHarian(obj.getInt("OvdDaysHarian"));
-//                                j.setTanggalJatuhTempoHarian(obj.getString("TglJatuhTempoHarian"));
-//                                j.setARin(obj.getInt("ARIN"));
-//                                j.setFlowUp(obj.getInt("FlowUp"));
-//                                j.setTanggalTarikHarian(obj.getString("TglTarikHarian"));
-//                                j.setTanggalTerimaKlaim(obj.getString("TglTerimaKlaim"));
-//                                j.setLat(obj.getString("LATITUDE"));
-//                                j.setLng(obj.getString("LONGITUDE"));
-//                                j.setApproval(obj.getInt("APPROVAL"));
-//                                j.setIsCollect(obj.getInt("IS_COLLECT"));
-//                                j.setPeriod(obj.getString("PERIOD"));
-//                                j.setColAreaID(obj.getDouble("M_AREA_COLL_ID"));
-//                                j.setCreateUser(obj.getString("CREATE_USER"));
-//                                j.setCreateDate(obj.getString("CREATE_DATE"));
-//                                j.setStatusVoid(obj.getInt("VOID"));
-//
-//                                dbhelper = new DBHelper(getActivity().getApplicationContext());
-//                                *//*dbhelper.insertDataDKH(j.getBranchID(), j.getBranchName(), j.getPic(), j.getNomorKontrak(), j.getNamaKostumer(), j.getTanggalJatuhTempo(),
-//                                        j.getOverDueDays(), j.getAngsuranKe(), j.getJumlahAngsuranOverDue(), j.getTenor(), j.getAngsuranBerjalan(), j.getAngsuranTertunggak(),
-//                                        j.getDenda(), j.getTitipan(), j.getTotalTagihan(), j.getOutstandingAR(), j.getAlamatKTP(), j.getNomorTlpRumah(), j.getNomorHanphone(),
-//                                        j.getAlamatKantor(), j.getNomorTlpKantor(), j.getAlamatSurat(), j.getNomorTlpSurat(), j.getPicTerakhir(), j.getPenangananTerakhir(),
-//                                        j.getTanggalJanjiBayar(), j.getDailyCollectibility(), j.getOdHarian(), j.getTanggalJatuhTempoHarian(), j.getARin(), j.getFlowUp(),
-//                                        j.getTanggalTarikHarian(), j.getTanggalTerimaKlaim(), j.getLat(), j.getLng(), j.getApproval(), j.getIsCollect(), j.getPeriod(),  j.getColAreaID(),
-//                                        j.getCreateUser(), j.getCreateDate(), j.getStatusVoid());*//*
-//                                //dbhelper.insertDataCollected(j.getNomorKontrak(),j.getDailyCollectibility(),j.getIsCollect(),j.getCreateDate());
-//                                dbhelper.insertDataSync_data(j.getBranchID(),j.getNomorKontrak(),j.getPic(),j.getDailyCollectibility(),j.getIsCollect(),j.getPeriod(),j.getTotalTagihan(),j.getCreateDate());
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                                Log.e(TAG, "Masuk catch");
-//                            }
-//                        }
-//                        progressDialog.hide();
-//                        swipe.setRefreshing(false);
-//                        CountData();
-//                    }
-//                }, new Response.ErrorListener() {
-//
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                VolleyLog.e(TAG, "Error: " + error.getMessage());
-//                Toast.makeText(getActivity().getApplicationContext(), "Terjadi kesalahan, mohon hubungi administrator", Toast.LENGTH_LONG).show();
-//                progressDialog.hide();
-//                swipe.setRefreshing(false);
-//            }
-//        });
-//        AppController.getInstance().addToRequestQueue(jArr);
-//    }*/
 
     @Override
     public void onRefresh() {

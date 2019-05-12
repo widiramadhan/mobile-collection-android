@@ -42,8 +42,8 @@ import sfi.mobile.collection.fragment.TabHistory;
 import sfi.mobile.collection.fragment.TaskFragment;
 import sfi.mobile.collection.fragment.HomeFragment;
 import sfi.mobile.collection.fragment.ProfileFragment;
-import sfi.mobile.collection.fragment.TabDraftWithDelete;
 import sfi.mobile.collection.listener.MyPhoneStateListener;
+import sfi.mobile.collection.services.MobileCollectionService;
 
 public class MainActivity extends AppCompatActivity implements LocationListener{
 
@@ -85,6 +85,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //memanggil service
+        Intent i = new Intent(this, MobileCollectionService.class);
+        this.startService(i);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -145,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                     finish();
                    // super.onDestroy();
                     //stopService(serviceIntent);
+                    stopService(new Intent(MainActivity.this, MobileCollectionService.class));
                    return true;
                 }
 
