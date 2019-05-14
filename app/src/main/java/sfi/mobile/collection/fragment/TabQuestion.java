@@ -77,7 +77,7 @@ public class TabQuestion extends Fragment implements LocationListener {
     Intent intent;
     Uri fileUri;
     Bitmap bitmap, decoded;
-    Byte byteimage;
+    Byte byteimage; 
     ImageView imageView, imageViewPembayaran;
     EditText contactperson, alamatbaru, pembayaran_diterima, hasilkunjungan;
     double intPembayaran,intTotaltagihan;
